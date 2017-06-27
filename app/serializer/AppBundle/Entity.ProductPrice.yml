@@ -1,0 +1,9 @@
+AppBundle\Entity\ProductPrice:
+    exclusion_policy: ALL
+    properties:
+        id:
+            expose: true
+            groups: [product]
+        price:
+            expose: true
+            groups: [product]

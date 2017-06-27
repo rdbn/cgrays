@@ -1,0 +1,63 @@
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+    position: relative;
+    min-height: 100%;
+}
+body {
+    padding-top: 70px;
+    /* Margin bottom by footer height */
+    margin-bottom: 80px;
+}
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    /* Set the fixed height of the footer here */
+    height: 80px;
+    background-color: #f5f5f5;
+}
+
+/* Custom page CSS
+-------------------------------------------------- */
+
+.starter-template {
+    padding: 40px 15px;
+    text-align: center;
+}
+
+.top10 {
+    margin-top: 10px;
+}
+
+.top20 {
+    margin-top: 20px;
+}
+
+.bottom20 {
+    margin-bottom: 20px;
+}
+
+.table-order td {
+    border-top: 0 !important;
+}
+
+.scroll-view {
+    padding-top: 14px;
+    height: 500px;
+    min-height: 300px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.steam-auth {
+    background-image: url('/bundles/steamauth/image/sits_01.png');
+    background-size: cover;
+    padding-left: 150px;
+    padding-top: 25px;
+}
+
+.hidden {
+    display: none !important;
+}

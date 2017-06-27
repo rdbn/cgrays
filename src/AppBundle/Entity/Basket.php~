@@ -1,0 +1,60 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: rdbn
+ * Date: 03.04.17
+ * Time: 10:29
+ */
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Entity(repositoryClass="\AppBundle\Repository\BasketRepository")
+ * @ORM\Table(name="basket")
+ */
+class Basket
+{
+    /**
+     * @ORM\Column(type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    protected $id;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Product", inversedBy="basket")
+     * @ORM\JoinColumn(name="product_id", referencedColumnName="id")
+     */
+    protected $product;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Product", inversedBy="basket")
+     * @ORM\JoinColumn(name="product_price_id", referencedColumnName="id")
+     */
+    protected $productPrice;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="basket")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     */
+    protected $users;
+
+    /**
+     * @ORM\Column(type="integer", options={"default": 1})
+     */
+    protected $count;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    protected $createdAt;
+
+    public function __construct()
+    {
+        $this->count = 1;
+        $this->createdAt = new \DateTime();
+    }
+
+}

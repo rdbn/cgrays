@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ product.name }} | Магазин Dota markets{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-lg-12">
+            <a class="btn btn-warning" href="{{ path('main') }}">Назад</a>
+        </div>
+        <div class="col-lg-4 top20">
+            <img src="{{ asset(product.iconUrlLarge) }}" alt="{{ product.name }}" class="img-thumbnail">
+            <div class="btn-group top20">
+                <button id="buy" class="btn btn-danger btn-lg" data-product="{{ product.id }}" data-product-price="{{ product.productPrice.first.id }}">
+                    <span class="glyphicon glyphicon-share-alt"></span> Купить
+                </button>
+                <button id="add-basket" class="btn btn-danger btn-lg" data-product="{{ product.id }}" data-product-price="{{ product.productPrice.first.id }}">
+                    <span class="glyphicon glyphicon-shopping-cart"></span>
+                </button>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <h1>{{ product.name }}</h1>
+            <p class="text-primary">
+                <span class="glyphicon glyphicon-tag"></span> <a href="{{ path('products', { "id" : product.id }) }}">Все предложения</a>
+            </p>
+            <p>
+                <span class="label label-default">{{ product.heroes.name }}</span>
+                <span class="label label-default">{{ product.typeProduct.name }}</span>
+                <span class="label label-default">{{ product.quality.name }}</span>
+                <span class="label label-default">{{ product.rarity.name }}</span>
+            </p>
+            <p class="alert alert-warning">
+                <strong>{{ product.productPrice.first.price }} <span class="glyphicon glyphicon-rub"></span></strong>
+            </p>
+            <p class="top20">{{ product.description }}</p>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script type="text/javascript" src="{{ asset('bundles/app/js/add-basket.js') }}"></script>
+{% endblock %}

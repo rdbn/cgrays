@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Корзина{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <table class="table table-order">
+            <tbody>
+            {% for order in orders %}
+                <tr id="order-{{ order.id }}" class="order">
+                    <td class="col-lg-3 col-md-3 col-sm-4 col-xs-6">
+                        <a href="{{ path('product', { 'productId': order.product_id, "productPriceId": order.price_id}) }}">
+                            <img class="img-thumbnail" src="{{ asset(order.icon_url_large) }}" alt="{{ order.name }}" />
+                        </a>
+                    </td>
+                    <td>
+                        <h4 class="media-heading">{{ order.name }}</h4>
+                        <p class="text-warning"><strong>{{ order.price }} <span class="glyphicon glyphicon-rub"></span></strong></p>
+                        <button data-order="{{ order.id }}" class="btn btn-danger" data-toggle="modal" data-target="#remove-modal">
+                            Удалить
+                        </button>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div id="remove-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="Remove modal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <p class="text-danger">Вы действительно хотите удалить товаор из корзины ?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" data-dismiss="modal">Нет</button>
+                    <button id="remove-order" class="btn btn-danger">Удалить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script type="text/javascript" src="{{ asset('bundles/app/js/basket.js') }}"></script>
+{% endblock %}

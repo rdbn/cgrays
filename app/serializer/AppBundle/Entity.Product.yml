@@ -1,0 +1,37 @@
+AppBundle\Entity\Product:
+    exclusion_policy: ALL
+    properties:
+        id:
+            expose: true
+            groups: [product]
+        name:
+            expose: true
+            groups: [product]
+        iconUrl:
+            expose: true
+            groups: [product]
+            accessor:
+                getter: getIconUrl
+        iconUrlLarge:
+            expose: true
+            groups: [product]
+            accessor:
+                getter: getIconUrlLarge
+        description:
+            expose: true
+            groups: [product]
+        heroes:
+            expose: true
+            groups: [product]
+        typeProduct:
+            expose: true
+            groups: [product]
+        quality:
+            expose: true
+            groups: [product]
+        rarity:
+            expose: true
+            groups: [product]
+        productPrice:
+            expose: true
+            groups: [product]

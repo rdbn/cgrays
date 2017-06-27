@@ -1,0 +1,103 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: rdbn
+ * Date: 03.04.17
+ * Time: 10:28
+ */
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+
+/**
+ * @ORM\Entity(repositoryClass="\AppBundle\Repository\ProductRepository")
+ * @ORM\Table(name="product")
+ */
+class Product
+{
+    /**
+     * @ORM\Column(type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    protected $id;
+
+    /**
+     * @ORM\Column(name="class_id", type="string", length=255, unique=true)
+     */
+    protected $classId;
+
+    /**
+     * @ORM\Column(name="instance_id", type="string", length=255, unique=true)
+     */
+    protected $instanceId;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Heroes", inversedBy="products")
+     * @ORM\JoinColumn(name="heroes_id", referencedColumnName="id")
+     */
+    protected $heroes;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\TypeProduct", inversedBy="products")
+     * @ORM\JoinColumn(name="type_product_id", referencedColumnName="id")
+     */
+    protected $typeProduct;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Quality", inversedBy="products")
+     * @ORM\JoinColumn(name="quality_id", referencedColumnName="id")
+     */
+    protected $quality;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Rarity", inversedBy="products")
+     * @ORM\JoinColumn(name="rarity_id", referencedColumnName="id")
+     */
+    protected $rarity;
+
+    /**
+     * @ORM\Column(type="string", length=255, unique=true)
+     */
+    protected $name;
+
+    /**
+     * @ORM\Column(name="icon_url", type="string", length=255)
+     */
+    protected $iconUrl;
+
+    /**
+     * @ORM\Column(name="icon_url_large", type="string", length=255)
+     */
+    protected $iconUrlLarge;
+
+    /**
+     * @ORM\Column(type="text")
+     */
+    protected $description;
+
+    /**
+     * @ORM\Column(name="created_at", type="datetime")
+     */
+    protected $createdAt;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Order", mappedBy="product")
+     */
+    protected $order;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\ProductPrice", mappedBy="product")
+     */
+    protected $productPrice;
+
+    public function __construct()
+    {
+        $this->createdAt = new \DateTime();
+
+        $this->order = new ArrayCollection();
+        $this->productPrice = new ArrayCollection();
+    }
+}

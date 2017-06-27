@@ -17,3 +17,11 @@ parameters:
 
     # A secret key that's used to generate certain security-related tokens
     secret:            ThisTokenIsNotSoSecretChangeIt
+
+    # A secret key for steam api
+    steam_api_url:     'https://api.steampowered.com'
+    steam_community_url: 'http://steamcommunity.com/'
+    steam_api_key:     key
+    steam_inventory_count: 8
+    steam_community_image_url: http://cdn.steamcommunity.com/economy/image/
+    cache_expire: 3600
