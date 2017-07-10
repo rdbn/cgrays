@@ -11,9 +11,9 @@ use Symfony\Component\HttpFoundation\Request;
 class UserController extends Controller
 {
     /**
-     * @Route("/user", name="user")
+     * @Route("/user", name="app.user.main")
      */
-    public function indexAction()
+    public function mainAction()
     {
         $user = $this->getUser();
         $products = $this->getDoctrine()->getRepository(ProductPrice::class)
@@ -26,7 +26,7 @@ class UserController extends Controller
     }
 
     /**
-     * @Route("/sell", name="user_sell")
+     * @Route("/sell", name="app.user.sell")
      */
     public function sellAction()
     {

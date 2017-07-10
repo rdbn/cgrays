@@ -42,6 +42,11 @@ class ProductPrice
     protected $price;
 
     /**
+     * @ORM\Column(name="is_sell", type="boolean", options={"default": TRUE})
+     */
+    protected $isSell;
+
+    /**
      * @ORM\Column(type="datetime", type="datetime")
      */
     protected $createdAt;
@@ -55,6 +60,7 @@ class ProductPrice
     {
         $this->createdAt = new \DateTime();
         $this->order = new ArrayCollection();
+        $this->isSell = true;
     }
 
     /**
@@ -89,6 +95,30 @@ class ProductPrice
     public function getPrice()
     {
         return $this->price;
+    }
+
+    /**
+     * Set isSell
+     *
+     * @param boolean $isSell
+     *
+     * @return ProductPrice
+     */
+    public function setIsSell($isSell)
+    {
+        $this->isSell = $isSell;
+
+        return $this;
+    }
+
+    /**
+     * Get isSell
+     *
+     * @return boolean
+     */
+    public function getIsSell()
+    {
+        return $this->isSell;
     }
 
     /**

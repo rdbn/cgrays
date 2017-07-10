@@ -34,11 +34,16 @@ class UploadImageService
 
     /**
      * @param string $url
+     * @param $isCommunityImageUrl
      * @return string
      */
-    public function upload($url)
+    public function upload($url, $isCommunityImageUrl = true)
     {
-        $byteImage = file_get_contents($this->steamCommunityImageUrl.$url);
+        if ($isCommunityImageUrl) {
+            $url = $this->steamCommunityImageUrl.$url;
+        }
+
+        $byteImage = file_get_contents($url);
         $nameImage = md5(uniqid(time(), true)).'.png';
         file_put_contents($this->getPath($nameImage), $byteImage);
 

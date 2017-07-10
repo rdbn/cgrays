@@ -1,4 +1,12 @@
 services:
+    steam.user_provider:
+        class: AppBundle\Security\SteamUserProvider
+        arguments: [ '@doctrine.orm.default_entity_manager', '@app.service.user_service', '%steam.user_class%' ]
+
+    app.service.user_service:
+        class: AppBundle\Services\SteamUserService
+        arguments: ['@steam.api_profile', '@app.service.upload_image']
+
     app.repository.product:
         class: AppBundle\Repository\ProductPriceRepository
         factory: ['@doctrine.orm.entity_manager', getRepository]
@@ -21,3 +29,7 @@ services:
     app.service.add_product_sell:
         class: AppBundle\Services\SaveSellProductService
         arguments: ['@doctrine.orm.entity_manager', '@snc_redis.default', '@app.service.upload_image', '@logger']
+
+    api.service.validator_item_sell:
+        class: ApiBundle\Service\ValidatorItemSellService
+        arguments: ['@validator']

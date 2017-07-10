@@ -3,6 +3,7 @@
 namespace ApiBundle\Controller;
 
 use AppBundle\Entity\Product;
+use AppBundle\Entity\ProductPrice;
 use AppBundle\Form\ProductFilterTypeForm;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\FOSRestController;
@@ -91,6 +92,90 @@ class ProductController extends FOSRestController
             ->findProductByIdAndPriceId($productId, $productPriceId);
 
         $view = $this->view($product, 200);
+        return $this->handleView($view);
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @Rest\Post("/products/add")
+     * @Rest\View()
+     * @return Response
+     */
+    public function postSaveProductAction(Request $request)
+    {
+        $itemSell = $request->request->get('item');
+        $validator = $this->get('api.service.validator_item_sell')
+            ->handler($itemSell);
+
+        if ($validator->isValid()) {
+            $productPriceSell =  $this->get('app.service.add_product_sell')
+                ->handler($this->getUser(), $itemSell);
+
+            $view = $this->view([
+                'product_id' => $productPriceSell->getProduct()->getId(),
+                'product_price_id' => $productPriceSell->getId(),
+                'icon_url' => $productPriceSell->getProduct()->getIconUrl(),
+                'name' => $productPriceSell->getProduct()->getName(),
+                'price' => $productPriceSell->getPrice(),
+            ], 200);
+        } else {
+            $view = $this->view($validator->getMessage(), 400);
+        }
+
+        return $this->handleView($view);
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @Rest\Post("/products/update/price")
+     * @Rest\View()
+     * @return Response
+     */
+    public function postUpdatePriceAction(Request $request)
+    {
+        $itemPrice = $request->request->get('item');
+        if (is_array($itemPrice)) {
+            $em = $this->getDoctrine()->getManager();
+            $productPrice = $em->getRepository(ProductPrice::class)
+                ->findOneBy(['id' => $itemPrice['id']]);
+
+            $productPrice->setPrice($itemPrice['price']);
+            $em->flush();
+
+            $view = $this->view('success', 200);
+        } else {
+            $view = $this->view('Bad request', 400);
+        }
+
+        return $this->handleView($view);
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @Rest\Post("/products/remove")
+     * @Rest\View()
+     * @return Response
+     */
+    public function postRemoveProductAction(Request $request)
+    {
+        $id = (int) $request->request->get('id');
+
+        $em = $this->getDoctrine()->getManager();
+        $product = $em->getRepository(ProductPrice::class)
+            ->findOneBy(['id' => $id]);
+
+        if ($product) {
+            $product->setIsSell(false);
+            $em->flush();
+
+            $view = $this->view("success", 200);
+        } else {
+            $view = $this->view("Bad request", 400);
+        }
+
         return $this->handleView($view);
     }
 }

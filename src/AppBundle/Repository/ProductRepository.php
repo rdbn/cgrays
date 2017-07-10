@@ -14,80 +14,99 @@ class ProductRepository extends EntityRepository
 {
     /**
      * @param array $data
+     * @param string $sort
+     * @param string $order
      * @return mixed
      */
-    public function queryProductsByFilters(array $data)
+    public function queryProductsByFilters(array $data, $sort = null, $order = null)
     {
         $dbal = $this->getEntityManager()->getConnection();
-        $qb = $dbal->createQueryBuilder();
+        $qbProduct = $dbal->createQueryBuilder();
 
-        $qb
-            ->addSelect("DISTINCT p.id as product_id")
+        $qbProduct
+            ->addSelect("DISTINCT ON (p.id) product_id")
             ->addSelect("p.name")
             ->addSelect("p.icon_url")
-            ->addSelect("(SELECT pr.id FROM product_price pr WHERE pr.product_id = p.id ORDER BY pr.price DESC LIMIT 1 OFFSET 0) as price_id")
-            ->addSelect("(SELECT pr.price FROM product_price pr WHERE pr.product_id = p.id ORDER BY pr.price DESC LIMIT 1 OFFSET 0) as price")
+            ->addSelect("pr.id price_id")
+            ->addSelect("pr.price")
             ->from("product", "p");
 
         if (isset($data["name"])) {
-            $qb
+            $qbProduct
                 ->andWhere($qb->expr()->like("p.name", ":name"))
                 ->setParameter("name", "%{$data["name"]}%");
         }
 
         if (isset($data["heroes"])) {
-            $qb
+            $qbProduct
                 ->andWhere("p.heroes_id = :heroes")
                 ->setParameter("heroes", $data["heroes"]->getId());
         }
 
         if (isset($data["typeProduct"])) {
-            $qb
+            $qbProduct
                 ->andWhere("p.type_product_id = :typeProduct")
                 ->setParameter("typeProduct", $data["typeProduct"]->getId());
         }
 
         if (isset($data["quality"])) {
-            $qb
+            $qbProduct
                 ->andWhere("p.quality_id = :quality")
                 ->setParameter("quality", $data["quality"]->getId());
         }
 
         if (isset($data["rareness"])) {
-            $qb
+            $qbProduct
                 ->andWhere("p.rareness_id = :rareness")
                 ->setParameter("rareness", $data["rareness"]->getId());
         }
 
-        $qb
+        $qbProduct
             ->leftJoin('p', 'product_price', 'pr', 'pr.product_id = p.id')
+            ->andWhere('pr.is_sell = TRUE')
             ->andWhere('pr.id IS NOT NULL');
+
+
+        $qb = $dbal->createQueryBuilder();
+        $qb
+            ->select('product.*')
+            ->from("({$qbProduct->getSQL()})", 'product');
+
+        if ($sort) {
+            $qb->orderBy("product.{$sort}", $order);
+        }
 
         return $qb;
     }
 
     /**
      * @param int $id
+     * @param string $sort
+     * @param string $order
      * @return mixed
      */
-    public function queryProductsPrice($id)
+    public function queryProductsPrice($id, $sort = null, $order = null)
     {
         $dbal = $this->getEntityManager()->getConnection();
         $qb = $dbal->createQueryBuilder();
 
-        $query = $qb
-            ->addSelect("DISTINCT pr.id as price_id")
+        $qb
+            ->addSelect("pr.id as price_id")
             ->addSelect("p.id as product_id")
             ->addSelect("p.name")
-            ->addSelect("p.icon_url_large")
+            ->addSelect("p.icon_url")
             ->addSelect("pr.price")
             ->from("product", "p")
             ->leftJoin("p" , "product_price", "pr", "p.id = pr.product_id")
             ->andWhere("p.id = :id")
-            ->setParameter("id", $id)
-            ->orderBy("pr.price", "DESC");
+            ->andWhere('pr.is_sell = TRUE')
+            ->setParameter("id", $id);
 
-        return $query;
+        if ($sort == 'price') {
+            $qb->orderBy("pr.price", $order);
+        }
+
+        return $qb;
     }
 
     /**
@@ -111,6 +130,7 @@ class ProductRepository extends EntityRepository
             ->leftJoin("p.productPrice", "pr")
             ->where("p.id = :product_id")
             ->andWhere("pr.id = :product_price_id")
+            ->andWhere("pr.isSell = true")
             ->setParameter("product_id", $productId)
             ->setParameter("product_price_id", $productPriceId);
 

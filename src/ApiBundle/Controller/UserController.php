@@ -2,7 +2,6 @@
 
 namespace ApiBundle\Controller;
 
-use AppBundle\Entity\ProductPrice;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\FOSRestController;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,60 +26,6 @@ class UserController extends FOSRestController
 
             $view = $this->view($inventory, 200);
         } catch (\Exception $e) {
-            $view = $this->view('Bad request', 400);
-        }
-
-        return $this->handleView($view);
-    }
-
-    /**
-     * @param Request $request
-     *
-     * @Rest\Post("/user/steam/add")
-     * @Rest\View()
-     * @return Response
-     */
-    public function postSaveProductAction(Request $request)
-    {
-        $itemSell = $request->request->get('item');
-        if (is_array($itemSell)) {
-            $productPriceSell =  $this->get('app.service.add_product_sell')
-                ->handler($this->getUser(), $itemSell);
-
-            $view = $this->view([
-                'product_id' => $productPriceSell->getProduct()->getId(),
-                'product_price_id' => $productPriceSell->getId(),
-                'icon_url' => $productPriceSell->getProduct()->getIconUrl(),
-                'name' => $productPriceSell->getProduct()->getName(),
-                'price' => $productPriceSell->getPrice(),
-            ], 200);
-        } else {
-            $view = $this->view('Bad request', 400);
-        }
-
-        return $this->handleView($view);
-    }
-
-    /**
-     * @param Request $request
-     *
-     * @Rest\Post("/user/item/update/price")
-     * @Rest\View()
-     * @return Response
-     */
-    public function postUpdatePriceAction(Request $request)
-    {
-        $itemPrice = $request->request->get('item');
-        if (is_array($itemPrice)) {
-            $em = $this->getDoctrine()->getManager();
-            $productPrice = $em->getRepository(ProductPrice::class)
-                ->findOneBy(['id' => $itemPrice['id']]);
-
-            $productPrice->setPrice($itemPrice['price']);
-            $em->flush();
-
-            $view = $this->view('success', 200);
-        } else {
             $view = $this->view('Bad request', 400);
         }
 

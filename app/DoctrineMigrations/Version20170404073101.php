@@ -19,14 +19,14 @@ class Version20170404073101 extends AbstractMigration
         $this->addSql("
             CREATE TABLE IF NOT EXISTS users (
               id SERIAL PRIMARY KEY,
-              steam_id VARCHAR(128) NOT NULL,
-              username VARCHAR(128) NOT NULL,
-              salt VARCHAR(255) NOT NULL,
-              password VARCHAR(255) NOT NULL,
+              steam_id BIGINT NOT NULL,
+              username VARCHAR(255) NOT NULL,
+              salt VARCHAR(32) NOT NULL,
+              password VARCHAR(88) NOT NULL,
               balance DECIMAL(7, 2) NOT NULL DEFAULT 0,
-              avatar VARCHAR(128) DEFAULT NULL,
-              is_online BOOLEAN,
-              is_sell BOOLEAN,
+              avatar VARCHAR(255) DEFAULT NULL,
+              is_online BOOLEAN NOT NULL DEFAULT FALSE,
+              is_sell BOOLEAN NOT NULL DEFAULT TRUE,
               created_at TIME NOT NULL,
               UNIQUE (steam_id)
             );

@@ -1,13 +1,14 @@
 <?php
 
-namespace SteamBundle\Security\User;
+namespace AppBundle\Security;
 
 use AppBundle\Entity\Role;
 use AppBundle\Entity\User;
+use SteamBundle\Security\User\SteamUserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
-use SteamBundle\Service\SteamUserService;
+use AppBundle\Services\SteamUserService;
 use Doctrine\ORM\EntityManager;
 
 class SteamUserProvider implements UserProviderInterface

@@ -1,8 +1,4 @@
 services:
-    steam.user_provider:
-        class: SteamBundle\Security\User\SteamUserProvider
-        arguments: [ '@doctrine.orm.default_entity_manager', '@steam.user_service', '%steam.user_class%' ]
-
     steam.security.authentication.provider:
         class: SteamBundle\Security\Authentication\SteamProvider
         arguments: [ '@steam.user_provider', '@guzzle.client.steam' ]
@@ -18,20 +14,21 @@ services:
         arguments: [ '@security.http_utils' ]
         public: false
 
-    steam.user_service:
-        class: SteamBundle\Service\SteamUserService
-        arguments: [ '@guzzle.client.steam_user', '%steam.steam_key%' ]
-
     # api method
-    steam.handler.steam_api_director:
-        class: SteamBundle\Handler\SteamApiDirector
+    steam.director.steam_api_director:
+        class: SteamBundle\Director\SteamApiDirector
 
     steam.modal.api_method:
         class: SteamBundle\Modal\ApiMethod
         arguments: ['@guzzle.client.steam']
 
+    steam.modal.api_steam_method:
+        class: SteamBundle\Modal\ApiSteamMethod
+        arguments: ['@guzzle.client.steam']
+
     steam.abstract_method:
         abstract: true
+        public: false
         arguments: ['@steam.modal.api_method', '%steam.steam_api_url%', '%steam.steam_key%', '%locale%']
 
     steam.dota_method.heroes:
@@ -39,8 +36,8 @@ services:
         parent: steam.abstract_method
 
     steam.api_heroes:
-        class: SteamBundle\Handler\SteamApiDirector
-        factory: ['@steam.handler.steam_api_director', 'builder']
+        class: SteamBundle\Director\SteamApiDirector
+        factory: ['@steam.director.steam_api_director', 'builder']
         arguments: ['@steam.dota_method.heroes']
 
     steam.dota_method.rarities:
@@ -48,9 +45,19 @@ services:
         parent: steam.abstract_method
 
     steam.api_rarities:
-        class: SteamBundle\Handler\SteamApiDirector
-        factory: ['@steam.handler.steam_api_director', 'builder']
+        class: SteamBundle\Director\SteamApiDirector
+        factory: ['@steam.director.steam_api_director', 'builder']
         arguments: ['@steam.dota_method.rarities']
+
+    steam.steam_method.profile:
+        class: SteamBundle\SteamMethod\ProfileUserMethod
+        public: false
+        arguments: ['@steam.modal.api_steam_method', '%steam.steam_api_url%', '%steam.steam_key%', '%locale%']
+
+    steam.api_profile:
+        class: SteamBundle\Director\SteamApiDirector
+        factory: ['@steam.director.steam_api_director', 'builder']
+        arguments: ['@steam.steam_method.profile']
 
     steam.api_inventory:
         class: SteamBundle\DotaMethod\InventoryBuilderDotaMethod

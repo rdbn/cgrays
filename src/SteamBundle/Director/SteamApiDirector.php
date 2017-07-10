@@ -6,7 +6,7 @@
  * Time: 10:41
  */
 
-namespace SteamBundle\Handler;
+namespace SteamBundle\Director;
 
 use SteamBundle\Modal\ApiMethod;
 use SteamBundle\Modal\MethodBuilderInterface;

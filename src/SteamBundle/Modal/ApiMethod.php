@@ -15,17 +15,17 @@ class ApiMethod
     /**
      * @var Client
      */
-    private $guzzle;
+    protected $guzzle;
 
     /**
      * @var string
      */
-    private $url;
+    protected $url;
 
     /**
      * @var array
      */
-    private $parameters;
+    protected $parameters;
 
     /**
      * ApiMethod constructor.

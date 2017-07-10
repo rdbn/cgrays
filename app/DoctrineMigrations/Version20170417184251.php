@@ -25,9 +25,9 @@ class Version20170417184251 extends AbstractMigration
               type_product_id INTEGER NOT NULL REFERENCES type_product (id),
               quality_id INTEGER NOT NULL REFERENCES quality (id),
               rarity_id INTEGER NOT NULL REFERENCES rarity (id),
-              name VARCHAR(128) NOT NULL,
-              icon_url VARCHAR(255) NOT NULL,
-              icon_url_large VARCHAR(255) NOT NULL,
+              name VARCHAR(255) NOT NULL,
+              icon_url VARCHAR(42) NOT NULL,
+              icon_url_large VARCHAR(42) NOT NULL,
               description TEXT,
               created_at TIME,
               UNIQUE (class_id, instance_id)
@@ -37,9 +37,10 @@ class Version20170417184251 extends AbstractMigration
         $this->addSql("
             CREATE TABLE IF NOT EXISTS product_price (
               id SERIAL PRIMARY KEY,
-              product_id INTEGER NOT NULL REFERENCES product (id),
               user_id INTEGER NOT NULL REFERENCES users (id),
-              price DECIMAL(7, 2) NOT NULL,
+              product_id INTEGER NOT NULL REFERENCES product (id),
+              price DECIMAL(11, 2) NOT NULL,
+              is_sell BOOLEAN NOT NULL DEFAULT TRUE,
               created_at TIME
             );
         ");

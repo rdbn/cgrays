@@ -40,8 +40,8 @@
             <div class="alert alert-warning">
                 <strong><span class="text-warning">Сортировка по:</span></strong>
                 <div class="btn-group" role="group">
-                    {{ knp_pagination_sortable(pagination, 'Названию', 'p.name') }}
-                    {{ knp_pagination_sortable(pagination, 'Цене', 'p.price') }}
+                    {{ knp_pagination_sortable(pagination, 'Названию', 'name') }}
+                    {{ knp_pagination_sortable(pagination, 'Цене', 'price') }}
                 </div>
             </div>
         </div>
@@ -51,7 +51,7 @@
     {% for product in pagination %}
         <div class="col-xs-6 col-sm-4 col-md-3">
             <div class="thumbnail">
-                <a href="{{ path('product', { "productId": product.product_id, "productPriceId": product.price_id }) }}">
+                <a href="{{ path('app.product.product', { "productId": product.product_id, "productPriceId": product.price_id }) }}">
                     <img src="{{ asset(product.icon_url) }}" alt="{{ product.name }}">
                 </a>
                 <div class="caption">

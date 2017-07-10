@@ -86,7 +86,19 @@ class SaveSellProductService
             $product = $this->insertProduct($item);
         }
 
-        return $this->insertProductPrice($user, $product, $item);
+        $productPrice = $this->em->getRepository(ProductPrice::class)
+            ->findOneBy(['users' => $user, 'product' => $product]);
+
+        if ($productPrice) {
+            $productPrice->setPrice($item['price']);
+            $productPrice->setIsSell(true);
+
+            $this->em->flush();
+        } else {
+            $productPrice = $this->insertProductPrice($user, $product, $item);
+        }
+
+        return $productPrice;
     }
 
     /**

@@ -3,7 +3,7 @@
 namespace AppBundle\Command;
 
 use Doctrine\DBAL\Driver\PDOException;
-use SteamBundle\Handler\SteamApiDirector;
+use SteamBundle\Director\SteamApiDirector;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;

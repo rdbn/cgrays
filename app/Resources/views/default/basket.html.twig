@@ -9,7 +9,7 @@
             {% for order in orders %}
                 <tr id="order-{{ order.id }}" class="order">
                     <td class="col-lg-3 col-md-3 col-sm-4 col-xs-6">
-                        <a href="{{ path('product', { 'productId': order.product_id, "productPriceId": order.price_id}) }}">
+                        <a href="{{ path('app.product.product', { 'productId': order.product_id, "productPriceId": order.price_id}) }}">
                             <img class="img-thumbnail" src="{{ asset(order.icon_url_large) }}" alt="{{ order.name }}" />
                         </a>
                     </td>

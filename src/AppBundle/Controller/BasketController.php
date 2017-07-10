@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 class BasketController extends Controller
 {
     /**
-     * @Route("/basket", name="basket")
+     * @Route("/basket", name="app.basket.basket")
      */
     public function basketAction()
     {
@@ -26,7 +26,7 @@ class BasketController extends Controller
     }
 
     /**
-     * @Route("/order", name="order")
+     * @Route("/order", name="app.product.order")
      */
     public function orderAction(Request $request)
     {

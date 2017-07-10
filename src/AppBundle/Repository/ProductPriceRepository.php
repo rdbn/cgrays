@@ -25,6 +25,7 @@ class ProductPriceRepository extends EntityRepository
             ->addSelect("p")
             ->leftJoin("pr.product", "p")
             ->where("pr.users = :user")
+            ->andWhere("pr.isSell = true")
             ->setParameter("user", $user);
 
         try {
@@ -47,7 +48,8 @@ class ProductPriceRepository extends EntityRepository
             ->addSelect('p.instance_id')
             ->from('product_price', 'pr')
             ->leftJoin('pr', 'product', 'p', 'pr.product_id = p.id')
-            ->where('pr.user_id = :user_id');
+            ->where('pr.user_id = :user_id')
+            ->andWhere("pr.is_sell = TRUE");
 
         $stmt = $dbal->prepare($qb->getSQL());
         $stmt->bindParam('user_id', $userId, \PDO::PARAM_INT);

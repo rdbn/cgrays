@@ -32,18 +32,18 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="{{ path('main') }}">Dota markets</a>
+                    <a class="navbar-brand" href="{{ path('app.product.main') }}">Cgrays</a>
                 </div>
                 <div class="collapse navbar-collapse">
                     {% set name = app.request.attributes.get("_route") %}
                     <ul class="nav navbar-nav">
-                        <li {%  if name == "main" %}class="active"{% endif %}><a href="{{ path('main') }}">Товары</a></li>
-                        <li {%  if name == "user_sell" %}class="active"{% endif %}><a href="{{ path('user_sell') }}">Вещи на продажу</a></li>
-                        <li {%  if name == "basket" %}class="active"{% endif %}><a href="{{ path('basket') }}">Корзина</a></li>
+                        <li {%  if name == "main" %}class="active"{% endif %}><a href="{{ path('app.product.main') }}">Товары</a></li>
+                        <li {%  if name == "user_sell" %}class="active"{% endif %}><a href="{{ path('app.user.sell') }}">Вещи на продажу</a></li>
+                        <li {%  if name == "basket" %}class="active"{% endif %}><a href="{{ path('app.basket.basket') }}">Корзина</a></li>
                     </ul>
                     {% if is_granted("ROLE_USER") %}
                         <ul class="nav navbar-nav navbar-right">
-                            <li {%  if name == "user" %}class="active"{% endif %}><a href="{{ path('user') }}">Профиль</a></li>
+                            <li {%  if name == "user" %}class="active"{% endif %}><a href="{{ path('app.user.main') }}">Профиль</a></li>
                             <li>
                                 <a href="#">
                                     <span class="text-danger">Баланс: {{ app.user.balance }} <span class="glyphicon glyphicon-rub"></span></span>

@@ -14,11 +14,14 @@ class ProductController extends Controller
     /**
      * @param Request $request
      *
-     * @Route("/", name="main")
+     * @Route("/", name="app.product.main")
      * @return Response
      */
     public function mainAction(Request $request)
     {
+        $sort = $request->query->get('sort');
+        $order = $request->query->get('order');
+
         $form = $this->createForm(ProductFilterTypeForm::class);
         $form->handleRequest($request);
 
@@ -30,7 +33,7 @@ class ProductController extends Controller
         }
 
         $products = $this->getDoctrine()->getRepository(Product::class)
-            ->queryProductsByFilters($data);
+            ->queryProductsByFilters($data, $sort, $order);
 
         $paginator = $this->get("knp_paginator");
         $pagination = $paginator->paginate(
@@ -49,14 +52,17 @@ class ProductController extends Controller
      * @param Request $request
      * @param int $id
      *
-     * @Route("/products/{id}", name="products")
+     * @Route("/products/{id}", name="app.product.products_price")
      * @return Response
      */
     public function productsPriceAction(Request $request, $id)
     {
+        $sort = $request->query->get('sort');
+        $order = $request->query->get('order');
+
         $form = $this->createForm(ProductFilterTypeForm::class);
         $products = $this->getDoctrine()->getRepository(Product::class)
-            ->queryProductsPrice($id);
+            ->queryProductsPrice($id, $sort, $order);
 
         $paginator = $this->get("knp_paginator");
         $pagination = $paginator->paginate(
@@ -75,7 +81,7 @@ class ProductController extends Controller
      * @param int $productId
      * @param int $productPriceId
      *
-     * @Route("/product/{productId}/{productPriceId}", name="product")
+     * @Route("/product/{productId}/{productPriceId}", name="app.product.product")
      * @return Response
      */
     public function productAction($productId, $productPriceId)
