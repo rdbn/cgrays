@@ -14,7 +14,7 @@ $(document).ready(function () {
             if (!buttonRemove.hasClass("disabled")) {
                 buttonRemove.addClass("disabled");
                 $.ajax({
-                    url: "/app_dev.php/api/order/remove/" + orderID,
+                    url: "/api/order/remove/" + orderID,
                     method: "POST",
                     statusCode: {
                         200: function () {

@@ -30,7 +30,6 @@ class RegisterAdminCommand extends ContainerAwareCommand
 
         $user = new User();
         $user
-            ->setEmail("admin@admin.com")
             ->setUsername("admin")
             ->setUsername("admin");
 

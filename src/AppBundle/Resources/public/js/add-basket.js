@@ -3,7 +3,7 @@ var Order = function () {
         var productPriceId = elementBtn.attr('data-product-price');
 
         $.ajax({
-            url: "/app_dev.php/api/order/add",
+            url: "/api/order/add",
             method: "POST",
             data: { productPriceId: productPriceId },
             statusCode: {

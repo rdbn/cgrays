@@ -85,7 +85,7 @@ var View = {
 };
 var Inventory = function () {
     var
-        urlMain = "/app_dev.php/api",
+        urlMain = "/api",
         urlUser = urlMain + '/user',
         urlProducts = urlMain + '/skins';
 
