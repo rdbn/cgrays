@@ -1,0 +1,9 @@
+AppBundle\Entity\ItemSet:
+    exclusion_policy: ALL
+    properties:
+        id:
+            expose: true
+            groups: [skins]
+        localizedTagName:
+            expose: true
+            groups: [skins]

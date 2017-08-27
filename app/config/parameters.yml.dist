@@ -24,4 +24,11 @@ parameters:
     steam_api_key:     key
     steam_inventory_count: 8
     steam_community_image_url: http://cdn.steamcommunity.com/economy/image/
+
+    rabbit_mq_host: localhost
+    rabbit_mq_port: 15672
+    rabbit_mq_user: cgrays
+    rabbit_mq_pass: cgrays
+    rabbit_mq_vhost: /
+
     cache_expire: 3600

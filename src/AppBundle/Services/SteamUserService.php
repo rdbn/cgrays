@@ -3,12 +3,12 @@
 namespace AppBundle\Services;
 
 use AppBundle\Entity\User;
-use SteamBundle\Modal\ApiSteamMethod;
+use SteamBundle\Modal\ApiMethod;
 
 class SteamUserService
 {
     /**
-     * @var ApiSteamMethod
+     * @var ApiMethod
      */
     private $steamApi;
 
@@ -19,10 +19,10 @@ class SteamUserService
 
     /**
      * SteamUserService constructor.
-     * @param ApiSteamMethod  $steamApi
+     * @param ApiMethod   $steamApi
      * @param UploadImageService $uploadImage
      */
-    public function __construct(ApiSteamMethod $steamApi, UploadImageService $uploadImage)
+    public function __construct(ApiMethod  $steamApi, UploadImageService $uploadImage)
     {
         $this->steamApi = $steamApi;
         $this->uploadImage = $uploadImage;

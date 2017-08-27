@@ -1,0 +1,97 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Купить предметы | Магазин CSGO markets{% endblock %}
+{% block stylesheets %}
+    <link href="{{ asset('bundles/app/css/bootstrap-select.min.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+    <div class="jumbotron top-space top0">
+        <div class="container">
+            <div class="row">
+                {{ form_start(form) }}
+                <div class="col-lg-12">
+                    <div class="input-group">
+                        {{ form_widget(form.name) }}
+                        <span class="input-group-btn">
+                        <button class="btn btn-action" type="submit">
+                            <span class="glyphicon glyphicon-search"></span>
+                        </button>
+                    </span>
+                    </div>
+                </div>
+                <div class="col-lg-4 top20">
+                    {{ form_widget(form.typeSkins) }}
+                </div>
+                <div class="col-lg-4 top20">
+                    {{ form_widget(form.quality) }}
+                </div>
+                <div class="col-lg-4 top20">
+                    {{ form_widget(form.decor) }}
+                </div>
+                <div class="col-lg-4 top20">
+                    {{ form_widget(form.itemSet) }}
+                </div>
+                <div class="col-lg-4 top20">
+                    {{ form_widget(form.weapon) }}
+                </div>
+                <div class="col-lg-4 top20">
+                    {{ form_widget(form.rarity) }}
+                </div>
+                {{ form_end(form) }}
+            </div>
+
+            <div class="row top20">
+                <div class="col-lg-12">
+                    <strong>Сортировка по:</strong>
+                    <div class="btn-group" role="group">
+                        {{ knp_pagination_sortable(pagination, 'Названию', 'name') }}
+                        {{ knp_pagination_sortable(pagination, 'Цене', 'price') }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container top20">
+        <div class="row">
+        {% for skin in pagination %}
+            <div class="col-xs-6 col-sm-4 col-md-3">
+                <div class="thumbnail">
+                    <a href="{{ path('app.skins.skin', {"skinsPriceId": skin.price_id }) }}">
+                        <img src="{{ asset(skin.icon_url) }}" alt="{{ skin.name }}">
+                    </a>
+                    <div class="caption">
+                        <p>
+                            <strong><span>{{ skin.price }} <span class="glyphicon glyphicon-rub text-danger"></span></span></strong>
+                            {% if is_granted("ROLE_USER") %}
+                                {% if skin.user_id != app.user.id %}
+                                    <a href="{{ path('app.skins_trade.fast_trade', { 'skinsPriceId': skin.price_id }) }}" class="btn btn-action">
+                                        Купить
+                                    </a>
+                                {% else %}
+                                    <button class="btn btn-action disabled" data-toggle="tooltip" data-placement="top" title="Вы владелец данного предмета.">
+                                        Купить
+                                    </button>
+                                {% endif %}
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="navigation">
+            {{ knp_pagination_render(pagination) }}
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script type="text/javascript" src="{{ asset('bundles/app/js/bootstrap-select.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/app/js/defaults-ru_RU.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/app/js/add-basket.js') }}"></script>
+{% endblock %}

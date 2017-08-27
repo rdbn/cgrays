@@ -1,0 +1,29 @@
+version: '2'
+
+services:
+  postgres:
+    image: postgres:9.6.1
+    ports:
+      - 5432:5432
+    volumes:
+      - /var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: cgrays
+      POSTGRES_USER: cgrays
+      POSTGRES_DB: cgrays
+
+  redis:
+    image: redis
+    ports:
+      - 6379:6379
+
+  rabbitmq:
+    build: ./docker/rabbitmq
+    ports:
+      - 15672:15672
+      - 61613:61613
+      - 5672:5672
+    environment:
+      RABBITMQ_DEFAULT_USER: cgrays
+      RABBITMQ_DEFAULT_PASS: cgrays
+      RABBITMQ_DEFAULT_VHOST: /

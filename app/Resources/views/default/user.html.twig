@@ -3,36 +3,37 @@
 {% block title %}{{ user.username }}{% endblock %}
 
 {% block body %}
-    <div class="row">
-        <div class="col-lg-2">
-            <img src="{{ asset(user.avatar) }}" class="img-thumbnail" />
+    <div class="container top20">
+        <div class="row">
+            <div class="col-lg-2">
+                <img src="{{ asset(user.avatar) }}" class="img-thumbnail" />
+            </div>
+            <div class="col-lg-10">
+                <h3 class="text-action">{{ user.username }}</h3>
+                <p>
+                    Баланс: <strong class="text-size24">{{ user.balance }}</strong>
+                    <span class="glyphicon glyphihon-rub text-danger"></span>
+                </p>
+            </div>
         </div>
-        <div class="col-lg-10">
-            <h3 class="text-success">{{ user.username }}</h3>
-            <p class="text-danger">
-                <strong>Баланс: {{ user.balance }} <span class="glyphicon glyphihon-rub"></span></strong>
-            </p>
+        <div class="jumbotron top20">
+            <h4 class="top0">Товары на продаже:</h4>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-12">
-            <h3 class="text-success">Товары на продаже</h3>
-        </div>
-    </div>
-    <div class="row">
-        {% for product in products %}
-            <div class="col-xs-6 col-sm-4 col-md-3">
-                <div class="thumbnail">
-                    <a href="{{ path('app.product.product', { "productId": product.product.id, "productPriceId": product.id }) }}">
-                        <img src="{{ asset(product.product.iconUrl) }}" alt="{{ product.product.name }}" />
-                    </a>
-                    <div class="caption">
-                        <p>
-                            <strong><span class="text-warning price-item-sell">{{ product.price }} <span class="glyphicon glyphicon-rub"></span></span></strong>
-                        </p>
+        <div class="row top20">
+            {% for skin in skins %}
+                <div class="col-xs-6 col-sm-4 col-md-3">
+                    <div class="thumbnail">
+                        <a href="{{ path('app.skins.skin', { "skinsPriceId": skin.id }) }}">
+                            <img src="{{ asset(skin.skins.iconUrl) }}" alt="{{ skin.skins.name }}" />
+                        </a>
+                        <div class="caption">
+                            <p>
+                                <strong>{{ skin.price }} <span class="glyphicon glyphicon-rub text-danger"></span></strong>
+                            </p>
+                        </div>
                     </div>
                 </div>
-            </div>
-        {% endfor %}
+            {% endfor %}
+        </div>
     </div>
 {% endblock %}

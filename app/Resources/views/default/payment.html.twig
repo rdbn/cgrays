@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Пополнить баланас{% endblock %}
+
+{% block body %}
+    {{ include(':default/payment:menu.html.twig') }}
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                {% set actionPay = app.request.attributes.get("actionPay") %}
+                <h4>{% if actionPay == 'in' %}Пополнить баланс{% else %}Вывод средств{% endif %}</h4>
+                {% if skinsPriceId is not null %}
+                    <div class="alert alert-danger">
+                        <strong>Не достаточно средств, пополните баланс!</strong>
+                    </div>
+
+                    <div class=""></div>
+                {% endif %}
+                <div class="form-group"></div>
+            </div>
+            <div class="col-lg-12">
+                {{ form_start(form) }}
+                    {{ form_errors(form) }}
+                    <div class="form-group">
+                        {{ form_widget(form.paymentSystem) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_widget(form.sum_payment) }}
+                    </div>
+                    {{ form_widget(form.submit) }}
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

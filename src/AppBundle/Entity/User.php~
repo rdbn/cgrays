@@ -10,12 +10,12 @@ namespace AppBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use SteamAuthBundle\Security\User\SteamUserInterface;
+use SteamBundle\Security\User\SteamUserInterface;
 use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\UserRepository")
  * @ORM\Table(name="users")
  */
 class User implements UserInterface, EquatableInterface, \Serializable, SteamUserInterface
@@ -28,9 +28,9 @@ class User implements UserInterface, EquatableInterface, \Serializable, SteamUse
     protected $id;
 
     /**
-     * @ORM\Column(type="string", length=255, unique=true)
+     * @ORM\Column(name="steam_id", type="string", length=128, unique=true)
      */
-    protected $email;
+    protected $steamId;
 
     /**
      * @ORM\Column(type="string", length=128, unique=true)
@@ -46,11 +46,6 @@ class User implements UserInterface, EquatableInterface, \Serializable, SteamUse
      * @ORM\Column(type="string", length=255)
      */
     protected $salt;
-
-    /**
-     * @ORM\Column(type="string", length=128)
-     */
-    protected $nickname;
 
     /**
      * @ORM\Column(type="decimal", precision=7, scale=2)
@@ -74,29 +69,49 @@ class User implements UserInterface, EquatableInterface, \Serializable, SteamUse
     protected $createdAt;
 
     /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Order", mappedBy="users")
+     * @ORM\Column(name="is_online", type="boolean", options={"default": false})
      */
-    protected $order;
+    protected $isOnline;
 
     /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Product", mappedBy="users")
+     * @ORM\Column(name="last_online", type="datetime")
      */
-    protected $product;
+    protected $lastOnline;
 
     /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Product", mappedBy="users")
+     * @ORM\Column(name="is_sell", type="boolean", options={"default": false})
      */
-    protected $productPrice;
+    protected $isSell;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\SkinsOrder", mappedBy="users")
+     */
+    protected $skinsOrder;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\SkinsPrice", mappedBy="users")
+     */
+    protected $skinsPrice;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Payment", mappedBy="user")
+     */
+    protected $payment;
 
     public function __construct()
     {
         $this->balance = 0;
+        $this->isOnline = false;
+        $this->isSell= false;
         $this->salt = md5(uniqid(time(), true));
 
         $this->createdAt = new \DateTime();
+        $this->lastOnline = new \DateTime();
 
         $this->roles = new ArrayCollection();
-        $this->basket = new ArrayCollection();
+        $this->skinsOrder = new ArrayCollection();
+        $this->skinsPrice = new ArrayCollection();
+        $this->payment = new ArrayCollection();
     }
 
     public function getRoles()
@@ -131,6 +146,9 @@ class User implements UserInterface, EquatableInterface, \Serializable, SteamUse
     {
         return serialize([
             $this->id,
+            $this->username,
+            $this->steamId,
+            $this->roles,
         ]);
     }
     /**
@@ -140,6 +158,9 @@ class User implements UserInterface, EquatableInterface, \Serializable, SteamUse
     {
         list (
             $this->id,
+            $this->username,
+            $this->steamId,
+            $this->roles,
             ) = unserialize($serialized);
     }
 
@@ -151,23 +172,37 @@ class User implements UserInterface, EquatableInterface, \Serializable, SteamUse
         return false;
     }
 
-    public function getNickname()
+    /**
+     * Set steamId
+     *
+     * @param int $steamId
+     *
+     * @return User
+     */
+    public function setSteamId($steamId)
     {
-        return $this->nickname;
-    }
-
-    public function setNickname($nickname)
-    {
-        $this->nickname = $nickname;
+        $this->steamId = $steamId;
 
         return $this;
     }
 
-    public function getAvatar()
+    /**
+     * Get steamId
+     *
+     * @return int
+     */
+    public function getSteamId()
     {
-        return $this->avatar;
+        return $this->steamId;
     }
 
+    /**
+     * Set avatar
+     *
+     * @param string $avatar
+     *
+     * @return User
+     */
     public function setAvatar($avatar)
     {
         $this->avatar = $avatar;
@@ -175,6 +210,15 @@ class User implements UserInterface, EquatableInterface, \Serializable, SteamUse
         return $this;
     }
 
+    /**
+     * Get avatar
+     *
+     * @return string
+     */
+    public function getAvatar()
+    {
+        return $this->avatar;
+    }
 
     /**
      * Get id
@@ -184,30 +228,6 @@ class User implements UserInterface, EquatableInterface, \Serializable, SteamUse
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set email
-     *
-     * @param string $email
-     *
-     * @return User
-     */
-    public function setEmail($email)
-    {
-        $this->email = $email;
-
-        return $this;
-    }
-
-    /**
-     * Get email
-     *
-     * @return string
-     */
-    public function getEmail()
-    {
-        return $this->email;
     }
 
     /**
@@ -253,9 +273,33 @@ class User implements UserInterface, EquatableInterface, \Serializable, SteamUse
     }
 
     /**
+     * Set balance
+     *
+     * @param string $balance
+     *
+     * @return User
+     */
+    public function setBalance($balance)
+    {
+        $this->balance = $balance;
+
+        return $this;
+    }
+
+    /**
+     * Get balance
+     *
+     * @return string
+     */
+    public function getBalance()
+    {
+        return $this->balance;
+    }
+
+    /**
      * Set createdAt
      *
-     * @param string $createdAt
+     * @param \DateTime $createdAt
      *
      * @return User
      */
@@ -269,11 +313,83 @@ class User implements UserInterface, EquatableInterface, \Serializable, SteamUse
     /**
      * Get createdAt
      *
-     * @return string
+     * @return \DateTime
      */
     public function getCreatedAt()
     {
         return $this->createdAt;
+    }
+
+    /**
+     * Set isOnline
+     *
+     * @param boolean $isOnline
+     *
+     * @return User
+     */
+    public function setIsOnline($isOnline)
+    {
+        $this->isOnline = $isOnline;
+
+        return $this;
+    }
+
+    /**
+     * Get isOnline
+     *
+     * @return boolean
+     */
+    public function getIsOnline()
+    {
+        return $this->isOnline;
+    }
+
+    /**
+     * Set lastOnline
+     *
+     * @param boolean $lastOnline
+     *
+     * @return User
+     */
+    public function setLastOnline($lastOnline)
+    {
+        $this->lastOnline = $lastOnline;
+
+        return $this;
+    }
+
+    /**
+     * Get lastOnline
+     *
+     * @return boolean
+     */
+    public function getLastOnline()
+    {
+        return $this->lastOnline;
+    }
+
+    /**
+     * Set isSell
+     *
+     * @param boolean $isSell
+     *
+     * @return User
+     */
+    public function setIsSell($isSell)
+    {
+        $this->isSell = $isSell;
+
+        return $this;
+    }
+
+    /**
+     * Get isSell
+     *
+     * @return boolean
+     */
+    public function getIsSell()
+    {
+        return $this->isSell;
     }
 
     /**
@@ -301,94 +417,104 @@ class User implements UserInterface, EquatableInterface, \Serializable, SteamUse
     }
 
     /**
-     * Set balance
+     * Add skinsOrder
      *
-     * @param string $balance
+     * @param \AppBundle\Entity\SkinsOrder $skinsOrder
      *
      * @return User
      */
-    public function setBalance($balance)
+    public function addSkinsOrder(\AppBundle\Entity\SkinsOrder $skinsOrder)
     {
-        $this->balance = $balance;
+        $this->skinsOrder[] = $skinsOrder;
 
         return $this;
     }
 
     /**
-     * Get balance
+     * Remove skinsOrder
      *
-     * @return string
+     * @param \AppBundle\Entity\SkinsOrder $skinsOrder
      */
-    public function getBalance()
+    public function removeSkinsOrder(\AppBundle\Entity\SkinsOrder $skinsOrder)
     {
-        return $this->balance;
+        $this->skinsOrder->removeElement($skinsOrder);
     }
 
     /**
-     * Add product
-     *
-     * @param \AppBundle\Entity\Product $product
-     *
-     * @return User
-     */
-    public function addProduct(\AppBundle\Entity\Product $product)
-    {
-        $this->product[] = $product;
-
-        return $this;
-    }
-
-    /**
-     * Remove product
-     *
-     * @param \AppBundle\Entity\Product $product
-     */
-    public function removeProduct(\AppBundle\Entity\Product $product)
-    {
-        $this->product->removeElement($product);
-    }
-
-    /**
-     * Get product
+     * Get skinsOrder
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getProduct()
+    public function getSkinsOrder()
     {
-        return $this->product;
+        return $this->skinsOrder;
     }
 
     /**
-     * Add order
+     * Add skinsPrice
      *
-     * @param \AppBundle\Entity\Order $order
+     * @param \AppBundle\Entity\SkinsPrice $skinsPrice
      *
      * @return User
      */
-    public function addOrder(\AppBundle\Entity\Order $order)
+    public function addSkinsPrice(\AppBundle\Entity\SkinsPrice $skinsPrice)
     {
-        $this->order[] = $order;
+        $this->skinsPrice[] = $skinsPrice;
 
         return $this;
     }
 
     /**
-     * Remove order
+     * Remove skinsPrice
      *
-     * @param \AppBundle\Entity\Order $order
+     * @param \AppBundle\Entity\SkinsPrice $skinsPrice
      */
-    public function removeOrder(\AppBundle\Entity\Order $order)
+    public function removeSkinsPrice(\AppBundle\Entity\SkinsPrice $skinsPrice)
     {
-        $this->order->removeElement($order);
+        $this->skinsPrice->removeElement($skinsPrice);
     }
 
     /**
-     * Get order
+     * Get skinsPrice
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getOrder()
+    public function getSkinsPrice()
     {
-        return $this->order;
+        return $this->skinsPrice;
+    }
+
+    /**
+     * Add payment
+     *
+     * @param \AppBundle\Entity\Payment $payment
+     *
+     * @return User
+     */
+    public function addPayment(\AppBundle\Entity\Payment $payment)
+    {
+        $this->payment[] = $payment;
+
+        return $this;
+    }
+
+    /**
+     * Remove payment
+     *
+     * @param \AppBundle\Entity\Payment $payment
+     */
+    public function removePayment(\AppBundle\Entity\Payment $payment)
+    {
+        $this->payment->removeElement($payment);
+    }
+
+    /**
+     * Get payment
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPayment()
+    {
+        return $this->payment;
     }
 }

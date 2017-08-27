@@ -5,25 +5,23 @@ html {
     min-height: 100%;
 }
 body {
-    padding-top: 70px;
     /* Margin bottom by footer height */
-    margin-bottom: 80px;
+    margin-bottom: 245px;
 }
 .footer {
     position: absolute;
     bottom: 0;
     width: 100%;
     /* Set the fixed height of the footer here */
-    height: 80px;
+    height: 215px;
     background-color: #f5f5f5;
 }
 
 /* Custom page CSS
 -------------------------------------------------- */
 
-.starter-template {
-    padding: 40px 15px;
-    text-align: center;
+.top0 {
+    margin-top: 0;
 }
 
 .top10 {
@@ -36,6 +34,10 @@ body {
 
 .bottom20 {
     margin-bottom: 20px;
+}
+
+.text-size24 {
+    font-size: 24px;
 }
 
 .table-order td {
@@ -55,7 +57,8 @@ body {
     background-image: url('/bundles/steamauth/image/sits_01.png');
     background-size: cover;
     padding-left: 150px;
-    padding-top: 25px;
+    padding-top: 15px !important;
+    padding-bottom: 15px !important;
 }
 
 .hidden {

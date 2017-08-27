@@ -4,6 +4,9 @@ AppBundle\Entity\Rarity:
         id:
             expose: true
             groups: [product]
-        title:
+        localizedTagName:
             expose: true
-            groups: [product]
+            groups: [skins]
+        color:
+            expose: true
+            groups: [skins]

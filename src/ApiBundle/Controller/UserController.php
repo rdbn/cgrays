@@ -22,7 +22,7 @@ class UserController extends FOSRestController
 
         try {
             $inventory = $this->get('app.service.steam_user_inventory')
-                ->handler($this->getUser(), $page);
+                ->handler($this->getUser(), $page, 730);
 
             $view = $this->view($inventory, 200);
         } catch (\Exception $e) {
@@ -40,9 +40,9 @@ class UserController extends FOSRestController
      */
     public function postRefreshInventoryAction()
     {
-        $userId = $this->getUser();
+        $userId = $this->getUser()->getId();
         $redis = $this->get('snc_redis.default_client');
-        $redis->del(["user:inventory:{$userId}", "user:inventory:{$userId}:start_id"]);
+        $redis->del(["user:inventory:730:{$userId}", "user:inventory:730:{$userId}:start_id"]);
 
         $view = $this->view('success', 200);
         return $this->handleView($view);

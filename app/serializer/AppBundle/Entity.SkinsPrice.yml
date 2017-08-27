@@ -1,0 +1,12 @@
+AppBundle\Entity\SkinsPrice:
+    exclusion_policy: ALL
+    properties:
+        id:
+            expose: true
+            groups: [skins]
+        price:
+            expose: true
+            groups: [skins]
+        skins:
+            expose: true
+            groups: [skins]

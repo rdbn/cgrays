@@ -1,9 +1,0 @@
-AppBundle\Entity\Heroes:
-    exclusion_policy: ALL
-    properties:
-        id:
-            expose: true
-            groups: [product]
-        title:
-            expose: true
-            groups: [product]

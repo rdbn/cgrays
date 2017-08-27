@@ -1,0 +1,7 @@
+jms_serializer:
+    metadata:
+        auto_detection: true
+        directories:
+            App:
+                namespace_prefix: "AppBundle"
+                path: "%kernel.root_dir%/serializer/AppBundle"

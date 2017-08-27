@@ -8,6 +8,7 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Modal\DictionaryInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -15,7 +16,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\Entity
  * @ORM\Table(name="quality")
  */
-class Quality
+class Quality implements DictionaryInterface
 {
     /**
      * @ORM\Column(type="integer")
@@ -25,28 +26,23 @@ class Quality
     protected $id;
 
     /**
-     * @ORM\Column(type="string", length=45)
+     * @ORM\Column(name="internal_name", type="string", length=45)
      */
-    protected $name;
+    protected $internalName;
 
     /**
-     * @ORM\Column(type="string", length=45)
+     * @ORM\Column(name="localized_tag_name", type="string", length=45)
      */
-    protected $title;
+    protected $localizedTagName;
 
     /**
-     * @ORM\Column(type="string", length=15)
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Skins", mappedBy="quality")
      */
-    protected $color;
-
-    /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Product", mappedBy="quality")
-     */
-    protected $products;
+    protected $skins;
 
     public function __construct()
     {
-        $this->products = new ArrayCollection();
+        $this->skins= new ArrayCollection();
     }
 
     /**
@@ -60,108 +56,84 @@ class Quality
     }
 
     /**
-     * Set name
+     * Set internalName
      *
-     * @param string $name
+     * @param string $internalName
      *
      * @return Quality
      */
-    public function setName($name)
+    public function setInternalName($internalName)
     {
-        $this->name = $name;
+        $this->internalName = $internalName;
 
         return $this;
     }
 
     /**
-     * Get name
+     * Get internalName
      *
      * @return string
      */
-    public function getName()
+    public function getInternalName()
     {
-        return $this->name;
+        return $this->internalName;
     }
 
     /**
-     * Set title
+     * Set localizedTagName
      *
-     * @param string $title
+     * @param string $localizedTagName
      *
      * @return Quality
      */
-    public function setTitle($title)
+    public function setLocalizedTagName($localizedTagName)
     {
-        $this->title = $title;
+        $this->localizedTagName = $localizedTagName;
 
         return $this;
     }
 
     /**
-     * Get title
+     * Get localizedTagName
      *
      * @return string
      */
-    public function getTitle()
+    public function getLocalizedTagName()
     {
-        return $this->title;
+        return $this->localizedTagName;
     }
 
     /**
-     * Set color
+     * Add skin
      *
-     * @param string $color
+     * @param \AppBundle\Entity\Skins $skin
      *
      * @return Quality
      */
-    public function setColor($color)
+    public function addSkin(\AppBundle\Entity\Skins $skin)
     {
-        $this->color = $color;
+        $this->skins[] = $skin;
 
         return $this;
     }
 
     /**
-     * Get color
+     * Remove skin
      *
-     * @return string
+     * @param \AppBundle\Entity\Skins $skin
      */
-    public function getColor()
+    public function removeSkin(\AppBundle\Entity\Skins $skin)
     {
-        return $this->color;
+        $this->skins->removeElement($skin);
     }
 
     /**
-     * Add product
-     *
-     * @param \AppBundle\Entity\Product $product
-     *
-     * @return Quality
-     */
-    public function addProduct(\AppBundle\Entity\Product $product)
-    {
-        $this->products[] = $product;
-
-        return $this;
-    }
-
-    /**
-     * Remove product
-     *
-     * @param \AppBundle\Entity\Product $product
-     */
-    public function removeProduct(\AppBundle\Entity\Product $product)
-    {
-        $this->products->removeElement($product);
-    }
-
-    /**
-     * Get products
+     * Get skins
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getProducts()
+    public function getSkins()
     {
-        return $this->products;
+        return $this->skins;
     }
 }

@@ -1,0 +1,15 @@
+{% set name = app.request.attributes.get("_route") %}
+{% set actionPay = app.request.attributes.get("actionPay") %}
+<div class="jumbotron">
+    <div class="container">
+        <div class="btn-group">
+            <a class="btn btn-action {% if name == 'app.payment.payment_list' %}active{% endif %}" href="{{ path('app.payment.payment_list') }}">История платежей</a>
+            <a class="btn btn-action {% if name == 'app.payment.pay_in_out' and actionPay == 'in' %}active{% endif %}" href="{{ path('app.payment.pay_in_out', {'actionPay': 'in'}) }}">
+                Пополнить баланс
+            </a>
+            <a class="btn btn-action {% if name == 'app.payment.pay_in_out' and actionPay == 'out' %}active{% endif %}" href="{{ path('app.payment.pay_in_out', {'actionPay': 'out'}) }}">
+                Вывод средств
+            </a>
+        </div>
+    </div>
+</div>

@@ -3,7 +3,7 @@ AppBundle\Entity\Quality:
     properties:
         id:
             expose: true
-            groups: [product]
-        title:
+            groups: [skins]
+        localizedTagName:
             expose: true
-            groups: [product]
+            groups: [skins]

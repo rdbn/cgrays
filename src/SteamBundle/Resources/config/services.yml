@@ -1,4 +1,5 @@
 services:
+    # security
     steam.security.authentication.provider:
         class: SteamBundle\Security\Authentication\SteamProvider
         arguments: [ '@steam.user_provider', '@guzzle.client.steam' ]
@@ -15,15 +16,11 @@ services:
         public: false
 
     # api method
-    steam.director.steam_api_director:
-        class: SteamBundle\Director\SteamApiDirector
+    steam.loader.steam_api_loader:
+        class: SteamBundle\Loader\ApiLoader
 
     steam.modal.api_method:
         class: SteamBundle\Modal\ApiMethod
-        arguments: ['@guzzle.client.steam']
-
-    steam.modal.api_steam_method:
-        class: SteamBundle\Modal\ApiSteamMethod
         arguments: ['@guzzle.client.steam']
 
     steam.abstract_method:
@@ -31,38 +28,57 @@ services:
         public: false
         arguments: ['@steam.modal.api_method', '%steam.steam_api_url%', '%steam.steam_key%', '%locale%']
 
+    # dota method
     steam.dota_method.heroes:
-        class: SteamBundle\DotaMethod\HeroesBuilderDotaMethod
+        class: SteamBundle\DotaMethod\Heroes
         parent: steam.abstract_method
 
-    steam.api_heroes:
-        class: SteamBundle\Director\SteamApiDirector
-        factory: ['@steam.director.steam_api_director', 'builder']
+    steam.api_dota_heroes:
+        class: SteamBundle\Loader\ApiLoader
+        factory: ['@steam.loader.steam_api_loader', 'builder']
         arguments: ['@steam.dota_method.heroes']
 
     steam.dota_method.rarities:
-        class: SteamBundle\DotaMethod\RaritiesBuilderDotaMethod
+        class: SteamBundle\DotaMethod\Rarities
         parent: steam.abstract_method
 
-    steam.api_rarities:
-        class: SteamBundle\Director\SteamApiDirector
-        factory: ['@steam.director.steam_api_director', 'builder']
+    steam.api_dota_rarities:
+        class: SteamBundle\Loader\ApiLoader
+        factory: ['@steam.loader.steam_api_loader', 'builder']
         arguments: ['@steam.dota_method.rarities']
 
-    steam.steam_method.profile:
-        class: SteamBundle\SteamMethod\ProfileUserMethod
-        public: false
-        arguments: ['@steam.modal.api_steam_method', '%steam.steam_api_url%', '%steam.steam_key%', '%locale%']
+    # CSGO method
+    steam.csgo_method.schema:
+        class: SteamBundle\CSGOMethod\Schema
+        parent: steam.abstract_method
 
-    steam.api_profile:
-        class: SteamBundle\Director\SteamApiDirector
-        factory: ['@steam.director.steam_api_director', 'builder']
+    steam.api_csgo_schema:
+        class: SteamBundle\Loader\ApiLoader
+        factory: ['@steam.loader.steam_api_loader', 'builder']
+        arguments: ['@steam.csgo_method.schema']
+
+    steam.csgo_method.store_meta_data:
+        class: SteamBundle\CSGOMethod\StoreMetaData
+        parent: steam.abstract_method
+
+    steam.api_csgo_store_meta_data:
+        class: SteamBundle\Loader\ApiLoader
+        factory: ['@steam.loader.steam_api_loader', 'builder']
+        arguments: ['@steam.csgo_method.store_meta_data']
+
+    # steam method
+    steam.steam_method.profile:
+        class: SteamBundle\SteamMethod\ProfileUser
+        parent: steam.abstract_method
+
+    steam.api_steam_profile:
+        class: SteamBundle\Loader\ApiLoader
+        factory: ['@steam.loader.steam_api_loader', 'builder']
         arguments: ['@steam.steam_method.profile']
 
     steam.api_inventory:
-        class: SteamBundle\DotaMethod\InventoryBuilderDotaMethod
+        class: SteamBundle\SteamMethod\Inventory
         arguments:
-            - '@steam.modal.api_method'
-            - '@security.token_storage'
+            - '@guzzle.client.steam'
             - '%steam.steam_community_url%'
             - '%steam.steam_inventory_count%'

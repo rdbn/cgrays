@@ -1,17 +1,19 @@
 services:
+    # SteamBundle
     steam.user_provider:
         class: AppBundle\Security\SteamUserProvider
         arguments: [ '@doctrine.orm.default_entity_manager', '@app.service.user_service', '%steam.user_class%' ]
 
+    # AppBundle
     app.service.user_service:
         class: AppBundle\Services\SteamUserService
-        arguments: ['@steam.api_profile', '@app.service.upload_image']
+        arguments: ['@steam.api_steam_profile', '@app.service.upload_image']
 
-    app.repository.product:
-        class: AppBundle\Repository\ProductPriceRepository
-        factory: ['@doctrine.orm.entity_manager', getRepository]
-        arguments:
-            - AppBundle\Entity\ProductPrice
+    app.form.message_type_form:
+        class: AppBundle\Form\MessageTypeForm
+        arguments: ['@security.token_storage']
+        tags:
+            - { name: form.type }
 
     app.service.upload_image:
         class: AppBundle\Services\UploadImageService
@@ -19,17 +21,55 @@ services:
         arguments: ['%steam_community_image_url%']
 
     app.service.steam_user_inventory:
-        class: AppBundle\Services\SteamUserInventoryService
+        class: AppBundle\Services\SteamUserInventoryHandler
         arguments:
-            - '@app.repository.product'
+            - '@app.repository.skins_price'
             - '@steam.api_inventory'
             - '@snc_redis.default'
             - '%steam_community_image_url%'
 
-    app.service.add_product_sell:
-        class: AppBundle\Services\SaveSellProductService
-        arguments: ['@doctrine.orm.entity_manager', '@snc_redis.default', '@app.service.upload_image', '@logger']
+    app.service.save_sell_skins_handler:
+        class: AppBundle\Services\SellSkins\AddSellHandler
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@doctrine.dbal.default_connection'
+            - '@snc_redis.default'
+            - '@app.service.upload_image'
+            - '@logger'
 
+    # Ввод/Вывод денег и оплата товара
+    app.service.payment.pay_in_out:
+        class: AppBundle\Services\Payment\PayInOutService
+        arguments: ['@doctrine.dbal.default_connection', '@app.repository.user', '@logger']
+
+    app.service.payment.payment_skins:
+        class: AppBundle\Services\Payment\PaymentSkinsService
+        arguments:
+            - '@doctrine.dbal.default_connection'
+            - '@app.repository.user'
+            - '@app.repository.skins_price'
+            - '@old_sound_rabbit_mq.trade_product_producer'
+            - '@logger'
+
+    # repository service
+    app.repository.user:
+        class: AppBundle\Repository\UserRepository
+        factory: ['@doctrine.orm.entity_manager', getRepository]
+        arguments:
+            - AppBundle\Entity\User
+
+    app.repository.skins_price:
+        class: AppBundle\Repository\SkinsPriceRepository
+        factory: ['@doctrine.orm.entity_manager', getRepository]
+        arguments:
+            - AppBundle\Entity\SkinsPrice
+
+    # ApiBundle
     api.service.validator_item_sell:
         class: ApiBundle\Service\ValidatorItemSellService
         arguments: ['@validator']
+
+    # ProcessingBundle
+    processing.is_online.is_online_handler:
+        class: ProcessingBundle\OnlineUser\IsOnlineHandler
+        arguments: ['@doctrine.dbal.default_connection', '@app.repository.user', '@logger']

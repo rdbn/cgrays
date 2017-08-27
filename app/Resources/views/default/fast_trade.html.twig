@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Корзина{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <table class="table table-order">
+                <tbody>
+                    <tr class="order">
+                        <td class="col-lg-3 col-md-3 col-sm-4 col-xs-6">
+                            <img class="img-thumbnail" src="{{ asset(skinsPrice.skins.iconUrl) }}" alt="{{ skinsPrice.skins.name }}" />
+                        </td>
+                        <td>
+                            <h4 class="media-heading">{{ skinsPrice.skins.name }}</h4>
+                            <div class="jumbotron">
+                                <p><strong class="text-size24">{{ skinsPrice.price }}</strong> <span class="glyphicon glyphicon-rub text-danger"></span></p>
+                                <a href="{{ path('app.skins.skin', {'skinsPriceId': skinsPrice.id}) }}" class="btn btn-action">
+                                    Отмена
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="jumbotron">
+            <p><strong>После покупки этот товар нельзя будет обменивать одну неделю.</strong></p>
+            {{ form_start(form) }}
+            <div class="form-group">
+                <label>
+                    {{ form_widget(form.check_rule) }} Я принимаю условия.
+                </label>
+            </div>
+            {{ form_widget(form.submit) }}
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}

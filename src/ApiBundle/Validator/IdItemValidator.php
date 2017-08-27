@@ -26,11 +26,12 @@ class IdItemValidator extends ConstraintValidator
             return;
         }
 
-        $ids = explode('-', $value['id']);
+        $ids = explode(':', $value['id']);
         $classId = (int) $ids[0];
         $instanceId = (int) $ids[1];
+        $assetId = (int) $ids[2];
 
-        if ($classId == 0 && $instanceId == 0) {
+        if ($classId == 0 && $instanceId == 0 && $assetId == 0) {
             $this->context->buildViolation($constraint->message)
                 ->addViolation();
 

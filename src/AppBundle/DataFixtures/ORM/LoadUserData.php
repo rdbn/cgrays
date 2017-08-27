@@ -61,6 +61,7 @@ class LoadUserData extends AbstractFixture implements OrderedFixtureInterface, F
             $userEntity = new User();
             $userEntity->setSteamId(rand(10000, 20000));
             $userEntity->setUsername($user["username"]);
+            $userEntity->setIsSell(true);
 
             $encoder = $this->container->get('security.password_encoder');
             $password = $encoder->encodePassword($userEntity, $user["username"]);
@@ -79,6 +80,6 @@ class LoadUserData extends AbstractFixture implements OrderedFixtureInterface, F
 
     public function getOrder()
     {
-        return 1;
+        return 2;
     }
 }

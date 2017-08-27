@@ -26,8 +26,9 @@ class Version20170404073101 extends AbstractMigration
               balance DECIMAL(7, 2) NOT NULL DEFAULT 0,
               avatar VARCHAR(255) DEFAULT NULL,
               is_online BOOLEAN NOT NULL DEFAULT FALSE,
+              last_online TIMESTAMPTZ NOT NULL,
               is_sell BOOLEAN NOT NULL DEFAULT TRUE,
-              created_at TIME NOT NULL,
+              created_at TIMESTAMPTZ NOT NULL,
               UNIQUE (steam_id)
             );
         ");
@@ -37,7 +38,7 @@ class Version20170404073101 extends AbstractMigration
             CREATE TABLE IF NOT EXISTS roles (
               id SERIAL PRIMARY KEY,
               role VARCHAR(45) NOT NULL,
-              created_at TIME NOT NULL,
+              created_at TIMESTAMPTZ NOT NULL,
               UNIQUE (role)
             );
         ");

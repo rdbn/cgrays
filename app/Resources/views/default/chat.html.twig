@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Чат{% endblock %}
+
+{% block body %}
+    <div class="container top20">
+        <div class="row">
+            <div class="col-lg-12">
+                <div id="message-view" class="scroll-view">
+                    {% set username = app.user.username %}
+                    {% for message in listMessage %}
+                        <p class="col-lg-12">
+                            <strong class="{% if message.username == username %}text-action{% endif %}">
+                                {{ message.username }}:
+                            </strong>
+                            {{ message.message }}
+                        </p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="jumbotron top20">
+            {{ form_widget(form.username) }}
+            <div class="form-group">
+            {{ form_widget(form.text_message) }}
+            </div>
+            {{ form_widget(form.submit) }}
+        </div>
+
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script type="text/javascript" src="{{ asset('bundles/app/js/chat.js') }}"></script>
+{% endblock %}

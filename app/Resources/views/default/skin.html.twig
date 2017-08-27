@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ skin.skins.name }} | Магазин CSGO markets{% endblock %}
+
+{% block body %}
+    <div class="container top20">
+        <div class="row">
+            <div class="col-lg-12">
+                <a class="btn btn-action" href="{{ path('app.skins.main') }}">Назад</a>
+            </div>
+            <div class="col-lg-4 top20">
+                <img src="{{ asset(skin.skins.iconUrlLarge) }}" alt="{{ skin.skins.name }}" class="img-thumbnail">
+                {% if is_granted("ROLE_USER") %}
+                    <div class="btn-group top20">
+                        {% if skin.users.id != app.user.id %}
+                            <a class="btn btn-action btn-lg" href="{{ path('app.skins_trade.fast_trade', { 'skinsPriceId': skin.id }) }}">
+                                <span class="glyphicon glyphicon-share-alt"></span> Купить
+                            </a>
+                            <button class="btn btn-action btn-lg add-basket" data-product-price="{{ skin.id }}">
+                                <span class="glyphicon glyphicon-shopping-cart"></span>
+                            </button>
+                        {% else %}
+                            <button class="btn btn-action btn-lg disabled" data-toggle="tooltip" data-placement="top" title="Вы владелец данного предмета.">
+                                <span class="glyphicon glyphicon-share-alt"></span> Купить
+                            </button>
+                            <button class="btn btn-action btn-lg disabled" data-toggle="tooltip" data-placement="top" title="Вы владелец данного предмета.">
+                                <span class="glyphicon glyphicon-shopping-cart"></span>
+                            </button>
+                        {% endif %}
+                    </div>
+                    {% if skin.users.id == app.user.id %}
+                        <div class="jumbotron top20">
+                            <p><strong>Вы не можите купить данный предмет, так как являетесь его владельцем.</strong></p>
+                        </div>
+                    {% endif %}
+                {% endif %}
+            </div>
+
+            <div class="col-lg-6">
+                <h1>{{ skin.skins.name }}</h1>
+                <p class="text-action">
+                    <span class="glyphicon glyphicon-tag"></span>
+                    <a class="text-action" href="{{ path('app.skins.skins_price', { "id" : skin.skins.id }) }}">
+                        Все предложения
+                    </a>
+                </p>
+                <p>
+                    <span class="label label-default">{{ skin.skins.typeSkins.localizedTagName }}</span>
+                    <span class="label label-default">{{ skin.skins.quality.localizedTagName }}</span>
+                    <span class="label label-default">{{ skin.skins.rarity.localizedTagName }}</span>
+                    <span class="label label-default">{{ skin.skins.itemSet.localizedTagName }}</span>
+                    <span class="label label-default">{{ skin.skins.weapon.localizedTagName }}</span>
+                    <span class="label label-default">{{ skin.skins.decor.localizedTagName }}</span>
+                </p>
+                <div class="jumbotron top20">
+                    <strong class="text-size24">{{ skin.price }}</strong> <span class="glyphicon glyphicon-rub text-danger"></span>
+                </div>
+                <p class="top20">{{ skin.skins.description }}</p>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script type="text/javascript" src="{{ asset('bundles/app/js/add-basket.js') }}"></script>
+{% endblock %}

@@ -24,7 +24,7 @@ security:
             security: true
             provider: steamauth
             steam:
-                default_route: main
+                default_route: app.skins.main
             remember_me:
                 secret: '%secret%'
             form_login:

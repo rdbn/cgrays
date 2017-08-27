@@ -1,0 +1,40 @@
+AppBundle\Entity\Skins:
+    exclusion_policy: ALL
+    properties:
+        id:
+            expose: true
+            groups: [skins]
+        name:
+            expose: true
+            groups: [skins]
+        iconUrl:
+            expose: true
+            groups: [skins]
+            accessor:
+                getter: getIconUrl
+        iconUrlLarge:
+            expose: true
+            groups: [skins]
+            accessor:
+                getter: getIconUrlLarge
+        description:
+            expose: true
+            groups: [skins]
+        decor:
+            expose: true
+            groups: [skins]
+        itemSet:
+            expose: true
+            groups: [skins]
+        weapon:
+            expose: true
+            groups: [skins]
+        typeSkins:
+            expose: true
+            groups: [skins]
+        quality:
+            expose: true
+            groups: [skins]
+        rarity:
+            expose: true
+            groups: [skins]

@@ -2,83 +2,142 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="viewport"    content="width=device-width, initial-scale=1.0">
         <meta name="description" content="">
-        <meta name="author" content="">
+
         <title>{% block title %}{% endblock %}</title>
 
-        <link href="{{ asset('bundles/app/css/bootstrap.min.css') }}" rel="stylesheet">
-        <link href="{{ asset('bundles/app/css/ie10-viewport-bug-workaround.css') }}" rel="stylesheet">
+        <link rel="shortcut icon" href="">
+
+        <link rel="stylesheet" media="screen" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,700">
+        <link rel="stylesheet" href="{{ asset('bundles/app/css/bootstrap.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('bundles/app/css/font-awesome.min.css') }}">
+        {#<link href="{{ asset('bundles/app/css/ie10-viewport-bug-workaround.css') }}" rel="stylesheet">#}
+
+        <!-- Custom styles for our template -->
+        <link rel="stylesheet" href="{{ asset('bundles/app/css/bootstrap-theme.css') }}">
+        <link rel="stylesheet" href="{{ asset('bundles/app/css/main.css') }}">
         {% block stylesheets %}{% endblock %}
         <link href="{{ asset('bundles/app/css/style.css') }}" rel="stylesheet">
 
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!--[if lt IE 9]>
-        <script src="{{ asset('public/js/ie8-responsive-file-warning.js') }}"></script>
-        <![endif]-->
-        <script src="{{ asset('bundles/app/js/ie-emulation-modes-warning.js') }}"></script>
-        <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <script src="/bundles/app/js/html5shiv.js"></script>
+        <script src="/bundles/app/js/respond.min.js"></script>
         <![endif]-->
     </head>
     <body>
-        <nav class="navbar navbar-default navbar-fixed-top">
+        <!-- Fixed navbar -->
+        <div class="navbar navbar-inverse navbar-fixed-top headroom" >
             <div class="container">
                 <div class="navbar-header">
-                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="{{ path('app.product.main') }}">Cgrays</a>
+                    <a class="navbar-brand" href="{{ path('app.skins.main') }}">Cgrays</a>
                 </div>
-                <div class="collapse navbar-collapse">
+                <div class="navbar-collapse collapse">
                     {% set name = app.request.attributes.get("_route") %}
-                    <ul class="nav navbar-nav">
-                        <li {%  if name == "main" %}class="active"{% endif %}><a href="{{ path('app.product.main') }}">Товары</a></li>
-                        <li {%  if name == "user_sell" %}class="active"{% endif %}><a href="{{ path('app.user.sell') }}">Вещи на продажу</a></li>
-                        <li {%  if name == "basket" %}class="active"{% endif %}><a href="{{ path('app.basket.basket') }}">Корзина</a></li>
+                    {% set gameName = app.request.attributes.get("gameName") %}
+                    <ul class="nav navbar-nav pull-right">
+                        <li {%  if name == "app.skins.main" %}class="active"{% endif %}><a href="{{ path('app.skins.main') }}">Товары</a></li>
+                        <li {%  if name == "app.user.sell" %}class="active"{% endif %}><a href="{{ path('app.user.sell') }}">Вещи на продажу</a></li>
+                        {% if is_granted("ROLE_USER") %}
+                            <li {%  if name == "app.chat.chat" %}class="active"{% endif %}><a href="{{ path('app.chat.chat') }}">Чат</a></li>
+                            <li {%  if name == "app.basket.basket" %}class="active"{% endif %}><a href="{{ path('app.skins_trade.basket') }}">Корзина</a></li>
+                            {% set username = app.user.username %}
+                            <ul id="username" class="nav navbar-nav navbar-right" data-username="{{ username }}">
+                                <li {%  if name == "app.user.main" %}class="active"{% endif %}>
+                                    <a id="balance-menu"  href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                        Профиль <span class="caret"></span>
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="{{ path('app.user.main') }}">Профиль</a></li>
+                                        <li><a href="{{ path('app.payment.payment_list') }}">История платежей</a></li>
+                                        <li><a href="{{ path('app.payment.pay_in_out', { 'actionPay': 'in' }) }}">Пополнить баланс</a></li>
+                                        <li><a href="{{ path('app.payment.pay_in_out', { 'actionPay': 'out' }) }}">Вывод средств</a></li>
+                                        <li><a href="{{ path('logout') }}">Выйти</a></li>
+                                    </ul>
+                                </li>
+                                <li class="dropdown">
+                                    <a href="#">Баланс: {{ app.user.balance }} <span class="glyphicon glyphicon-rub text-danger"></span></a>
+                                </li>
+                            </ul>
+                        {% else %}
+                            <li>{% include "SteamBundle:Login:login.html.twig" %}</li>
+                        {% endif %}
                     </ul>
-                    {% if is_granted("ROLE_USER") %}
-                        <ul class="nav navbar-nav navbar-right">
-                            <li {%  if name == "user" %}class="active"{% endif %}><a href="{{ path('app.user.main') }}">Профиль</a></li>
-                            <li>
-                                <a href="#">
-                                    <span class="text-danger">Баланс: {{ app.user.balance }} <span class="glyphicon glyphicon-rub"></span></span>
-                                </a>
-                            </li>
-                        </ul>
-                    {% else %}
-                        {% include "SteamBundle:Login:login.html.twig" %}
-                    {% endif %}
+                </div><!--/.nav-collapse -->
+            </div>
+        </div>
+        <!-- /.navbar -->
+        <header id="head" class="secondary"></header>
 
+        {% block body %}{% endblock %}
+
+        <footer id="footer" class="top-space footer">
+            <div class="footer1">
+                <div class="container">
+                    <div class="row">
+
+                        <div class="col-md-3 widget">
+                            <h3 class="widget-title">Контакты</h3>
+                            <div class="widget-body">
+                                <p>+234 23 9873237<br>
+                                    <a href="mailto:#">cgrays@gmail.com</a><br>
+                                    <br>
+                                    Москва улаца старосадовая д.7
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3 widget">
+                            <h3 class="widget-title">Паблики</h3>
+                            <div class="widget-body">
+                                <p class="follow-me-icons clearfix">
+                                    <a href=""><i class="fa fa-twitter fa-2"></i></a>
+                                    <a href=""><i class="fa fa-dribbble fa-2"></i></a>
+                                    <a href=""><i class="fa fa-github fa-2"></i></a>
+                                    <a href=""><i class="fa fa-facebook fa-2"></i></a>
+                                </p>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
             </div>
-        </nav>
-        <div class="container">
-            {% block body %}{% endblock %}
-        </div>
-        <footer class="footer">
-            <div class="container top20">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <p class="text-center text-warning">
-                            <span>Ссылка на конткат</span>
-                            <span>Ссылка на facebook</span>
-                            <span>Ссылка на youtube</span>
-                            <span>Ссылка на instagram</span>
-                        </p>
-                        <p><small class="text-muted text-left"><span class="glyphicon glyphicon-copyright-mark"></span> Все права защищены 2017</small></p>
+            <div class="footer2">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-6 widget">
+                            <div class="widget-body">
+                                <p class="simplenav">
+                                    <a href="{{ path('app.skins.main') }}">Товары</a> |
+                                    <a href="{{ path('app.user.sell') }}">Вещи на продажу</a> |
+                                    <a href="{{ path('app.skins_trade.basket') }}">Корзина</a>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-md-6 widget">
+                            <div class="widget-body">
+                                <p class="text-right">
+                                    Copyright &copy; {{ "now"|date("Y") }}, Cgrays. Designed by <a href="http://gettemplate.com/" rel="designer">gettemplate</a>
+                                </p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </footer>
+
         <!-- JavaScript -->
         <script src="{{ asset('bundles/app/js/jquery-3.2.0.min.js') }}"></script>
         <script src="{{ asset('bundles/app/js/bootstrap.min.js') }}"></script>
-        <script src="{{ asset('bundles/app/js/ie10-viewport-bug-workaround.js') }}"></script>
+        <script src="{{ asset('bundles/app/js/headroom.min.js') }}"></script>
+        <script src="{{ asset('bundles/app/js/jQuery.headroom.min.js') }}"></script>
+        <script src="{{ asset('bundles/app/js/template.js') }}"></script>
+        <script src="{{ asset('bundles/app/js/socket.io.min.js') }}"></script>
         {% block javascripts %}{% endblock %}
+        <script src="{{ asset('bundles/app/js/is-online.js') }}"></script>
     </body>
 </html>

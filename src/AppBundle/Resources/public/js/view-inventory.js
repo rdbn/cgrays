@@ -25,25 +25,27 @@ var View = {
             price = id['price'];
         } else {
             item = allItems[id];
-            html += '<div class="col-lg-12 bottom20 text-left"><button class="btn btn-warning btn-back">Назад</button></div>';
+            html += '<div class="col-lg-12 bottom20 text-left"><button class="btn btn-action btn-back">Назад</button></div>';
         }
 
         html +=
             '<div class="col-lg-6"><img src="'+item['icon_url_large']+'" class="img-thumbnail" /></div>' +
             '<div class="col-lg-6 text-left"><h4>'+item['name']+'</h4><p>' +
-            '<span class="label label-default">'+item['quality']+'</span> ' +
-            '<span class="label label-default">'+item['rarity']+'</span> ' +
-            '<span class="label label-default">'+item['type_product']+'</span> ' +
-            '<span class="label label-default">'+item['heroes']+'</span>' +
+            '<span class="label label-default">'+item['quality']['localized_tag_name']+'</span> ' +
+            '<span class="label label-default">'+item['item_set']['localized_tag_name']+'</span> ' +
+            '<span class="label label-default">'+item['rarity']['localized_tag_name']+'</span> ' +
+            '<span class="label label-default">'+item['type_skins']['localized_tag_name']+'</span> ' +
+            '<span class="label label-default">'+item['weapon']['localized_tag_name']+'</span> ' +
+            '<span class="label label-default">'+item['decor']['localized_tag_name']+'</span>' +
             '</p><p class="alert alert-danger error-price hidden" role="alert"></p>' +
             '<div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-rub"></span></span>' +
-            '<input type="number" class="form-control input-lg price-sell-product" placeholder="Цена" value="' + (price > 0 ? price : '') + '" />' +
+            '<input type="number" class="form-control input-lg price-sell-skins" placeholder="Цена" value="' + (price > 0 ? price : '') + '" />' +
             '<span class="input-group-addon">.00</span></div>';
 
         if (id instanceof Object) {
-            html += '<button class="top10 btn btn-warning update-product-sell" data-toggle="'+item['id']+'">Обновить стоимость</button></div>';
+            html += '<button class="top10 btn btn-action update-skins-sell" data-toggle="'+item['id']+'">Обновить стоимость</button></div>';
         } else {
-            html += '<button class="top10 btn btn-danger add-product-sell" data-toggle="'+id+'">Выставить на продажу</button></div>';
+            html += '<button class="top10 btn btn-action add-skins-sell" data-toggle="'+id+'">Выставить на продажу</button></div>';
         }
 
         $('#user-inventory').html(html);
@@ -52,11 +54,11 @@ var View = {
     addItemSell: function (item) {
         var html =
             '<div class="col-xs-4 col-sm-3 col-md-2"><div class="thumbnail">' +
-            '<a class="view-sell-item" href="#" data-product="'+item['product_id']+'" data-product-price="'+item['product_price_id']+'" ' +
-            'data-toggle="modal" data-target="#add-products-steam-user"><img src="/'+item['icon_url']+'" alt="'+item['name']+'" /></a>' +
-            '<div class="caption"><p><strong><span class="text-warning price-item-sell">'+item['price'] +
-            '.00 <span class="glyphicon glyphicon-rub"></span></span></strong></p><p class="text-center">' +
-            '<button class="btn btn-danger btn-sm remove-sell-item" type="button" data-toggle="'+item['product_price_id']+'">Снять с продажи</button>' +
+            '<a class="view-sell-item" href="#" data-skins-price="'+item['skins_price_id']+'" ' +
+            'data-toggle="modal" data-target="#add-skins-steam-user"><img src="/'+item['icon_url']+'" alt="'+item['name']+'" /></a>' +
+            '<div class="caption"><p><strong><span class="price-item-sell">'+item['price'] +
+            '.00 <span class="glyphicon glyphicon-rub text-danger"></span></span></strong></p><p class="text-center">' +
+            '<button class="btn btn-action btn-sm remove-sell-item" type="button" data-toggle="'+item['skins_price_id']+'">Снять с продажи</button>' +
             '</p></div></div></div>';
 
         $('.scroll-view').append(html);
@@ -85,7 +87,7 @@ var Inventory = function () {
     var
         urlMain = "/app_dev.php/api",
         urlUser = urlMain + '/user',
-        urlProducts = urlMain + '/products';
+        urlProducts = urlMain + '/skins';
 
     var Pagination = function (page) {
         $.ajax({
@@ -142,7 +144,7 @@ var Inventory = function () {
             statusCode: {
                 200: function () {
                     View.updatePriceItem(elementSellItem, price);
-                    $('#add-products-steam-user').modal('hide');
+                    $('#add-skins-steam-user').modal('hide');
                 },
                 400: function () {
                     View.error(400);
@@ -151,8 +153,6 @@ var Inventory = function () {
         });
     };
     var AddSellProduct = function (id, price) {
-        id = allItems[id]['classid'] + '-' + allItems[id]['instanceid'];
-
         $.ajax({
             url: urlProducts + "/add",
             method: "POST",
@@ -170,22 +170,23 @@ var Inventory = function () {
         });
     };
     var ViewSellProduct = function (element) {
-        var
-            productId = element.attr('data-product'),
-            productPriceId = element.attr('data-product-price');
+        var skinsPriceId = element.attr('data-skins-price');
 
         $.ajax({
-            url: urlProducts + '/' + productId + '/' + productPriceId,
+            url: urlProducts + '/' + skinsPriceId,
             statusCode: {
                 200: function (data) {
                     var item = {
-                        icon_url_large: '/' + data['icon_url_large'],
-                        heroes: data['heroes']['title'],
-                        type_product: data['type_product']['title'],
-                        quality: data['quality']['title'],
-                        name: data['name'],
-                        price: data['product_price'][0]['price'],
-                        id: data['product_price'][0]['id']
+                        icon_url_large: '/' + data['skins']['icon_url_large'],
+                        type_skins: data['skins']['type_skins'],
+                        decor: data['skins']['decor'],
+                        item_set: data['skins']['item_set'],
+                        weapon: data['skins']['weapon'],
+                        rarity: data['skins']['rarity'],
+                        quality: data['skins']['quality'],
+                        name: data['skins']['name'],
+                        price: data['price'],
+                        id: data['id']
                     };
 
                     View.item(item)
@@ -200,7 +201,7 @@ var Inventory = function () {
             data: {id: id},
             statusCode: {
                 200: function () {
-                    element.parents('.user-inventory-product-sell').remove()
+                    element.parents('.user-inventory-skins-sell').remove()
                 },
                 400: function () {
                     element.removeClass('disabled')
@@ -313,7 +314,7 @@ var ActionUserInventory = function () {
     };
 
     var AddOrUpdateProductPrice = function (btnAddProductSell, closure) {
-        var priceElement = userInventory.find('.price-sell-product');
+        var priceElement = userInventory.find('.price-sell-skins');
 
         if (validationPrice(priceElement)) {
             if (!btnAddProductSell.hasClass('disabled')) {
@@ -335,14 +336,14 @@ var ActionUserInventory = function () {
             });
         },
         addProductSell: function () {
-            userInventory.on('click', '.add-product-sell', function () {
+            userInventory.on('click', '.add-skins-sell', function () {
                 AddOrUpdateProductPrice($(this), function (id, priceElement) {
                     inventory.addSellProduct(id, priceElement.val());
                 });
             });
         },
         updateProductPrice: function () {
-            userInventory.on('click', '.update-product-sell', function () {
+            userInventory.on('click', '.update-skins-sell', function () {
                 AddOrUpdateProductPrice($(this), function (id, priceElement) {
                     Inventory().updatePriceProduct(id, priceElement, elementSellItem);
                 })

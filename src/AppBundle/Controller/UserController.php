@@ -2,8 +2,9 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Entity\Product;
-use AppBundle\Entity\ProductPrice;
+use AppBundle\Entity\ProductDota;
+use AppBundle\Entity\ProductPriceDota;
+use AppBundle\Entity\SkinsPrice;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,11 +17,11 @@ class UserController extends Controller
     public function mainAction()
     {
         $user = $this->getUser();
-        $products = $this->getDoctrine()->getRepository(ProductPrice::class)
-            ->findProductsByUser($user);
+        $skins = $this->getDoctrine()->getRepository(SkinsPrice::class)
+            ->findSkinsPriceByUser($user);
 
         return $this->render('default/user.html.twig', [
-            'products' => $products,
+            'skins' => $skins,
             'user' => $user,
         ]);
     }
@@ -32,12 +33,12 @@ class UserController extends Controller
     {
         $user = $this->getUser();
         if ($user) {
-            $products = $this->getDoctrine()->getRepository(ProductPrice::class)
-                ->findProductsByUser($this->getUser());
+            $skins = $this->getDoctrine()->getRepository(SkinsPrice::class)
+                ->findSkinsPriceByUser($this->getUser());
         }
 
         return $this->render("default/sell.html.twig", [
-            "products" => isset($products) ? $products : [],
+            "skins" => isset($skins) ? $skins : [],
         ]);
     }
 }

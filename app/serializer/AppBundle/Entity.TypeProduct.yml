@@ -1,9 +1,0 @@
-AppBundle\Entity\TypeProduct:
-    exclusion_policy: ALL
-    properties:
-        id:
-            expose: true
-            groups: [product]
-        title:
-            expose: true
-            groups: [product]

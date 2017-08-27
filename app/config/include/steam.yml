@@ -1,0 +1,6 @@
+steam:
+    steam_community_url: "%steam_community_url%"
+    steam_inventory_count: "%steam_inventory_count%"
+    steam_api_url: "%steam_api_url%"
+    steam_key: "%steam_api_key%"
+    user_class: AppBundle\Entity\User

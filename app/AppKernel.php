@@ -22,6 +22,7 @@ class AppKernel extends Kernel
             new Symfony\Bundle\AsseticBundle\AsseticBundle(),
             new EightPoints\Bundle\GuzzleBundle\GuzzleBundle(),
             new Knp\Bundle\PaginatorBundle\KnpPaginatorBundle(),
+            new OldSound\RabbitMqBundle\OldSoundRabbitMqBundle(),
 
             // sonata
             new Sonata\CoreBundle\SonataCoreBundle(),
@@ -35,6 +36,8 @@ class AppKernel extends Kernel
             new AppBundle\AppBundle(),
             new ApiBundle\ApiBundle(),
             new SteamBundle\SteamBundle(),
+            new ProcessingBundle\ProcessingBundle(),
+            // new DotaBundle\DotaBundle(),
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {

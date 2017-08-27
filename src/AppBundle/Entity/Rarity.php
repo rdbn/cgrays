@@ -8,6 +8,7 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Modal\DictionaryInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -15,7 +16,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\Entity
  * @ORM\Table(name="rarity")
  */
-class Rarity
+class Rarity implements DictionaryInterface
 {
     /**
      * @ORM\Column(type="integer")
@@ -25,33 +26,28 @@ class Rarity
     protected $id;
 
     /**
-     * @ORM\Column(type="string", length=45)
+     * @ORM\Column(name="internal_name", type="string", length=45)
      */
-    protected $name;
+    protected $internalName;
 
     /**
-     * @ORM\Column(type="string", length=45)
+     * @ORM\Column(name="localized_tag_name", type="string", length=45)
      */
-    protected $title;
+    protected $localizedTagName;
 
     /**
-     * @ORM\Column(type="string", length=45)
+     * @ORM\Column(name="color", type="string", length=45)
      */
     protected $color;
 
     /**
-     * @ORM\Column(name="order_item", type="integer")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Skins", mappedBy="rarity")
      */
-    protected $order;
-
-    /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Product", mappedBy="rarity")
-     */
-    protected $products;
+    protected $skins;
 
     public function __construct()
     {
-        $this->products = new ArrayCollection();
+        $this->skins= new ArrayCollection();
     }
 
     /**
@@ -65,51 +61,51 @@ class Rarity
     }
 
     /**
-     * Set name
+     * Set internalName
      *
-     * @param string $name
+     * @param string $internalName
      *
      * @return Rarity
      */
-    public function setName($name)
+    public function setInternalName($internalName)
     {
-        $this->name = $name;
+        $this->internalName = $internalName;
 
         return $this;
     }
 
     /**
-     * Get name
+     * Get internalName
      *
      * @return string
      */
-    public function getName()
+    public function getInternalName()
     {
-        return $this->name;
+        return $this->internalName;
     }
 
     /**
-     * Set title
+     * Set localizedTagName
      *
-     * @param string $title
+     * @param string $localizedTagName
      *
      * @return Rarity
      */
-    public function setTitle($title)
+    public function setLocalizedTagName($localizedTagName)
     {
-        $this->title = $title;
+        $this->localizedTagName = $localizedTagName;
 
         return $this;
     }
 
     /**
-     * Get title
+     * Get localizedTagName
      *
      * @return string
      */
-    public function getTitle()
+    public function getLocalizedTagName()
     {
-        return $this->title;
+        return $this->localizedTagName;
     }
 
     /**
@@ -137,60 +133,36 @@ class Rarity
     }
 
     /**
-     * Set order
+     * Add skin
      *
-     * @param integer $order
+     * @param \AppBundle\Entity\Skins $skin
      *
      * @return Rarity
      */
-    public function setOrder($order)
+    public function addSkin(\AppBundle\Entity\Skins $skin)
     {
-        $this->order = $order;
+        $this->skins[] = $skin;
 
         return $this;
     }
 
     /**
-     * Get order
+     * Remove skin
      *
-     * @return integer
+     * @param \AppBundle\Entity\Skins $skin
      */
-    public function getOrder()
+    public function removeSkin(\AppBundle\Entity\Skins $skin)
     {
-        return $this->order;
+        $this->skins->removeElement($skin);
     }
 
     /**
-     * Add product
-     *
-     * @param \AppBundle\Entity\Product $product
-     *
-     * @return Rarity
-     */
-    public function addProduct(\AppBundle\Entity\Product $product)
-    {
-        $this->products[] = $product;
-
-        return $this;
-    }
-
-    /**
-     * Remove product
-     *
-     * @param \AppBundle\Entity\Product $product
-     */
-    public function removeProduct(\AppBundle\Entity\Product $product)
-    {
-        $this->products->removeElement($product);
-    }
-
-    /**
-     * Get products
+     * Get skins
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getProducts()
+    public function getSkins()
     {
-        return $this->products;
+        return $this->skins;
     }
 }

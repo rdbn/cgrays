@@ -38,18 +38,35 @@ class ApiMethod
 
     /**
      * @param $url
+     * @return self
      */
     public function setUrl($url)
     {
         $this->url = $url;
+
+        return $this;
     }
 
     /**
      * @param array $parameters
+     * @return self
      */
     public function setParameters(array $parameters)
     {
         $this->parameters = $parameters;
+
+        return $this;
+    }
+
+    /**
+     * @param $steamId
+     * @return self
+     */
+    public function setSteamId($steamId)
+    {
+        $this->parameters['steamIds'] = $steamId;
+
+        return $this;
     }
 
     /**

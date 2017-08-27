@@ -10,9 +10,10 @@ namespace AppBundle\DataFixtures\ORM;
 
 use AppBundle\Entity\Role;
 use Doctrine\Common\DataFixtures\AbstractFixture;
+use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 
-class LoadRoleData extends AbstractFixture
+class LoadRoleData extends AbstractFixture implements OrderedFixtureInterface
 {
     /**
      * @var array
@@ -32,5 +33,10 @@ class LoadRoleData extends AbstractFixture
         }
 
         $manager->flush();
+    }
+
+    public function getOrder()
+    {
+        return 1;
     }
 }
