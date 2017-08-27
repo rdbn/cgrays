@@ -1,20 +1,40 @@
+.idea
 .DS_Store
-.idea/
-/app/config/parameters.yml
-/build/
-/phpunit.xml
-/var/*
-!/var/cache
+
+# Cache, session files and logs (Symfony3)
 /var/cache/*
-!var/cache/.gitkeep
-!/var/logs
 /var/logs/*
-!var/logs/.gitkeep
-!/var/sessions
 /var/sessions/*
+!var/cache/.gitkeep
+!var/logs/.gitkeep
 !var/sessions/.gitkeep
-!var/SymfonyRequirements.php
+
+# Parameters
+/app/config/parameters.yml
+/app/config/parameters.ini
+
 /vendor/
+
+# Managed by Composer
+/app/bootstrap.php.cache
+/var/bootstrap.php.cache
+/bin/*
+!bin/console
+!bin/symfony_requirements
+
+# Assets and user uploads
 /web/bundles/
+/web/uploads/
 /web/image/
-*~
+
+# PHPUnit
+/app/phpunit.xml
+/phpunit.xml
+
+# Build data
+/build/
+
+# Backup entities generated with doctrine:generate:entities command
+**/Entity/*~
+
+supervisord.log
