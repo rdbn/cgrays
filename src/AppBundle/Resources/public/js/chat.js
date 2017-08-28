@@ -1,6 +1,6 @@
 var Chat = function () {
     var
-        socket = io.connect('http://localhost:8080/chat'),
+        socket = io.connect('http://'+window.location.hostname+':88/chat'),
         username = $('#message_type_form_username').val();
 
     return {
