@@ -54,8 +54,20 @@ set :file_permissions_paths, ["var", "web/image"]
 
 namespace :deploy do
   task :migrate do
-    symfony_console('doctrine:migrations:migrate', '--no-interaction')
+    on roles(:db) do
+      invoke 'symfony:console', 'doctrine:migrations:migrate', '--no-interaction'
+    end
   end
 end
 
+namespace :deploy do
+  task :cache do
+    on roles(:db) do
+      invoke 'symfony:console', 'cache:clear'
+    end
+  end
+end
+
+after 'deploy:updated', 'deploy:migrate'
 after 'deploy:updated', 'symfony:assets:install'
+after 'deploy:updated', 'deploy:cache'
