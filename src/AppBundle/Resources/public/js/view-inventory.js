@@ -256,12 +256,12 @@ var Action = {
     },
     startSell: function () {
         $('#start-sell').click(function () {
-            Inventory().isSell($(this), true);
+            Inventory().isSell($(this), 1);
         });
     },
     stopSell: function () {
         $('#stop-sell').click(function () {
-            Inventory().isSell($(this), false);
+            Inventory().isSell($(this), 0);
         });
     },
     paginationLeft: function () {
