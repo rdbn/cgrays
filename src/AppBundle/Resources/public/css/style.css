@@ -54,7 +54,7 @@ body {
 }
 
 .steam-auth {
-    background-image: url('/bundles/steamauth/image/sits_01.png');
+    background-image: url('/bundles/steam/image/sits_01.png');
     background-size: cover;
     padding-left: 150px;
     padding-top: 15px !important;
