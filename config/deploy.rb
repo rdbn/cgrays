@@ -42,7 +42,7 @@ set :assets_install_flags,  '--symlink'
 
 # Share files/directories between releases
 set :linked_files, ["app/config/parameters.yml"]
-set :linked_dirs, ["var/logs", "vendor", "web/image"]
+set :linked_dirs, ["var/logs", "var/sessions", "vendor", "web/image"]
 
 # Set correct permissions between releases, this is turned off by default
 set :file_permissions_paths, ["var"]
