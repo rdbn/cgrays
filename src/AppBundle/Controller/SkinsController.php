@@ -32,6 +32,10 @@ class SkinsController extends Controller
             foreach ($form->getIterator() as $name => $item) {
                 $data[$name] = $item->getData();
             }
+
+            if (isset($data['name'])) {
+                $data['name'] = preg_replace("/[^a-zа-яё\d]+/i", '', $data['name']);
+            }
         }
 
         $products = $this->getDoctrine()->getRepository(SkinsPrice::class)

@@ -35,21 +35,31 @@ class SkinsPriceRepository extends EntityRepository
             ->from("skins", "s");
 
         if (isset($data["name"])) {
-            $qbProduct
-                ->andWhere($qbProduct->expr()->like("s.name", ":name"))
-                ->setParameter("name", "%{$data["name"]}%");
+            $qbProduct->andWhere($qbProduct->expr()->like("s.name", "'%{$data["name"]}%'"));
         }
 
-        if (isset($data["typeProduct"])) {
-            $qbProduct
-                ->andWhere("s.type_product_id = :typeProduct")
-                ->setParameter("typeProduct", $data["typeProduct"]->getId());
+        if (isset($data["typeSkins"])) {
+            $qbProduct->andWhere($qbProduct->expr()->eq('s.type_skins_id', (int)$data["typeSkins"]->getId()));
+        }
+
+        if (isset($data["decor"])) {
+            $qbProduct->andWhere($qbProduct->expr()->eq('s.decor_id', (int)$data["decor"]->getId()));
+        }
+
+        if (isset($data["rarity"])) {
+            $qbProduct->andWhere($qbProduct->expr()->eq('s.rarity_id', (int)$data["rarity"]->getId()));
+        }
+
+        if (isset($data["itemSet"])) {
+            $qbProduct->andWhere($qbProduct->expr()->eq('s.item_set_id', (int)$data["itemSet"]->getId()));
+        }
+
+        if (isset($data["weapon"])) {
+            $qbProduct->andWhere($qbProduct->expr()->eq('s.weapon_id', (int)$data["weapon"]->getId()));
         }
 
         if (isset($data["quality"])) {
-            $qbProduct
-                ->andWhere("s.quality_id = :quality")
-                ->setParameter("quality", $data["quality"]->getId());
+            $qbProduct->andWhere($qbProduct->expr()->eq('s.quality_id', (int)$data["quality"]->getId()));
         }
 
         $qbProduct
