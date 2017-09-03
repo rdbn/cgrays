@@ -103,6 +103,11 @@ class User implements UserInterface, EquatableInterface, \Serializable, SteamUse
      */
     protected $payment;
 
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\NewsComment", mappedBy="user")
+     */
+    protected $newsComment;
+
     public function __construct()
     {
         $this->balance = 0;
@@ -118,6 +123,7 @@ class User implements UserInterface, EquatableInterface, \Serializable, SteamUse
         $this->skinsTrade = new ArrayCollection();
         $this->skinsPrice = new ArrayCollection();
         $this->payment = new ArrayCollection();
+        $this->newsComment = new ArrayCollection();
     }
 
     public function getRoles()
@@ -547,5 +553,39 @@ class User implements UserInterface, EquatableInterface, \Serializable, SteamUse
     public function getPayment()
     {
         return $this->payment;
+    }
+
+    /**
+     * Add newsComment
+     *
+     * @param \AppBundle\Entity\NewsComment $newsComment
+     *
+     * @return User
+     */
+    public function addNewsComment(\AppBundle\Entity\NewsComment $newsComment)
+    {
+        $this->newsComment[] = $newsComment;
+
+        return $this;
+    }
+
+    /**
+     * Remove newsComment
+     *
+     * @param \AppBundle\Entity\NewsComment $newsComment
+     */
+    public function removeNewsComment(\AppBundle\Entity\NewsComment $newsComment)
+    {
+        $this->newsComment->removeElement($newsComment);
+    }
+
+    /**
+     * Get newsComment
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getNewsComment()
+    {
+        return $this->newsComment;
     }
 }

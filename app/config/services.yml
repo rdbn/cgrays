@@ -76,6 +76,14 @@ services:
         class: ApiBundle\Service\ValidatorItemSellService
         arguments: ['@validator']
 
+    api.service.news_like:
+        class: ApiBundle\Service\NewsLikeService
+        arguments: ['@doctrine.orm.entity_manager', '@security.token_storage', '@logger']
+
+    api.service.news_comment:
+        class: ApiBundle\Service\NewsCommentService
+        arguments: ['@doctrine.dbal.default_connection', '@security.token_storage', '@logger']
+
     # ProcessingBundle
     processing.is_online.is_online_handler:
         class: ProcessingBundle\OnlineUser\IsOnlineHandler

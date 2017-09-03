@@ -45,6 +45,7 @@
                     <ul class="nav navbar-nav pull-right">
                         <li {%  if name == "app.skins.main" %}class="active"{% endif %}><a href="{{ path('app.skins.main') }}">Товары</a></li>
                         <li {%  if name == "app.user.sell" %}class="active"{% endif %}><a href="{{ path('app.user.sell') }}">Вещи на продажу</a></li>
+                        <li {%  if name == "app.news.list" %}class="active"{% endif %}><a href="{{ path('app.news.list') }}">Новости</a></li>
                         {% if is_granted("ROLE_USER") %}
                             <li {%  if name == "app.chat.chat" %}class="active"{% endif %}><a href="{{ path('app.chat.chat') }}">Чат</a></li>
                             <li {%  if name == "app.basket.basket" %}class="active"{% endif %}><a href="{{ path('app.skins_trade.basket') }}">Корзина</a></li>
