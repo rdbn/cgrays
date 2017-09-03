@@ -21,20 +21,20 @@ class UserController extends FOSRestController
     {
         $page = $request->query->getInt('page', 1);
 
-        // try {
+        try {
             $inventory = $this->get('app.service.steam_user_inventory')
                 ->handler($this->getUser(), $page, 730);
 
             $view = $this->view($inventory, 200);
-//        } catch (\Exception $e) {
-//            switch ($e->getCode()) {
-//                case 403:
-//                    $view = $this->view('Forbidden user inventory', 400);
-//                    break;
-//                default:
-//                    $view = $this->view('Bad request', 400);
-//            }
-//        }
+        } catch (\Exception $e) {
+            switch ($e->getCode()) {
+                case 403:
+                    $view = $this->view('Forbidden user inventory', 400);
+                    break;
+                default:
+                    $view = $this->view('Bad request', 400);
+            }
+        }
 
         return $this->handleView($view);
     }
