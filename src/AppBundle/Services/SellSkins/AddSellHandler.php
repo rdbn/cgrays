@@ -118,7 +118,7 @@ class AddSellHandler
         }
 
         if ($tableName == 'rarity') {
-            $item['color'] = $item['color'] ? $item['color'] : 'fff';
+            $item['color'] = isset($item['color']) ? $item['color'] : 'fff';
         }
 
         $this->dbal->beginTransaction();
