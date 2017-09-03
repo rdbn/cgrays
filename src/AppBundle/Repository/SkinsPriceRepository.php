@@ -114,6 +114,35 @@ class SkinsPriceRepository extends EntityRepository
     }
 
     /**
+     * @param int $skinsId
+     * @param int $skinsPriceId
+     * @return mixed
+     */
+    public function findSkinsPriceBySkinsId($skinsId, $skinsPriceId)
+    {
+        $dbal = $this->getEntityManager()->getConnection();
+        $qb = $dbal->createQueryBuilder();
+
+        $qb
+            ->addSelect("sp.id as price_id")
+            ->addSelect("s.icon_url")
+            ->addSelect("sp.price")
+            ->from("skins_price", "sp")
+            ->leftJoin("sp" , "skins", "s", "s.id = sp.skins_id")
+            ->andWhere("sp.skins_id = :skins_id")
+            ->andWhere("sp.id <> :skins_price_id")
+            ->andWhere('sp.is_sell = TRUE')
+            ->andWhere('sp.is_remove = FALSE');
+
+        $stmt = $dbal->prepare($qb->getSQL());
+        $stmt->bindParam('skins_id', $skinsId, \PDO::PARAM_INT);
+        $stmt->bindParam('skins_price_id', $skinsPriceId, \PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+    }
+
+    /**
      * @param User $user
      * @return array
      */

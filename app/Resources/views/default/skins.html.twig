@@ -56,7 +56,7 @@
     <div class="container top20">
         <div class="row">
         {% for skin in pagination %}
-            <div class="col-xs-6 col-sm-4 col-md-3">
+            <div class="col-xs-6 col-sm-4 col-md-2">
                 <div class="thumbnail">
                     <a href="{{ path('app.skins.skin', {"skinsPriceId": skin.price_id }) }}">
                         <img src="{{ asset(skin.icon_url) }}" alt="{{ skin.name }}">

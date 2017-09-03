@@ -63,4 +63,18 @@ class SkinsTradeRepository extends EntityRepository
             return [];
         }
     }
+
+    /**
+     * @param $userId
+     * @return int
+     */
+    public function findCountSkinsTradeByUserId($userId)
+    {
+        $dbal = $this->getEntityManager()->getConnection();
+        $stmt = $dbal->prepare('SELECT count(st.id) as count_skins FROM skins_trade st WHERE st.user_id = :id');
+        $stmt->bindParam('id', $userId, \PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetchColumn();
+    }
 }

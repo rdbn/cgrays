@@ -28,6 +28,9 @@
                             </button>
                         {% endif %}
                     </div>
+                    <p class="top10">
+                        Товаров в корзине: <strong><span class="text-action">{{ countSkinsTrade }}</span></strong>
+                    </p>
                     {% if skin.users.id == app.user.id %}
                         <div class="jumbotron top20">
                             <p><strong>Вы не можите купить данный предмет, так как являетесь его владельцем.</strong></p>
@@ -57,6 +60,17 @@
                 </div>
                 <p class="top20">{{ skin.skins.description }}</p>
             </div>
+        </div>
+        <div class="row top20">
+            <div class="col-lg-12 bottom20">
+                <h4>Другие {{ skin.skins.name }} ({{ skin.skins.decor.localizedTagName }}) на торговой площадке</h4>
+            </div>
+            {% for skin in skins %}
+                <div class="col-lg-2">
+                    <img src="{{ asset(skin.icon_url) }}" class="img-thumbnail" />
+                    <p>{{ skin.price }} <span class="glyphicon glyphicon-rub text-danger"></span></p>
+                </div>
+            {% endfor %}
         </div>
     </div>
 {% endblock %}

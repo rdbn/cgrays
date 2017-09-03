@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\SkinsPrice;
+use AppBundle\Entity\SkinsTrade;
 use AppBundle\Form\SkinsFilterTypeForm;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -94,13 +95,19 @@ class SkinsController extends Controller
      */
     public function productAction($skinsPriceId)
     {
+        /* @var SkinsPrice $skin */
         $skin = $this->getDoctrine()->getRepository(SkinsPrice::class)
             ->findSkinsPriceById($skinsPriceId);
 
         $skins = $this->getDoctrine()->getRepository(SkinsPrice::class)
-            ->findSkinsPriceById($skinsPriceId);
+            ->findSkinsPriceBySkinsId($skin->getSkins()->getId(), $skinsPriceId);
+
+        $countSkinsTrade = $this->getDoctrine()->getRepository(SkinsTrade::class)
+            ->findCountSkinsTradeByUserId($skin->getSkins()->getId());
 
         return $this->render('default/skin.html.twig', [
+            'countSkinsTrade' => $countSkinsTrade,
+            'skins' => $skins,
             'skin' => $skin,
         ]);
     }
