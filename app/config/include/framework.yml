@@ -33,6 +33,9 @@ framework:
 twig:
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
+    globals:
+        steam_inventory_count: '%steam_inventory_count%'
+
 
 assetic:
     debug:          '%kernel.debug%'

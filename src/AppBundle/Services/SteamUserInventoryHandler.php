@@ -103,12 +103,12 @@ class SteamUserInventoryHandler
         $descriptionItem = [];
         foreach ($userInventory['descriptions'] as $description) {
             $descriptionItem[$description['classid']] = [
-                'type_skins' => $this->getDictionaryType($description['tags'][0]),
-                'weapon' => $this->getDictionaryType($description['tags'][1]),
-                'item_set' => $this->getDictionaryType($description['tags'][2]),
-                'quality' => $this->getDictionaryType($description['tags'][3]),
-                'rarity' => $this->getDictionaryType($description['tags'][4]),
-                'decor' => $this->getDictionaryType($description['tags'][5]),
+                'type_skins' => $this->getDictionaryType($description['tags'], 0),
+                'weapon' => $this->getDictionaryType($description['tags'], 1),
+                'item_set' => $this->getDictionaryType($description['tags'], 2),
+                'quality' => $this->getDictionaryType($description['tags'], 3),
+                'rarity' => $this->getDictionaryType($description['tags'], 4),
+                'decor' => $this->getDictionaryType($description['tags'], 5),
                 'is_sell' => $description['marketable'],
                 'name' => $description['name'],
                 'descriptions' => $description['descriptions'][2]['value'],
@@ -135,15 +135,27 @@ class SteamUserInventoryHandler
         return $userItem;
     }
 
-    private function getDictionaryType(array $item)
+    /**
+     * @param $item
+     * @param $key
+     * @return array
+     */
+    private function getDictionaryType($item, $key)
     {
-        $tag = [
-            'internal_name' => $item['internal_name'],
-            'localized_tag_name' => $item['localized_tag_name'],
-        ];
+        if (isset($item[$key])) {
+            $tag = [
+                'internal_name' => $item[$key]['internal_name'],
+                'localized_tag_name' => $item[$key]['localized_tag_name'],
+            ];
 
-        if (isset($item['color'])) {
-            $tag['color'] = $item['color'];
+            if (isset($item['color'])) {
+                $tag['color'] = $item[$key]['color'];
+            }
+        } else {
+            $tag = [
+                'internal_name' => 'another',
+                'localized_tag_name' => 'Другое',
+            ];
         }
 
         return $tag;

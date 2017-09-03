@@ -88,7 +88,7 @@ var View = {
 };
 var Inventory = function () {
     var
-        urlMain = "/api",
+        urlMain = "/app_dev.php/api",
         urlUser = urlMain + '/user',
         urlProducts = urlMain + '/skins';
 
@@ -99,8 +99,25 @@ var Inventory = function () {
             statusCode: {
                 200: function (data) {
                     allItems = data;
-                    console.log(Object.keys(allItems).length);
-                    if (Object.keys(allItems).length > 0) {
+                    var
+                        length = Object.keys(allItems).length,
+                        pagination =  Number($('#showListInventory').attr('data-pagination')),
+                        arrowRight = $('#arrow-right'),
+                        arrowLeft = $('#arrow-left');
+
+                    if (length < pagination) {
+                        arrowRight.addClass('hidden');
+                    } else if (arrowRight.hasClass('hidden')) {
+                        arrowRight.removeClass('hidden');
+                    }
+
+                    if (page <= 1) {
+                        arrowLeft.addClass('hidden');
+                    } else if (arrowLeft.hasClass('hidden')) {
+                        arrowLeft.removeClass('hidden');
+                    }
+
+                    if (length > 0) {
                         View.inventory();
                     } else {
                         $('#user-inventory').html('Ваш инветнтарь пуст.');

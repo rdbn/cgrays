@@ -97,6 +97,9 @@ class SkinsController extends Controller
         $skin = $this->getDoctrine()->getRepository(SkinsPrice::class)
             ->findSkinsPriceById($skinsPriceId);
 
+        $skins = $this->getDoctrine()->getRepository(SkinsPrice::class)
+            ->findSkinsPriceById($skinsPriceId);
+
         return $this->render('default/skin.html.twig', [
             'skin' => $skin,
         ]);

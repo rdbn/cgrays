@@ -64,6 +64,13 @@ services:
         arguments:
             - AppBundle\Entity\SkinsPrice
 
+    # twig function
+    app.twig_extension:
+        class: AppBundle\Twig\AppExtension
+        public: false
+        tags:
+            - { name: twig.extension }
+
     # ApiBundle
     api.service.validator_item_sell:
         class: ApiBundle\Service\ValidatorItemSellService
