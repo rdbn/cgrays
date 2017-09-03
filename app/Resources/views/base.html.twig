@@ -34,7 +34,10 @@
                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                         <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="{{ path('app.skins.main') }}">Cgrays</a>
+                    <a class="navbar-brand" href="{{ path('app.skins.main') }}">
+                        <img src="{{ asset('bundles/app/image/icon_cgrays.png') }}" alt="Cgrays" class="logo-cgrays" />
+                        Cgrays
+                    </a>
                 </div>
                 <div class="navbar-collapse collapse">
                     {% set name = app.request.attributes.get("_route") %}
@@ -47,21 +50,17 @@
                             <li {%  if name == "app.basket.basket" %}class="active"{% endif %}><a href="{{ path('app.skins_trade.basket') }}">Корзина</a></li>
                             {% set username = app.user.username %}
                             <ul id="username" class="nav navbar-nav navbar-right" data-username="{{ username }}">
-                                <li {%  if name == "app.user.main" %}class="active"{% endif %}>
-                                    <a id="balance-menu"  href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                        Профиль <span class="caret"></span>
+                                <li>
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                        Баланс: {{ app.user.balance }} <span class="glyphicon glyphicon-rub text-danger"></span> <span class="caret"></span>
                                     </a>
                                     <ul class="dropdown-menu">
-                                        <li><a href="{{ path('app.user.main') }}">Профиль</a></li>
                                         <li><a href="{{ path('app.payment.payment_list') }}">История платежей</a></li>
                                         <li><a href="{{ path('app.payment.pay_in_out', { 'actionPay': 'in' }) }}">Пополнить баланс</a></li>
                                         <li><a href="{{ path('app.payment.pay_in_out', { 'actionPay': 'out' }) }}">Вывод средств</a></li>
-                                        <li><a href="{{ path('logout') }}">Выйти</a></li>
                                     </ul>
                                 </li>
-                                <li class="dropdown">
-                                    <a href="#">Баланс: {{ app.user.balance }} <span class="glyphicon glyphicon-rub text-danger"></span></a>
-                                </li>
+                                <li><a href="{{ path('logout') }}">Выйти</a></li>
                             </ul>
                         {% else %}
                             <li>{% include "SteamBundle:Login:login.html.twig" %}</li>

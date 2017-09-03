@@ -4,7 +4,7 @@
 
 {% block body %}
     {% if is_granted("ROLE_USER") %}
-        <div id="add-skins-steam-user" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+        <div id="add-skins-steam-user" class="modal fade" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -31,10 +31,52 @@
             </div>
         </div>
 
+        <div id="check-remove-href-trade" class="modal fade" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <nav id="menu-pagination">
+                            <p class="text-danger top20">
+                                <strong>
+                                    <span class="glyphicon glyphicon-exclamation-sign"></span>
+                                    Вы действительно хотите удалить ссылку для обмена?
+                                </strong>
+                            </p>
+                        </nav>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Нет</button>
+                        <button id="close-modal" type="button" class="btn btn-action" data-dismiss="modal">Да</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <div class="jumbotron">
             <div class="container">
-                <div class="btn-group">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h4 class="text-action">Обратите внимание!</h4>
+                        <ul class="text-danger">
+                            <li>При выставлении предмета на продажу он не покидает пределы вашего инвентаря.</li>
+                            <li>
+                                При добавлении в список для продажи предметов со счетчиками убийств, снимайте их из своей
+                                экипировки. Если предмет изменит свойства (например, изменилось количество убийств), то с
+                                его передачей могут возникнуть проблемы.
+                            </li>
+                            <li>
+                                Для того чтобы выставленные предметы отображались покупателям, необходимо быть онлайн на
+                                сайте. Это значит, что должна быть открыта минимум одна вкладка на сайта
+                            </li>
+                            <li>
+                                При отсутствии соединения с интернетом, все ваши выставленные вещи перестают отображаться
+                                в списке предметов доступных для покупки.
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="btn-group top20">
                     <button id="showListInventory" class="btn btn-action" type="button" data-toggle="modal" data-target="#add-skins-steam-user">
                         <span class="glyphicon glyphicon-plus"></span>
                         Добавить предмет для продажи
@@ -56,6 +98,70 @@
         </div>
 
         <div class="container">
+            <div class="jumbotron top20">
+                {% set user = app.user %}
+                <h3 class="text-action">Ваша ссылка на обмен:</h3>
+                <p>
+                    <strong>
+                        <a href="http://steamcommunity.com/profiles/{{ user.steamId }}/tradeoffers/privacy" target="_blank">
+                            <span class="glyphicon glyphicon-new-window"></span>
+                            Узнать ссылку
+                        </a>
+                    </strong>
+                </p>
+                <div class="input-group">
+                    <input id="value-href-trade" class="form-control" value="{{ user.hrefTrade }}" type="text" name="href_trade" />
+                    <div class="input-group-btn">
+                        <button id="add-href-trade" type="button" class="btn btn-action">сохранить</button>
+                    </div>
+                </div>
+                <p class="text-danger top10">
+                    <strong>
+                        <span class="glyphicon glyphicon-exclamation-sign"></span>
+                        Чтобы не стать жертвой мошенничества, никогда не
+                        сообщайте посторонним людям вашу ссылку на обмен!
+                    </strong>
+                </p>
+                <button class="btn btn-action" type="button" data-toggle="collapse" data-target="#requirements" aria-expanded="false" aria-controls="requirements">
+                    Требования к аккаунту
+                </button>
+                <div class="collapse" id="requirements">
+                    <h4>Требования к аккаунту и подготовка к использованию маркета</h4>
+                    <ul>
+                        <li>
+                            Шаг 1: Аккаунт не должен иметь бана трейда или временного ограничения на обмен
+                            (7 дневное ограничение, VAC блокировки, смена пароля и
+                            <a href="https://support.steampowered.com/kb_article.php?ref=1047-EDFM-2932&l=russian" target="_blank">прочее</a>)
+                        </li>
+                        <li>
+                            Шаг 2: Параметры приватности инвентаря и профиля пользователя должны быть установлены на  “открыт для всех”
+                        </li>
+                        <li>
+                            Шаг 3: У аккаунта должна быть создана и вписана в поле на сайте корректная ссылка на обмен
+                        </li>
+                        <li>
+                            Шаг 4: У аккаунта должны быть предметы без меток “нельзя передавать”. (если планируете продавать предметы)
+                        </li>
+                        <li>
+                            Шаг 5: У аккаунта должна быть привязка к мобильному телефону
+                        </li>
+                        <li>
+                            Шаг 6: У аккаунта обязательно должны быть вещи в инвентаре
+                        </li>
+                        <li>
+                            Шаг 7: Количество вещей не должно превышать количество свободных слотов инвентаря
+                        </li>
+                        <li>
+                            Шаг 8: Настройка оповещений о покупке и продаже
+                        </li>
+                    </ul>
+                    <p>
+                        Примечание : У аккаунта должно быть не более 1600 предметов в инвентаре.
+                        (Если планируете выставлять предметы на продажу, иначе могут быть ошибки при загрузке инвентаря)
+                    </p>
+                </div>
+            </div>
+
             <h4 class="text-left top-space top20">Выставленные предметы:</h4>
             <div class="row">
                 <div class="col-lg-12">

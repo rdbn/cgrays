@@ -96,6 +96,9 @@ class SteamUserInventoryHandler
         $userInventory = $this->inventoryBuilderDota
             ->getResult($user->getSteamId(), (int) $this->redis->get($keyStartId), $gameId);
 
+        if (!isset($userInventory['descriptions'])) {
+            return [];
+        }
 
         $descriptionItem = [];
         foreach ($userInventory['descriptions'] as $description) {

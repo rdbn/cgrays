@@ -2,6 +2,8 @@
 
 namespace ApiBundle\Controller;
 
+use AppBundle\Entity\User;
+use Doctrine\DBAL\DBALException;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\FOSRestController;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,7 +28,39 @@ class UserController extends FOSRestController
 
             $view = $this->view($inventory, 200);
         } catch (\Exception $e) {
-            $view = $this->view('Bad request', 400);
+            var_dump($e->getMessage(), $e->getCode());
+            switch ($e->getCode()) {
+                case 403:
+                    $view = $this->view('Forbidden user inventory', 400);
+                    break;
+                default:
+                    $view = $this->view('Bad request', 400);
+            }
+        }
+
+        return $this->handleView($view);
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @Rest\Post("/user/hrefTrade")
+     * @Rest\View()
+     * @return Response
+     */
+    public function postHrefTradeAction(Request $request)
+    {
+        $hrefTrade = $request->request->get('href_trade');
+
+        try {
+            $user = $this->getUser();
+            $user->setHrefTrade($hrefTrade);
+            $this->getDoctrine()->getManager()->flush();
+
+            $view = $this->view('success', 200);
+        } catch (DBALException $e) {
+            $this->get('logger')->error($e->getMessage());
+            $view = $this->view('success', 400);
         }
 
         return $this->handleView($view);

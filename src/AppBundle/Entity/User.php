@@ -33,6 +33,11 @@ class User implements UserInterface, EquatableInterface, \Serializable, SteamUse
     protected $steamId;
 
     /**
+     * @ORM\Column(name="href_trade", type="text", options={"default": ""})
+     */
+    protected $hrefTrade;
+
+    /**
      * @ORM\Column(type="string", length=128, unique=true)
      */
     protected $username;
@@ -103,13 +108,14 @@ class User implements UserInterface, EquatableInterface, \Serializable, SteamUse
         $this->balance = 0;
         $this->isOnline = false;
         $this->isSell= false;
+        $this->hrefTrade = "";
         $this->salt = md5(uniqid(time(), true));
 
         $this->createdAt = new \DateTime();
         $this->lastOnline = new \DateTime();
 
         $this->roles = new ArrayCollection();
-        $this->skinsOrder = new ArrayCollection();
+        $this->skinsTrade = new ArrayCollection();
         $this->skinsPrice = new ArrayCollection();
         $this->payment = new ArrayCollection();
     }
@@ -228,6 +234,31 @@ class User implements UserInterface, EquatableInterface, \Serializable, SteamUse
     public function getId()
     {
         return $this->id;
+        //return 6;
+    }
+
+    /**
+     * Set hrefTrade
+     *
+     * @param int $hrefTrade
+     *
+     * @return User
+     */
+    public function setHrefTrade($hrefTrade)
+    {
+        $this->hrefTrade = $hrefTrade;
+
+        return $this;
+    }
+
+    /**
+     * Get hrefTrade
+     *
+     * @return int
+     */
+    public function getHrefTrade()
+    {
+        return $this->hrefTrade;
     }
 
     /**

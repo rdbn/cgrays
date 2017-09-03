@@ -75,6 +75,9 @@ var View = {
             case 400:
                 str = 'Что то пошло не так, пожалуйста повторите попытку.';
                 break;
+            case 403:
+                str = 'На сданный момент ваш инветарь заблокирован для просмотра.';
+                break;
         }
 
         $('#user-inventory').html('<p>'+str+'</p>');
@@ -85,7 +88,7 @@ var View = {
 };
 var Inventory = function () {
     var
-        urlMain = "/api",
+        urlMain = "/app_dev.php/api",
         urlUser = urlMain + '/user',
         urlProducts = urlMain + '/skins';
 
@@ -96,7 +99,11 @@ var Inventory = function () {
             statusCode: {
                 200: function (data) {
                     allItems = data;
-                    View.inventory();
+                    if (allItems.length > 0) {
+                        View.inventory();
+                    } else {
+                        $('#user-inventory').html('Ваш инветнтарь пуст.');
+                    }
                 },
                 400: function (data) {
                     if (data['price'] === undefined) {
@@ -104,6 +111,9 @@ var Inventory = function () {
                     } else {
                         View.errorPrice(data['price']);
                     }
+                },
+                403: function (data) {
+                    View.error(400);
                 }
             }
         });
@@ -209,6 +219,18 @@ var Inventory = function () {
             }
         });
     };
+    var HrefTrade = function (element, hrefTrade) {
+        $.ajax({
+            url: urlUser + "/hrefTrade",
+            method: "POST",
+            data: {href_trade: hrefTrade},
+            statusCode: {
+                200: function () {
+                    element.removeClass('disabled');
+                }
+            }
+        });
+    };
 
     return {
         addSellProduct: function (id, price) {
@@ -245,6 +267,9 @@ var Inventory = function () {
         },
         remove: function (element, id) {
             Remove(element, id);
+        },
+        hrefTrade: function (element, hrefTrade) {
+            HrefTrade(element, hrefTrade);
         }
     }
 };
@@ -276,6 +301,16 @@ var Action = {
     },
     showListInventory: function () {
         $('#showListInventory').click(function () {
+            var hrefTrade = $('#value-href-trade');
+            if (hrefTrade.val().length === 0) {
+                hrefTrade.focus();
+
+                $('#add-skins-steam-user').modal({
+                    show: false
+                });
+                return false;
+            }
+
             Inventory().pagination();
         });
     }
@@ -370,6 +405,18 @@ var ActionUserInventory = function () {
                     inventory.remove(elementBtn, elementBtn.attr('data-toggle'));
                 }
             })
+        },
+        hrefTrade: function () {
+            $('#add-href-trade').click(function () {
+                var
+                    elementBtn = $(this),
+                    hrefTrade = $('#value-href-trade').val();
+
+                if (!elementBtn.hasClass('disabled')) {
+                    elementBtn.addClass('disabled');
+                    inventory.hrefTrade(elementBtn, hrefTrade);
+                }
+            })
         }
     };
 };
@@ -389,4 +436,5 @@ $(document).ready(function () {
     actionUserInventory.addProductSell();
     actionUserInventory.updateProductPrice();
     actionUserInventory.removeProduct();
+    actionUserInventory.hrefTrade();
 });

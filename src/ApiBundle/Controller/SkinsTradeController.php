@@ -35,6 +35,7 @@ class SkinsTradeController extends FOSRestController
 
             $view = $this->view("success", 200);
         } catch (DBALException $e) {
+            $this->get('logger')->error($e->getMessage());
             $view = $this->view("Bad request", 400);
         }
 
@@ -60,6 +61,7 @@ class SkinsTradeController extends FOSRestController
 
             $view = $this->view("successful", 200);
         } catch (\Exception $e) {
+            $this->get('logger')->error($e->getMessage());
             $view = $this->view("Bad request", 400);
 
         }
