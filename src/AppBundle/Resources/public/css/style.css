@@ -70,3 +70,8 @@ body {
 .hidden {
     display: none !important;
 }
+
+.not-target-item {
+    transform: scale(0.9);
+    opacity: 0.6;
+}

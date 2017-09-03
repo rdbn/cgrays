@@ -70,7 +70,7 @@ class SteamUserInventoryHandler
         foreach ($sellUserProducts as $product) {
             $key = "{$product['class_id']}:{$product['instance_id']}:{$product['asset_id']}";
             if (isset($userInventory[$key])) {
-                unset($userInventory[$key]);
+                $userInventory[$key]['is_view_sell'] = 1;
             }
         }
 

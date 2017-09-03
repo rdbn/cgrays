@@ -7,10 +7,10 @@ var View = {
         for (var item in allItems) {
             html += '<div class="col-xs-6 col-sm-2 col-md-2"><div class="thumbnail">';
 
-            if (allItems[item]['is_sell'] === 1) {
+            if (allItems[item]['is_sell'] === 1 && allItems[item]['is_view_sell'] === undefined) {
                 html += '<a class="view-item-inventory" data-toggle="'+item+'" href="#"><img src="'+allItems[item]['icon_url']+'" /></a>'
             } else {
-                html += '<img src="'+allItems[item]['icon_url']+'" />'
+                html += '<img src="'+allItems[item]['icon_url']+'" class="not-target-item" />'
             }
 
             html += '</div></div>';
@@ -187,7 +187,7 @@ var Inventory = function () {
             data: {item: {page: page, price: price, id: id}},
             statusCode: {
                 200: function (data) {
-                    delete allItems[id];
+                    allItems[id]['is_view_sell'] = 1;
                     View.addItemSell(data);
                     View.inventory();
                 },

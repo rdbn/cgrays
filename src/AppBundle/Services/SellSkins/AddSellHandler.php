@@ -117,6 +117,10 @@ class AddSellHandler
             return $dictionary->getId();
         }
 
+        if ($tableName == 'rarity') {
+            $item['color'] = isset($item['color']) ? $item['color'] : 'fff';
+        }
+
         $this->dbal->beginTransaction();
         try {
             $this->dbal->insert($tableName, $item);
