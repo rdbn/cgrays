@@ -1,5 +1,5 @@
 var News = function () {
-    var url = '/app_dev.php/api/news';
+    var url = '/api/news';
 
     var AddComment = function (elementBtn) {
         var
