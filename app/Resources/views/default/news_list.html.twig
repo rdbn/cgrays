@@ -10,7 +10,7 @@
                     <h4>
                         <a class="text-action" href="{{ path('app.news.news', {'id': news.id}) }}">{{ news.title }}</a>
                     </h4>
-                    <p class="text-muted top20">{{ news.text|strlen(300) }}</p>
+                    <p class="top20">{{ news.text|strlen(300)|raw }}</p>
                     <p>Дата публикации: <span class="text-muted text-sm">{{ news.createdAt.format('Y-m-d H:i:s') }}</span></p>
                 </div>
             {% endfor %}
