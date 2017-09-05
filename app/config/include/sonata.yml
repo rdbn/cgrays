@@ -1,6 +1,17 @@
+sonata_admin:
+    # for hide mosaic view button on all screen using `false`
+    show_mosaic_button:   true
+
 sonata_block:
     default_contexts: [cms]
     blocks:
         # enable the SonataAdminBundle block
         sonata.admin.block.admin_list:
             contexts: [admin]
+
+services:
+    sonata_admin.admin.news:
+        class: AdminBundle\Admin\NewsAdmin
+        arguments: [~, AppBundle\Entity\News, ~]
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: Информация, label: Новости, show_mosaic_button: false }

@@ -47,25 +47,6 @@ services:
         factory: ['@steam.loader.steam_api_loader', 'builder']
         arguments: ['@steam.dota_method.rarities']
 
-    # CSGO method
-    steam.csgo_method.schema:
-        class: SteamBundle\CSGOMethod\Schema
-        parent: steam.abstract_method
-
-    steam.api_csgo_schema:
-        class: SteamBundle\Loader\ApiLoader
-        factory: ['@steam.loader.steam_api_loader', 'builder']
-        arguments: ['@steam.csgo_method.schema']
-
-    steam.csgo_method.store_meta_data:
-        class: SteamBundle\CSGOMethod\StoreMetaData
-        parent: steam.abstract_method
-
-    steam.api_csgo_store_meta_data:
-        class: SteamBundle\Loader\ApiLoader
-        factory: ['@steam.loader.steam_api_loader', 'builder']
-        arguments: ['@steam.csgo_method.store_meta_data']
-
     # steam method
     steam.steam_method.profile:
         class: SteamBundle\SteamMethod\ProfileUser

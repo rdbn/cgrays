@@ -54,7 +54,6 @@ class Version20170404073101 extends AbstractMigration
 
         $this->addSql("CREATE SEQUENCE IF NOT EXISTS users_id_seq START 1;");
         $this->addSql("CREATE SEQUENCE IF NOT EXISTS roles_id_seq START 1;");
-        $this->addSql("CREATE SEQUENCE IF NOT EXISTS category_id_seq START 1;");
 
     }
 

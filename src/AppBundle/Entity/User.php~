@@ -33,6 +33,11 @@ class User implements UserInterface, EquatableInterface, \Serializable, SteamUse
     protected $steamId;
 
     /**
+     * @ORM\Column(name="href_trade", type="text", options={"default": ""})
+     */
+    protected $hrefTrade;
+
+    /**
      * @ORM\Column(type="string", length=128, unique=true)
      */
     protected $username;
@@ -84,9 +89,9 @@ class User implements UserInterface, EquatableInterface, \Serializable, SteamUse
     protected $isSell;
 
     /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\SkinsOrder", mappedBy="users")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\SkinsTrade", mappedBy="users")
      */
-    protected $skinsOrder;
+    protected $skinsTrade;
 
     /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\SkinsPrice", mappedBy="users")
@@ -98,20 +103,27 @@ class User implements UserInterface, EquatableInterface, \Serializable, SteamUse
      */
     protected $payment;
 
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\NewsComment", mappedBy="user")
+     */
+    protected $newsComment;
+
     public function __construct()
     {
         $this->balance = 0;
         $this->isOnline = false;
         $this->isSell= false;
+        $this->hrefTrade = "";
         $this->salt = md5(uniqid(time(), true));
 
         $this->createdAt = new \DateTime();
         $this->lastOnline = new \DateTime();
 
         $this->roles = new ArrayCollection();
-        $this->skinsOrder = new ArrayCollection();
+        $this->skinsTrade = new ArrayCollection();
         $this->skinsPrice = new ArrayCollection();
         $this->payment = new ArrayCollection();
+        $this->newsComment = new ArrayCollection();
     }
 
     public function getRoles()
@@ -228,6 +240,31 @@ class User implements UserInterface, EquatableInterface, \Serializable, SteamUse
     public function getId()
     {
         return $this->id;
+        //return 6;
+    }
+
+    /**
+     * Set hrefTrade
+     *
+     * @param int $hrefTrade
+     *
+     * @return User
+     */
+    public function setHrefTrade($hrefTrade)
+    {
+        $this->hrefTrade = $hrefTrade;
+
+        return $this;
+    }
+
+    /**
+     * Get hrefTrade
+     *
+     * @return int
+     */
+    public function getHrefTrade()
+    {
+        return $this->hrefTrade;
     }
 
     /**
@@ -347,7 +384,7 @@ class User implements UserInterface, EquatableInterface, \Serializable, SteamUse
     /**
      * Set lastOnline
      *
-     * @param boolean $lastOnline
+     * @param \DateTime $lastOnline
      *
      * @return User
      */
@@ -361,7 +398,7 @@ class User implements UserInterface, EquatableInterface, \Serializable, SteamUse
     /**
      * Get lastOnline
      *
-     * @return boolean
+     * @return \DateTime
      */
     public function getLastOnline()
     {
@@ -417,37 +454,37 @@ class User implements UserInterface, EquatableInterface, \Serializable, SteamUse
     }
 
     /**
-     * Add skinsOrder
+     * Add skinsTrade
      *
-     * @param \AppBundle\Entity\SkinsOrder $skinsOrder
+     * @param \AppBundle\Entity\SkinsTrade $skinsTrade
      *
      * @return User
      */
-    public function addSkinsOrder(\AppBundle\Entity\SkinsOrder $skinsOrder)
+    public function addSkinsTrade(\AppBundle\Entity\SkinsTrade $skinsTrade)
     {
-        $this->skinsOrder[] = $skinsOrder;
+        $this->skinsTrade[] = $skinsTrade;
 
         return $this;
     }
 
     /**
-     * Remove skinsOrder
+     * Remove skinsTrade
      *
-     * @param \AppBundle\Entity\SkinsOrder $skinsOrder
+     * @param \AppBundle\Entity\SkinsTrade $skinsTrade
      */
-    public function removeSkinsOrder(\AppBundle\Entity\SkinsOrder $skinsOrder)
+    public function removeSkinsTrade(\AppBundle\Entity\SkinsTrade $skinsTrade)
     {
-        $this->skinsOrder->removeElement($skinsOrder);
+        $this->skinsTrade->removeElement($skinsTrade);
     }
 
     /**
-     * Get skinsOrder
+     * Get skinsTrade
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getSkinsOrder()
+    public function getSkinsTrade()
     {
-        return $this->skinsOrder;
+        return $this->skinsTrade;
     }
 
     /**
