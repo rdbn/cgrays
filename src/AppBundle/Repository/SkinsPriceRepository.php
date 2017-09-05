@@ -66,7 +66,7 @@ class SkinsPriceRepository extends EntityRepository
             ->leftJoin('s', 'skins_price', 'sp', 'sp.skins_id = s.id')
             ->leftJoin('sp', 'users', 'u', 'sp.user_id = u.id')
             ->andWhere('u.is_sell = TRUE')
-            ->andWhere('sp.is_sell = FALSE')
+            ->andWhere('sp.is_sell = TRUE')
             ->andWhere('sp.is_remove = FALSE')
             ->andWhere('sp.id IS NOT NULL');
 
