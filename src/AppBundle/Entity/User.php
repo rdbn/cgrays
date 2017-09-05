@@ -128,7 +128,12 @@ class User implements UserInterface, EquatableInterface, \Serializable, SteamUse
 
     public function getRoles()
     {
-        return $this->roles->toArray();
+        $roles = [];
+        foreach ($this->roles as $role) {
+            $roles[] = $role->getRole();
+        }
+
+        return $roles;
     }
 
     public function getPassword()

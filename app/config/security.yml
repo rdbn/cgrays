@@ -37,7 +37,7 @@ security:
             anonymous: true
 
     access_control:
-        - { path: ^/login$, roles: ROLE_ADMIN }
+        - { path: ^/login$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/user, roles: ROLE_USER }
         - { path: ^/api, roles: ROLE_USER }
-        - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/backend, roles: ROLE_ADMIN }

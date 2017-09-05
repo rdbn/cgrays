@@ -31,13 +31,18 @@ class RegisterAdminCommand extends ContainerAwareCommand
         $user = new User();
         $user
             ->setUsername("admin")
-            ->setUsername("admin");
+            ->setSteamId("123")
+            ->setAvatar("image/300.png");
 
         $encoder = $container->get('security.password_encoder');
         $user->setPassword($encoder->encodePassword($user, "admin"));
 
         $role = $em->getRepository(Role::class)
             ->findOneBy(["role" => "ROLE_ADMIN"]);
+        $user->addRole($role);
+
+        $role = $em->getRepository(Role::class)
+            ->findOneBy(["role" => "ROLE_USER"]);
 
         $user->addRole($role);
 

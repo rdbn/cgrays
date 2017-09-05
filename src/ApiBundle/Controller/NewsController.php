@@ -32,29 +32,27 @@ class NewsController extends FOSRestController
     }
 
     /**
+     * @param int $newsId
      * @param Request $request
      *
-     * @Rest\Post("/news/add/comment")
+     * @Rest\Post("/news/add/comment/{newsId}")
      * @Rest\View()
      * @return Response
      */
-    public function postNewsAddCommentAction(Request $request)
+    public function postNewsAddCommentAction(Request $request, $newsId)
     {
         $form = $this->createForm(NewsCommentTypeForm::class);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            //try {
+            try {
                 $comment = $this->get('api.service.news_comment')
-                    ->getComment(
-                        $form->get('news')->getData()->getId(),
-                        $form->get('comment')->getData()
-                    );
+                    ->getComment($newsId, $form->get('comment')->getData());
 
                 $view = $this->view($comment, 200);
-//            } catch (\Exception $e) {
-//                $view = $this->view('Bad request', 400);
-//            }
+            } catch (\Exception $e) {
+                $view = $this->view('Bad request', 400);
+            }
         } else {
             $view = $this->view($form->getErrors(), 400);
         }

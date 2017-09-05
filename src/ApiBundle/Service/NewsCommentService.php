@@ -62,7 +62,7 @@ class NewsCommentService
             $this->dbal->insert('news_comment', [
                 'news_id' => $newsId,
                 'user_id' => $this->user->getId(),
-                'text' => $text,
+                'comment' => $text,
                 'created_at' => $date,
             ]);
             $this->dbal->commit();
