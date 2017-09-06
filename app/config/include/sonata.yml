@@ -15,3 +15,9 @@ services:
         arguments: [~, AppBundle\Entity\News, ~]
         tags:
             - { name: sonata.admin, manager_type: orm, group: Информация, label: Новости, show_mosaic_button: false }
+
+    sonata_admin.admin.static_page:
+        class: AdminBundle\Admin\StaticPageAdmin
+        arguments: [~, AppBundle\Entity\StaticPage, ~]
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: Информация, label: Страницы с инф., show_mosaic_button: false }

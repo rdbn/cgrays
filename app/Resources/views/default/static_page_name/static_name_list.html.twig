@@ -1,0 +1,3 @@
+{% for key, name in namePages %}
+    <p><a href="{{ path('app.static_page.page', { 'name': key }) }}" target="_blank">{{ name }}</a></p>
+{% endfor %}
