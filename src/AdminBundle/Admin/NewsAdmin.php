@@ -56,6 +56,8 @@ class NewsAdmin extends AbstractAdmin
     {
         $list
             ->addIdentifier('title')
-            ->add('createdAt');
+            ->add('createdAt', 'date', [
+                'format' => 'Y-m-d H:i:s',
+            ]);
     }
 }

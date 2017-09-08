@@ -61,7 +61,17 @@
                                         <li><a href="{{ path('app.payment.pay_in_out', { 'actionPay': 'out' }) }}">Вывод средств</a></li>
                                     </ul>
                                 </li>
-                                <li><a href="{{ path('logout') }}">Выйти</a></li>
+                                {% if is_granted("ROLE_ADMIN") %}
+                                    <li>
+                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Выйти <span class="caret"></span></a>
+                                        <ul class="dropdown-menu">
+                                            <li><a href="{{ path('app.security.switch_user', { 'username': 'admin' }) }}">Выйти из аккаунта</a></li>
+                                            <li><a href="{{ path('logout') }}">Выйти</a></li>
+                                        </ul>
+                                    </li>
+                                {% else %}
+                                    <li><a href="{{ path('logout') }}">Выйти</a></li>
+                                {% endif %}
                             </ul>
                         {% else %}
                             <li>{% include "SteamBundle:Login:login.html.twig" %}</li>

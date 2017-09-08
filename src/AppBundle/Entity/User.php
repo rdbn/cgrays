@@ -8,9 +8,11 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Services\UploadImageService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use SteamBundle\Security\User\SteamUserInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -108,6 +110,11 @@ class User implements UserInterface, EquatableInterface, \Serializable, SteamUse
      */
     protected $newsComment;
 
+    /**
+     * Unmapped property to handle file uploads
+     */
+    private $file;
+
     public function __construct()
     {
         $this->balance = 0;
@@ -154,6 +161,50 @@ class User implements UserInterface, EquatableInterface, \Serializable, SteamUse
     public function eraseCredentials()
     {
         return $this->password;
+    }
+
+    /**
+     * Sets file.
+     *
+     * @param UploadedFile $file
+     */
+    public function setFile(UploadedFile $file = null)
+    {
+        $this->file = $file;
+    }
+
+    /**
+     * Get file.
+     *
+     * @return UploadedFile
+     */
+    public function getFile()
+    {
+        return $this->file;
+    }
+
+    /**
+     * Manages the copying of the file to the relevant place on the server
+     */
+    public function upload()
+    {
+        if (null === $this->getFile()) {
+            return;
+        }
+
+        if ($this->getAvatar()) {
+            $filename = __DIR__ . "/../../../web{$this->getAvatar()}";
+            if (file_exists($filename)) {
+                unlink($filename);
+            }
+        }
+
+        $uploadDir = UploadImageService::UPLOAD_IMAGE_PATH;
+        $nameImage = $uploadDir.md5(uniqid(time(), true)).'.png';
+        $this->getFile()->move($uploadDir, $nameImage);
+
+        $this->avatar = $nameImage;
+        $this->setFile(null);
     }
 
     /**
@@ -245,7 +296,6 @@ class User implements UserInterface, EquatableInterface, \Serializable, SteamUse
     public function getId()
     {
         return $this->id;
-        //return 6;
     }
 
     /**

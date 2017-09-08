@@ -88,3 +88,9 @@ services:
     processing.is_online.is_online_handler:
         class: ProcessingBundle\OnlineUser\IsOnlineHandler
         arguments: ['@doctrine.dbal.default_connection', '@app.repository.user', '@logger']
+
+    # listener
+    app.switch_user_listener:
+        class: AppBundle\EventListener\SwitchUserListener
+        tags:
+            - { name: kernel.event_listener, event: security.switch_user, method: onSwitchUser }
