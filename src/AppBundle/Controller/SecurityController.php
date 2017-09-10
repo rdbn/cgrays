@@ -41,7 +41,7 @@ class SecurityController extends Controller
     {
         $authChecker = $this->get('security.authorization_checker');
         $session = $request->getSession();
-        if ($authChecker->isGranted('ROLE_ALLOWED_TO_SWITCH') || $session->has('uuid_switch_user')) {
+        if ($authChecker->isGranted('ROLE_ALLOWED_TO_SWITCH')) {
             if ($session->has('uuid_switch_user')) {
                 $steamId = $session->get('uuid_switch_user');
             } else {
