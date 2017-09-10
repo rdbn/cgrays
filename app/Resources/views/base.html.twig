@@ -61,13 +61,22 @@
                                         <li><a href="{{ path('app.payment.pay_in_out', { 'actionPay': 'out' }) }}">Вывод средств</a></li>
                                     </ul>
                                 </li>
-                                {% if is_granted("ROLE_ADMIN") %}
+                                {% if is_granted("ROLE_ALLOWED_TO_SWITCH") or app.session.has('uuid_switch_user') %}
+                                    {% if app.session.has('uuid_switch_user') %}
+                                        {% set steamId = app.session.get('uuid_switch_user') %}
+                                    {% else %}
+                                        {% set steamId = null %}
+                                    {% endif %}
                                     <li>
-                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Выйти <span class="caret"></span></a>
-                                        <ul class="dropdown-menu">
-                                            <li><a href="{{ path('app.security.switch_user', { 'username': 'admin' }) }}">Выйти из аккаунта</a></li>
-                                            <li><a href="{{ path('logout') }}">Выйти</a></li>
-                                        </ul>
+                                        {% if steamId != app.user.steamId %}
+                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Выйти <span class="caret"></span></a>
+                                            <ul class="dropdown-menu">
+                                                <li><a href="{{ path('app.security.switch_user', { 'steamId': steamId }) }}">Выйти из аккаунта</a></li>
+                                                <li><a href="{{ path('logout') }}">Выйти</a></li>
+                                            </ul>
+                                        {% else %}
+                                            <a href="{{ path('logout') }}">Выйти</a>
+                                        {% endif %}
                                     </li>
                                 {% else %}
                                     <li><a href="{{ path('logout') }}">Выйти</a></li>

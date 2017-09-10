@@ -14,8 +14,14 @@ use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
+use Sonata\AdminBundle\Form\Type\Filter\ChoiceType;
 use Sonata\DoctrineORMAdminBundle\Datagrid\ProxyQuery;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 class UserAdmin extends AbstractAdmin
 {
@@ -34,16 +40,30 @@ class UserAdmin extends AbstractAdmin
     protected function configureFormFields(FormMapper $form)
     {
         $form
-            ->add('username')
-            ->add('steamId')
+            ->add('username', TextType::class, [
+                'label' => 'Steam username'
+            ])
+            ->add('steamId', TextType::class, [
+                'label' => 'Steam ID'
+            ])
             ->add('isOnline')
             ->add('isSell')
-            ->add('roles', EntityType::class, [
+            ->add('plainPassword', RepeatedType::class, [
+                'type' => PasswordType::class,
+                'invalid_message' => 'Значения паролей не совпадают.',
+                'required' => false,
+                'first_options'  => ['label' => 'Password'],
+                'second_options' => ['label' => 'Repeat Password'],
+            ])
+            ->add('role', EntityType::class, [
                 'class' => Role::class,
                 'choice_label' => 'role',
-                'multiple' => true
+                'expanded' => true,
+                'multiple' => true,
             ])
-            ->add('file', 'file');
+            ->add('file', 'file', [
+                'required' => false,
+            ]);
     }
 
     /**
@@ -76,9 +96,6 @@ class UserAdmin extends AbstractAdmin
             ->add('isSell', 'boolean', [
                 'label' => 'Включен трейд или нет'
             ])
-            ->add('roles', 'collection', [
-                'label' => 'Права пользователя',
-            ])
             ->add('lastOnline', 'date', [
                 'label' => 'Время последнего захода',
                 'format' => 'Y-m-d H:i:s',
@@ -86,14 +103,19 @@ class UserAdmin extends AbstractAdmin
             ->add('createdAt', 'date', [
                 'label' => 'Дата регистрации',
                 'format' => 'Y-m-d H:i:s',
-            ])
-            ->add('_action', null, [
-                'actions' => [
-                    'switch_user' => [
-                        'template' => 'CRUD/list__action_switch_user.html.twig'
-                    ],
-                ],
             ]);
+
+        $isGranted = $this->getConfigurationPool()->getContainer()->get('security.authorization_checker');
+        if ($isGranted->isGranted('ROLE_ALLOWED_TO_SWITCH')) {
+            $list
+                ->add('_action', null, [
+                    'actions' => [
+                        'switch_user' => [
+                            'template' => 'CRUD/list__action_switch_user.html.twig'
+                        ],
+                    ],
+                ]);
+        }
     }
 
     /**
@@ -119,6 +141,7 @@ class UserAdmin extends AbstractAdmin
      */
     public function prePersist($object)
     {
+        $this->changePassword($object);
         $this->manageFileUpload($object);
     }
 
@@ -127,6 +150,20 @@ class UserAdmin extends AbstractAdmin
      */
     public function preUpdate($object)
     {
+        if ($object->getPlainPassword()) {
+            $this->changePassword($object);
+        }
+
+        $container = $this->getConfigurationPool()->getContainer();
+        $currentUser = $container->get('security.token_storage')
+            ->getToken()
+            ->getUser();
+
+        if ($object == $currentUser) {
+            $token = new UsernamePasswordToken($object, '', 'frontend', $object->getRoles());
+            $container->get('security.token_storage')->setToken($token);
+        }
+
         $this->manageFileUpload($object);
     }
 
@@ -138,5 +175,17 @@ class UserAdmin extends AbstractAdmin
         if ($object->getFile()) {
             $object->upload();
         }
+    }
+
+    /**
+     * @param User $user
+     */
+    private function changePassword($user)
+    {
+        $password = $this->getConfigurationPool()->getContainer()
+            ->get('security.password_encoder')
+            ->encodePassword($user, $user->getPlainPassword());
+
+        $user->setPassword($password);
     }
 }

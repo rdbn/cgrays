@@ -111,6 +111,11 @@ class User implements UserInterface, EquatableInterface, \Serializable, SteamUse
     protected $newsComment;
 
     /**
+     * Unmapped property to handle change password
+     */
+    private $plainPassword;
+
+    /**
      * Unmapped property to handle file uploads
      */
     private $file;
@@ -161,6 +166,25 @@ class User implements UserInterface, EquatableInterface, \Serializable, SteamUse
     public function eraseCredentials()
     {
         return $this->password;
+    }
+
+    /**
+     * @param $plainPassword
+     * @return $this
+     */
+    public function setPlainPassword($plainPassword)
+    {
+        $this->plainPassword = $plainPassword;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPlainPassword()
+    {
+        return $this->plainPassword;
     }
 
     /**
@@ -496,6 +520,14 @@ class User implements UserInterface, EquatableInterface, \Serializable, SteamUse
         $this->roles[] = $role;
 
         return $this;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getRole()
+    {
+        return $this->roles;
     }
 
     /**

@@ -10,7 +10,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-use Symfony\Component\Security\Core\Role\SwitchUserRole;
 
 class SecurityController extends Controller
 {
@@ -34,26 +33,27 @@ class SecurityController extends Controller
 
     /**
      * @param Request $request
-     * @param string $username
-     * @Route("/switch/user/{username}", name="app.security.switch_user")
+     * @param string $steamId
+     * @Route("/switch/user/{steamId}", name="app.security.switch_user")
      * @return RedirectResponse
      */
-    public function switchUserAction(Request $request, $username)
+    public function switchUserAction(Request $request, $steamId)
     {
         $authChecker = $this->get('security.authorization_checker');
-        if ($authChecker->isGranted('ROLE_ADMIN')) {
-            $tokenStorage = $this->get('security.token_storage');
+        $session = $request->getSession();
+        if ($authChecker->isGranted('ROLE_ALLOWED_TO_SWITCH') || $session->has('uuid_switch_user')) {
+            if ($session->has('uuid_switch_user')) {
+                $steamId = $session->get('uuid_switch_user');
+            } else {
+                $session->set('uuid_switch_user', $this->getUser()->getSteamId());
+            }
 
-            $user = $this->getDoctrine()->getRepository(User::class)
-                ->findOneBy(['username' => $username]);
-
-            $role = $this->getDoctrine()->getRepository(Role::class)
-                ->findOneBy(['role' => 'ROLE_ADMIN']);
-
-            $user->addRole($role);
+            $em = $this->get('doctrine.orm.entity_manager');
+            $user = $em->getRepository(User::class)
+                ->findOneBy(['steamId' => $steamId]);
 
             $token = new UsernamePasswordToken($user, '', 'frontend', $user->getRoles());
-            $tokenStorage->setToken($token);
+            $this->get('security.token_storage')->setToken($token);
         }
 
         return $this->redirectToRoute('app.skins.main');
