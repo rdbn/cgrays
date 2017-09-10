@@ -11,6 +11,7 @@ namespace AppBundle\Repository;
 use AppBundle\Entity\User;
 use Doctrine\DBAL\Driver\PDOException;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\QueryBuilder;
 
 class UserRepository extends EntityRepository
 {
@@ -42,6 +43,9 @@ class UserRepository extends EntityRepository
         return $stmt->fetch();
     }
 
+    /**
+     * @return array
+     */
     public function findUserIsNotOnline()
     {
         $dbal = $this->getEntityManager()->getConnection();
@@ -55,5 +59,18 @@ class UserRepository extends EntityRepository
         $stmt->execute();
 
         return $stmt->fetchAll();
+    }
+
+    /**
+     * @return QueryBuilder
+     */
+    public function querySonata()
+    {
+        $qb = $this->createQueryBuilder('u');
+        $qb
+            ->addSelect('r')
+            ->leftJoin('u.roles', 'r');
+
+        return $qb;
     }
 }

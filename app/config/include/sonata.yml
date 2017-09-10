@@ -21,3 +21,15 @@ services:
         arguments: [~, AppBundle\Entity\StaticPage, ~]
         tags:
             - { name: sonata.admin, manager_type: orm, group: Информация, label: Страницы с инф., show_mosaic_button: false }
+
+    sonata_admin.admin.user:
+        class: AdminBundle\Admin\UserAdmin
+        arguments: [~, AppBundle\Entity\User, ~]
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: Пользователи, label: Список пользователей, show_mosaic_button: false }
+
+    sonata_admin.admin.role:
+        class: AdminBundle\Admin\RoleAdmin
+        arguments: [~, AppBundle\Entity\Role, ~]
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: Пользователи, label: Парва доступа, show_mosaic_button: false }

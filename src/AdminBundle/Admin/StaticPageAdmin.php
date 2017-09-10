@@ -53,6 +53,8 @@ class StaticPageAdmin extends AbstractAdmin
     {
         $list
             ->addIdentifier('typePage')
-            ->add('createdAt');
+            ->add('createdAt', 'date', [
+                'format' => 'Y-m-d H:i:s',
+            ]);
     }
 }
