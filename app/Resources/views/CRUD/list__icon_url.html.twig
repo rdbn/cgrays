@@ -1,0 +1,15 @@
+{% extends 'SonataAdminBundle:CRUD:base_list_field.html.twig' %}
+
+{% block field %}
+    {% if object.skins is defined %}
+        {% set name = object.skins.name %}
+        {% set path = object.skins.iconUrl %}
+    {% else %}
+        {% set name = object.name %}
+        {% set path = object.iconUrl %}
+    {% endif %}
+
+    <div class="col-lg-6">
+        <img src="{{ asset(path) }}" alt="{{ name }}" />
+    </div>
+{% endblock %}

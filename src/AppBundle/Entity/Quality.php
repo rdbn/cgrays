@@ -40,10 +40,22 @@ class Quality implements DictionaryInterface
      */
     protected $skins;
 
+    /**
+     * Quality constructor.
+     */
     public function __construct()
     {
         $this->skins= new ArrayCollection();
     }
+
+    /**
+     * @return mixed
+     */
+    public function __toString()
+    {
+        return $this->localizedTagName;
+    }
+
 
     /**
      * Get id

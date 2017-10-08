@@ -138,6 +138,11 @@ class User implements UserInterface, EquatableInterface, \Serializable, SteamUse
         $this->newsComment = new ArrayCollection();
     }
 
+    public function __toString()
+    {
+        return $this->username;
+    }
+
     public function getRoles()
     {
         $roles = [];

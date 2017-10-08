@@ -67,7 +67,7 @@ class SkinsPrice
     protected $isRemove;
 
     /**
-     * @ORM\Column(type="datetime", type="datetime")
+     * @ORM\Column(name="created_at", type="datetime", type="datetime")
      */
     protected $createdAt;
 

@@ -46,6 +46,14 @@ class Weapon implements DictionaryInterface
     }
 
     /**
+     * @return mixed
+     */
+    public function __toString()
+    {
+        return $this->localizedTagName;
+    }
+
+    /**
      * Get id
      *
      * @return integer

@@ -12,3 +12,4 @@ imports:
     - { resource: include/steam.yml }
     - { resource: include/sonata.yml }
     - { resource: include/swiftmailer.yml }
+    - { resource: include/lexik_jwt_authentication.yml }

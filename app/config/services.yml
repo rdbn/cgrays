@@ -1,8 +1,22 @@
 services:
+    # AdminBundle
+    admin.service.cases_list:
+        class: AdminBundle\Service\CasesListService
+        arguments: ['@doctrine.orm.default_entity_manager']
+
+    admin.listener.cases:
+        class: AdminBundle\EventListener\CasesPersistSubscriber
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }
+
     # SteamBundle
+    apikey_authenticator:
+        class:  AppBundle\Security\ApiKeyAuthenticator
+        public: false
+
     steam.user_provider:
         class: AppBundle\Security\SteamUserProvider
-        arguments: [ '@doctrine.orm.default_entity_manager', '@app.service.user_service', '%steam.user_class%' ]
+        arguments: ['@doctrine.orm.default_entity_manager', '@app.service.user_service', '%steam.user_class%']
 
     # AppBundle
     app.service.user_service:
@@ -83,6 +97,14 @@ services:
     api.service.news_comment:
         class: ApiBundle\Service\NewsCommentService
         arguments: ['@doctrine.dbal.default_connection', '@security.token_storage', '@logger']
+
+    api.service.case_open:
+        class: ApiBundle\Service\CaseOpenHandler
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@doctrine.dbal.default_connection'
+            - '@security.token_storage'
+            - '@logger'
 
     # ProcessingBundle
     processing.is_online.is_online_handler:

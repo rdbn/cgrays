@@ -36,7 +36,7 @@ class Rarity implements DictionaryInterface
     protected $localizedTagName;
 
     /**
-     * @ORM\Column(name="color", type="string", length=45)
+     * @ORM\Column(type="string", length=45)
      */
     protected $color;
 
@@ -48,6 +48,14 @@ class Rarity implements DictionaryInterface
     public function __construct()
     {
         $this->skins= new ArrayCollection();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function __toString()
+    {
+        return $this->localizedTagName;
     }
 
     /**

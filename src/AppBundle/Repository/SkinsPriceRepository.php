@@ -224,4 +224,26 @@ class SkinsPriceRepository extends EntityRepository
 
         return $stmt->fetch();
     }
+
+    public function querySonata()
+    {
+        $qb = $this->createQueryBuilder('sp');
+        $qb
+            ->addSelect('s')
+            ->addSelect('r')
+            ->addSelect('q')
+            ->addSelect('w')
+            ->addSelect('its')
+            ->addSelect('ts')
+            ->addSelect('d')
+            ->leftJoin('sp.skins', 's')
+            ->leftJoin('s.rarity', 'r')
+            ->leftJoin('s.quality', 'q')
+            ->leftJoin('s.weapon', 'w')
+            ->leftJoin('s.itemSet', 'its')
+            ->leftJoin('s.typeSkins', 'ts')
+            ->leftJoin('s.decor', 'd');
+
+        return $qb;
+    }
 }

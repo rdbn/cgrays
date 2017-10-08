@@ -3,6 +3,9 @@
 #    type:     annotation
 #    prefix:   /
 
+api_login_check:
+    path: /api/login_check
+
 api:
     resource: "@ApiBundle/Controller/"
     type:     rest

@@ -23,6 +23,7 @@ class AppKernel extends Kernel
             new EightPoints\Bundle\GuzzleBundle\GuzzleBundle(),
             new Knp\Bundle\PaginatorBundle\KnpPaginatorBundle(),
             new OldSound\RabbitMqBundle\OldSoundRabbitMqBundle(),
+            new Lexik\Bundle\JWTAuthenticationBundle\LexikJWTAuthenticationBundle(),
 
             // sonata
             new Sonata\CoreBundle\SonataCoreBundle(),
@@ -34,6 +35,7 @@ class AppKernel extends Kernel
             new Sonata\AdminBundle\SonataAdminBundle(),
             new Snc\RedisBundle\SncRedisBundle(),
 
+            new AdminBundle\AdminBundle(),
             new AppBundle\AppBundle(),
             new ApiBundle\ApiBundle(),
             new SteamBundle\SteamBundle(),
