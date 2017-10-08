@@ -32,7 +32,7 @@ security:
                 require_previous_session: false
 
         api:
-            pattern:   ^/api
+            pattern:   ^/api/cases
             anonymous: true
             stateless: true
             lexik_jwt: ~
