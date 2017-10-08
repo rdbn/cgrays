@@ -92,10 +92,21 @@ class Skins
      */
     protected $skinsPrice;
 
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\CasesSkins", mappedBy="skins")
+     */
+    protected $casesSkins;
+
     public function __construct()
     {
         $this->createdAt = new \DateTime();
         $this->skinsPrice = new ArrayCollection();
+        $this->casesSkins = new ArrayCollection();
+    }
+
+    public function __toString()
+    {
+        return $this->name;
     }
 
     /**
@@ -404,5 +415,39 @@ class Skins
     public function getSkinsPrice()
     {
         return $this->skinsPrice;
+    }
+
+    /**
+     * Add casesSkin
+     *
+     * @param \AppBundle\Entity\CasesSkins $casesSkin
+     *
+     * @return Skins
+     */
+    public function addCasesSkin(\AppBundle\Entity\CasesSkins $casesSkin)
+    {
+        $this->casesSkins[] = $casesSkin;
+
+        return $this;
+    }
+
+    /**
+     * Remove casesSkin
+     *
+     * @param \AppBundle\Entity\CasesSkins $casesSkin
+     */
+    public function removeCasesSkin(\AppBundle\Entity\CasesSkins $casesSkin)
+    {
+        $this->casesSkins->removeElement($casesSkin);
+    }
+
+    /**
+     * Get casesSkins
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getCasesSkins()
+    {
+        return $this->casesSkins;
     }
 }

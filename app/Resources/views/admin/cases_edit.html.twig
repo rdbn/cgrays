@@ -1,0 +1,87 @@
+{% extends 'SonataAdminBundle:CRUD:edit.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('bundles/admin/css/cases-skins.css') }}">
+{% endblock %}
+
+{% block form %}
+    {{ form_start(form) }}
+        {{ form_errors(form) }}
+        <div class="box box-primary">
+            <div class="box-header">
+                <h4 class="box-title">
+                    Кейсы
+                </h4>
+            </div>
+            <div class="box-body">
+                <div class="sonata-ba-collapsed-fields">
+                    <div class="form-group">
+                        {{ form_label(form.name) }}
+                        <div class="sonata-ba-field sonata-ba-field-standard-natural">
+                            {{ form_widget(form.name, {'attr': {'class': 'form-control'}}) }}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        {{ form_label(form.casesCategory) }}
+                        <div class="sonata-ba-field sonata-ba-field-standard-natural">
+                            {{ form_widget(form.casesCategory, {'attr': {'class': 'form-control'}}) }}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        {{ form_label(form.casesDomain) }}
+                        <div class="sonata-ba-field sonata-ba-field-standard-natural">
+                            {{ form_widget(form.casesDomain, {'attr': {'class': 'form-control'}}) }}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        {{ form_label(form.price) }}
+                        <div class="sonata-ba-field sonata-ba-field-standard-natural">
+                            {{ form_widget(form.price, {'attr': {'class': 'form-control'}}) }}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        {{ form_label(form.file) }}
+                        <div class="sonata-ba-field sonata-ba-field-standard-natural">
+                            {% if object.image %}
+                                {{ form_widget(form.file) }}
+                            {% else %}
+                                {{ form_widget(form.file, {'attr': {'required': 'required'}}) }}
+                            {% endif %}
+
+                        </div>
+                    </div>
+                    {% if object.image %}
+                        <div class="form-group">
+                            <img src="{{ asset(object.image) }}" class="img-thumbnail" />
+                        </div>
+                    {% endif %}
+                    <h3>Список скинов в кейсе:</h3>
+                    <div class="row">
+                    {% for casesSkins in listCasesSkins %}
+                        <div class="col-lg-2">
+                            <div class="thumbnail skins {% if casesSkins.is_skins_case %}check-skins{% endif %}">
+                                <img src="{{ asset(casesSkins.icon_url) }}" alt="{{ casesSkins.name }}">
+                                <div class="caption">
+                                    <h3>{{ casesSkins.name }}</h3>
+                                    <p>
+                                        <input class="form-control skins-count" data-skins-id="{{ casesSkins.skins_id }}" name="rate_drop_item" type="text" placeholder="Коэфицент" value="{{ casesSkins.count }}" />
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="sonata-ba-form-actions well well-small form-actions">
+            {{ form_widget(form.submit, {'attr': {'class': 'btn btn-success'}}) }}
+        </div>
+    {{ form_end(form) }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/admin/js/cases-skins.js') }}" type="application/javascript"></script>
+{% endblock %}

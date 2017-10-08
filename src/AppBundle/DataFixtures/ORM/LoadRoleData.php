@@ -21,6 +21,7 @@ class LoadRoleData extends AbstractFixture implements OrderedFixtureInterface
     private $roles = [
         "ROLE_USER",
         "ROLE_ADMIN",
+        "ROLE_ALLOWED_TO_SWITCH",
     ];
 
     public function load(ObjectManager $manager)

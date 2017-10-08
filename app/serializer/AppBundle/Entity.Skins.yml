@@ -14,7 +14,7 @@ AppBundle\Entity\Skins:
                 getter: getIconUrl
         iconUrlLarge:
             expose: true
-            groups: [skins]
+            groups: [skins, case_view]
             accessor:
                 getter: getIconUrlLarge
         description:

@@ -1,0 +1,9 @@
+AppBundle\Entity\CasesCategory:
+    exclusion_policy: ALL
+    properties:
+        id:
+            expose: true
+            groups: [cases_category]
+        name:
+            expose: true
+            groups: [cases_category]

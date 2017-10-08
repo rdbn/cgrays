@@ -4,6 +4,7 @@ namespace AppBundle\Security;
 
 use AppBundle\Entity\Role;
 use AppBundle\Entity\User;
+use AppBundle\Repository\UserRepository;
 use SteamBundle\Security\User\SteamUserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -13,10 +14,27 @@ use Doctrine\ORM\EntityManager;
 
 class SteamUserProvider implements UserProviderInterface
 {
+    /**
+     * @var EntityManager
+     */
     private $em;
-    private $userClass;
+
+    /**
+     * @var SteamUserService
+     */
     private $userService;
 
+    /**
+     * @var User
+     */
+    private $userClass;
+
+    /**
+     * SteamUserProvider constructor.
+     * @param EntityManager $em
+     * @param SteamUserService $userService
+     * @param $userClass
+     */
     public function __construct(EntityManager $em, SteamUserService $userService, $userClass)
     {
         $this->em = $em;
@@ -24,10 +42,14 @@ class SteamUserProvider implements UserProviderInterface
         $this->userService = $userService;
     }
 
+    /**
+     * @param string $steamId
+     * @return User|null|object
+     */
     public function loadUserByUsername($steamId)
     {
-        $userRepo = $this->em->getRepository($this->userClass);
-        $user = $userRepo->findOneBy(['steamId' => $steamId]);
+        $user = $this->em->getRepository($this->userClass)
+            ->findUserByUsernameOrSteamId($steamId);
 
         if (!$user) {
             /* @var User $user */
@@ -48,6 +70,10 @@ class SteamUserProvider implements UserProviderInterface
         return $user;
     }
 
+    /**
+     * @param UserInterface $user
+     * @return User|null|object
+     */
     public function refreshUser(UserInterface $user)
     {
         if (!$user instanceof SteamUserInterface) {
@@ -56,8 +82,25 @@ class SteamUserProvider implements UserProviderInterface
         return $this->loadUserByUsername($user->getSteamId());
     }
 
+    /**
+     * @param string $class
+     * @return bool
+     */
     public function supportsClass($class)
     {
         return $class === $this->userClass;
+    }
+
+    /**
+     * @param $apiKey
+     * @return mixed
+     */
+    public function getUsernameForApiKey($apiKey)
+    {
+        // Look up the username based on the token in the database, via
+        // an API call, or do something entirely different
+        $username = "admin";
+
+        return $username;
     }
 }

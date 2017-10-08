@@ -16,6 +16,22 @@ use Doctrine\ORM\QueryBuilder;
 class UserRepository extends EntityRepository
 {
     /**
+     * @param $value
+     * @return mixed
+     */
+    public function findUserByUsernameOrSteamId($value)
+    {
+        $qb = $this->createQueryBuilder('u');
+        $qb
+            ->where('u.steamId = :user_1')
+            ->orWhere('u.username = :user_2')
+            ->setParameter('user_1', (int)$value, \PDO::PARAM_INT)
+            ->setParameter('user_2', $value, \PDO::PARAM_STR);
+
+        return $qb->getQuery()->getOneOrNullResult();
+    }
+
+    /**
      * @param int $userId
      * @return mixed
      */
