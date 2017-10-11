@@ -11,20 +11,11 @@ namespace AppBundle\Modal;
 interface DictionaryInterface
 {
     /**
-     * Set internalName
-     *
-     * @param string $internalName
-     *
-     * @return self
-     */
-    public function setInternalName($internalName);
-
-    /**
-     * Get internalName
+     * Get id
      *
      * @return string
      */
-    public function getInternalName();
+    public function getId();
 
     /**
      * Set localizedTagName

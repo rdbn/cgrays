@@ -45,12 +45,6 @@ class Skins
     protected $itemSet;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Weapon", inversedBy="skins")
-     * @ORM\JoinColumn(name="weapon_id", referencedColumnName="id")
-     */
-    protected $weapon;
-
-    /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Rarity", inversedBy="skins")
      * @ORM\JoinColumn(name="rarity_id", referencedColumnName="id")
      */
@@ -83,9 +77,9 @@ class Skins
     protected $description;
 
     /**
-     * @ORM\Column(name="created_at", type="datetime")
+     * @ORM\Column(name="steam_price", type="decimal", precision=10, scale=5, options={"default": 0})
      */
-    protected $createdAt;
+    protected $steamPrice;
 
     /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\SkinsPrice", mappedBy="skins")
@@ -99,7 +93,7 @@ class Skins
 
     public function __construct()
     {
-        $this->createdAt = new \DateTime();
+        $this->steamPrice = 0;
         $this->skinsPrice = new ArrayCollection();
         $this->casesSkins = new ArrayCollection();
     }
@@ -216,27 +210,27 @@ class Skins
     }
 
     /**
-     * Set createdAt
+     * Set steamPrice
      *
-     * @param \DateTime $createdAt
+     * @param string $steamPrice
      *
      * @return Skins
      */
-    public function setCreatedAt($createdAt)
+    public function setSteamPrice($steamPrice)
     {
-        $this->createdAt = $createdAt;
+        $this->steamPrice = $steamPrice;
 
         return $this;
     }
 
     /**
-     * Get createdAt
+     * Get steamPrice
      *
-     * @return \DateTime
+     * @return string
      */
-    public function getCreatedAt()
+    public function getSteamPrice()
     {
-        return $this->createdAt;
+        return $this->steamPrice;
     }
 
     /**
@@ -309,30 +303,6 @@ class Skins
     public function getItemSet()
     {
         return $this->itemSet;
-    }
-
-    /**
-     * Set weapon
-     *
-     * @param \AppBundle\Entity\Weapon $weapon
-     *
-     * @return Skins
-     */
-    public function setWeapon(\AppBundle\Entity\Weapon $weapon = null)
-    {
-        $this->weapon = $weapon;
-
-        return $this;
-    }
-
-    /**
-     * Get weapon
-     *
-     * @return \AppBundle\Entity\Weapon
-     */
-    public function getWeapon()
-    {
-        return $this->weapon;
     }
 
     /**

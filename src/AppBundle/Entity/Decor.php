@@ -26,11 +26,6 @@ class Decor implements DictionaryInterface
     protected $id;
 
     /**
-     * @ORM\Column(name="internal_name", type="string", length=45)
-     */
-    protected $internalName;
-
-    /**
      * @ORM\Column(name="localized_tag_name", type="string", length=45)
      */
     protected $localizedTagName;
@@ -61,30 +56,6 @@ class Decor implements DictionaryInterface
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set internalName
-     *
-     * @param string $internalName
-     *
-     * @return Decor
-     */
-    public function setInternalName($internalName)
-    {
-        $this->internalName = $internalName;
-
-        return $this;
-    }
-
-    /**
-     * Get internalName
-     *
-     * @return string
-     */
-    public function getInternalName()
-    {
-        return $this->internalName;
     }
 
     /**

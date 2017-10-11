@@ -68,6 +68,23 @@ namespace :deploy do
   end
 end
 
+set :cron_path, "#{fetch(:app_config_path)}/crontab/"+fetch(:stage).to_s
+after "deploy:cleanup", "application:crontab:setup"
+
+namespace :application do
+    namespace :crontab do
+        desc "Sets up crontab"
+        task :setup do
+            on roles (:app) do
+                puts "-" * 6
+                puts "Setting up crontab"
+                execute :crontab, "#{release_path}/#{fetch(:cron_path)}"
+                puts "-" * 6
+            end
+        end
+    end
+end
+
 after 'deploy:updated', 'deploy:migrate'
 after 'deploy:updated', 'symfony:assets:install'
 after 'deploy:updated', 'deploy:cache'

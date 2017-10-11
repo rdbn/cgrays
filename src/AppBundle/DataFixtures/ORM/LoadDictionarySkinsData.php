@@ -28,33 +28,23 @@ class LoadDictionarySkinsData extends AbstractFixture implements OrderedFixtureI
         for ($i = 0; $i < 15; $i++) {
             $name = uniqid();
             $typeProduct = new TypeSkins();
-            $typeProduct->setInternalName($name);
             $typeProduct->setLocalizedTagName($name);
             $manager->persist($typeProduct);
 
             $quality = new Quality();
-            $quality->setInternalName($name);
             $quality->setLocalizedTagName($name);
             $manager->persist($quality);
 
             $rarity = new Rarity();
-            $rarity->setInternalName($name);
             $rarity->setLocalizedTagName($name);
             $rarity->setColor('4b69ff');
             $manager->persist($rarity);
 
             $itemSet = new ItemSet();
-            $itemSet->setInternalName($name);
             $itemSet->setLocalizedTagName($name);
             $manager->persist($itemSet);
 
-            $weapon = new Weapon();
-            $weapon->setInternalName($name);
-            $weapon->setLocalizedTagName($name);
-            $manager->persist($weapon);
-
             $decor = new Decor();
-            $decor->setInternalName($name);
             $decor->setLocalizedTagName($name);
             $manager->persist($decor);
         }

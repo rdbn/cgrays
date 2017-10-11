@@ -72,6 +72,12 @@ services:
         arguments:
             - AppBundle\Entity\User
 
+    app.repository.skins:
+        class: AppBundle\Repository\SkinsRepository
+        factory: ['@doctrine.orm.entity_manager', getRepository]
+        arguments:
+            - AppBundle\Entity\Skins
+
     app.repository.skins_price:
         class: AppBundle\Repository\SkinsPriceRepository
         factory: ['@doctrine.orm.entity_manager', getRepository]
@@ -110,6 +116,25 @@ services:
     processing.is_online.is_online_handler:
         class: ProcessingBundle\OnlineUser\IsOnlineHandler
         arguments: ['@doctrine.dbal.default_connection', '@app.repository.user', '@logger']
+
+    processing.parser.skins_handler:
+        class: ProcessingBundle\Parser\SkinsHandler
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@doctrine.dbal.default_connection'
+            - '@guzzle.client.steam'
+            - '@app.service.upload_image'
+            - '@logger'
+            - '%steam.steam_community_url%'
+
+    processing.service.parser_market_handler:
+        class: ProcessingBundle\Services\ParserMarketHandler
+        arguments:
+            - '@app.repository.skins'
+            - '@old_sound_rabbit_mq.parser_price_producer'
+            - '@old_sound_rabbit_mq.parser_skins_producer'
+            - '@steam.api_market'
+            - '@logger'
 
     # listener
     app.switch_user_listener:
