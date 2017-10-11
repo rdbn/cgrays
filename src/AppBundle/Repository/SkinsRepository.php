@@ -44,4 +44,19 @@ class SkinsRepository extends EntityRepository
 
         return $qb->getQuery()->getResult();
     }
+
+    /**
+     * @param $namesSkins
+     * @return array
+     */
+    public function findSkinsByNames($namesSkins)
+    {
+        $dbal = $this->getEntityManager()->getConnection();
+
+        $stmt = $dbal->prepare('SELECT s.id, s.name FROM skins s WHERE s.name IN (:names_skins)');
+        $stmt->bindParam('names_skins', $namesSkins);
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+    }
 }

@@ -63,3 +63,10 @@ services:
             - '@guzzle.client.steam'
             - '%steam.steam_community_url%'
             - '%steam.steam_inventory_count%'
+
+    steam.api_market:
+        class: SteamBundle\SteamMethod\Market
+        arguments:
+            - '@guzzle.client.steam'
+            - '%steam.steam_community_url%'
+            - '%steam.steam_inventory_count%'

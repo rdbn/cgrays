@@ -21,6 +21,14 @@ old_sound_rabbit_mq:
             connection:       default
             exchange_options: {name: 'trade_product', type: fanout}
 
+        parser_price:
+            connection:       default
+            exchange_options: {name: 'parser_price', type: direct}
+
+        parser_skins:
+            connection:       default
+            exchange_options: {name: 'parser_skins', type: direct}
+
     consumers:
         is_online_user:
             connection:       default
@@ -34,6 +42,18 @@ old_sound_rabbit_mq:
             exchange_options: {name: 'trade_product', type: fanout}
             callback:         processing.trade.trade
 
+        parser_price:
+            connection:       default
+            queue_options:    {name: 'parser_price'}
+            exchange_options: {name: 'parser_price', type: direct}
+            callback:         processing.parser.price
+
+        parser_skins:
+            connection:       default
+            queue_options:    {name: 'parser_skins'}
+            exchange_options: {name: 'parser_skins', type: direct}
+            callback:         processing.parser.skins
+
 services:
     processing.online_user.is_online:
         class: ProcessingBundle\OnlineUser\IsOnlineConsumer
@@ -42,3 +62,11 @@ services:
     processing.trade.trade:
         class: ProcessingBundle\Trade\TradeConsumer
         arguments: ['@doctrine.dbal.default_connection', '@logger']
+
+    processing.parser.price:
+        class: ProcessingBundle\Parser\PriceConsumer
+        arguments: ['@doctrine.dbal.default_connection', '@logger']
+
+    processing.parser.skins:
+        class: ProcessingBundle\Parser\SkinsConsumer
+        arguments: ['@processing.parser.skins_handler']

@@ -42,9 +42,6 @@ class LoadSkinsData extends AbstractFixture implements OrderedFixtureInterface
             $itemSet = $manager->getRepository(ItemSet::class)
                 ->findOneBy(["id" => $id]);
 
-            $weapon = $manager->getRepository(Weapon::class)
-                ->findOneBy(["id" => $id]);
-
             $decor = $manager->getRepository(Decor::class)
                 ->findOneBy(["id" => $id]);
 
@@ -53,7 +50,6 @@ class LoadSkinsData extends AbstractFixture implements OrderedFixtureInterface
             $skins->setQuality($quality);
             $skins->setRarity($rarity);
             $skins->setItemSet($itemSet);
-            $skins->setWeapon($weapon);
             $skins->setDecor($decor);
             $skins->setName("Product " . uniqid());
             $skins->setIconUrl("image/300.png");

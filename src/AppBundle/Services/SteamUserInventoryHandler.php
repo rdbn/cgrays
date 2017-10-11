@@ -104,7 +104,6 @@ class SteamUserInventoryHandler
         foreach ($userInventory['descriptions'] as $description) {
             $descriptionItem[$description['classid']] = [
                 'type_skins' => $this->getDictionaryType($description['tags'], 0),
-                'weapon' => $this->getDictionaryType($description['tags'], 1),
                 'item_set' => $this->getDictionaryType($description['tags'], 2),
                 'quality' => $this->getDictionaryType($description['tags'], 3),
                 'rarity' => $this->getDictionaryType($description['tags'], 4),
@@ -113,7 +112,7 @@ class SteamUserInventoryHandler
                 'name' => $description['name'],
                 'descriptions' => $description['descriptions'][2]['value'],
                 'icon_url' => $this->steamCommunityImageUrl . $description['icon_url'],
-                'icon_url_large' => $this->steamCommunityImageUrl . $description['icon_url_large'],
+                'icon_url_large' => $this->steamCommunityImageUrl . $description['icon_url'],
             ];
         }
 
