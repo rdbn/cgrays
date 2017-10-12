@@ -160,7 +160,10 @@ class SkinsHandler
             $weaponName = trim($matches[1]);
         }
 
-        if (count($skin['descriptions']) == 7) {
+        if ($typeSkinsName == "Наклейка") {
+            $decorName = "Другое";
+            $itemSetName = "Другое";
+        } else if (count($skin['descriptions']) == 7) {
             $decorName = trim(explode(":", $skin['descriptions'][0]['value'])[1]);
             $itemSetName = trim($skin['descriptions'][4]['value']);
         } else {
