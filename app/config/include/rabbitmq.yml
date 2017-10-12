@@ -69,4 +69,4 @@ services:
 
     processing.parser.skins:
         class: ProcessingBundle\Parser\SkinsConsumer
-        arguments: ['@processing.parser.skins_handler']
+        arguments: ['@processing.parser.skins_handler', '@logger']
