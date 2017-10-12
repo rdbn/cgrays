@@ -45,6 +45,12 @@ class Skins
     protected $itemSet;
 
     /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Weapon", inversedBy="skins")
+     * @ORM\JoinColumn(name="weapon_id", referencedColumnName="id")
+     */
+    protected $weapon;
+
+    /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Rarity", inversedBy="skins")
      * @ORM\JoinColumn(name="rarity_id", referencedColumnName="id")
      */
@@ -303,6 +309,30 @@ class Skins
     public function getItemSet()
     {
         return $this->itemSet;
+    }
+
+    /**
+     * Set weapon
+     *
+     * @param \AppBundle\Entity\Weapon $weapon
+     *
+     * @return Skins
+     */
+    public function setWeapon(\AppBundle\Entity\Weapon $weapon = null)
+    {
+        $this->weapon = $weapon;
+
+        return $this;
+    }
+
+    /**
+     * Get weapon
+     *
+     * @return \AppBundle\Entity\Weapon
+     */
+    public function getWeapon()
+    {
+        return $this->weapon;
     }
 
     /**

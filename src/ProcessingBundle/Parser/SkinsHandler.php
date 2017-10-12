@@ -13,6 +13,7 @@ use AppBundle\Entity\ItemSet;
 use AppBundle\Entity\Quality;
 use AppBundle\Entity\Rarity;
 use AppBundle\Entity\TypeSkins;
+use AppBundle\Entity\Weapon;
 use AppBundle\Modal\DictionaryInterface;
 use AppBundle\Services\UploadImageService;
 use Doctrine\DBAL\Connection;
@@ -147,10 +148,16 @@ class SkinsHandler
             $typeSkinsName = trim($type[0]);
             $qualityName = 'Обыч.';
             $rarityName = trim($type[1]);
+
+            preg_match('/(.*)\s\|/i', $skin['name'], $matches);
+            $weaponName = trim($matches[1]);
         } else {
             $typeSkinsName = trim($type[0]);
             $qualityName = trim($type[1]);
             $rarityName = trim($type[2]);
+
+            preg_match("/{$qualityName}\s(.*)\s\||/i", $skin['name'], $matches);
+            $weaponName = trim($matches[1]);
         }
 
         if (count($skin['descriptions']) == 7) {
@@ -166,6 +173,7 @@ class SkinsHandler
         $itemSetId = $this->addDictionary(ItemSet::class, 'item_set', $itemSetName);
         $rarityId = $this->addDictionary(Rarity::class, 'rarity', $rarityName);
         $qualityId = $this->addDictionary(Quality::class, 'quality', $qualityName);
+        $weaponId = $this->addDictionary(Weapon::class, 'weapon', $weaponName);
         $iconUrl = "image/" . $this->uploadImage->upload($this->steamCommunityImageUrl . "/" . $skin['icon_url'], false);
 
         $countDictionary = count($skin['descriptions']);
@@ -191,6 +199,7 @@ class SkinsHandler
                 'type_skins_id' => $typeSkinsId,
                 'item_set_id' => $itemSetId,
                 'rarity_id' => $rarityId,
+                'weapon_id' => $weaponId,
                 'icon_url' => $iconUrl,
                 'icon_url_large' => $iconUrl,
                 'name' => $skin['name'],
