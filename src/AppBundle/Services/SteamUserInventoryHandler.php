@@ -102,8 +102,15 @@ class SteamUserInventoryHandler
 
         $descriptionItem = [];
         foreach ($userInventory['descriptions'] as $description) {
+            $iconUrl = $this->steamCommunityImageUrl . $description['icon_url'];
+            $iconUrlLarge = $this->steamCommunityImageUrl . $description['icon_url'];
+            if (isset($description['icon_url_large'])) {
+                $iconUrlLarge = $this->steamCommunityImageUrl . $description['icon_url_large'];
+            }
+
             $descriptionItem[$description['classid']] = [
                 'type_skins' => $this->getDictionaryType($description['tags'], 0),
+                'weapon' => $this->getDictionaryType($description['tags'], 1),
                 'item_set' => $this->getDictionaryType($description['tags'], 2),
                 'quality' => $this->getDictionaryType($description['tags'], 3),
                 'rarity' => $this->getDictionaryType($description['tags'], 4),
@@ -111,8 +118,8 @@ class SteamUserInventoryHandler
                 'is_sell' => $description['marketable'],
                 'name' => $description['name'],
                 'descriptions' => $description['descriptions'][2]['value'],
-                'icon_url' => $this->steamCommunityImageUrl . $description['icon_url'],
-                'icon_url_large' => $this->steamCommunityImageUrl . $description['icon_url'],
+                'icon_url' => $iconUrl,
+                'icon_url_large' => $iconUrlLarge,
             ];
         }
 
@@ -142,11 +149,7 @@ class SteamUserInventoryHandler
     private function getDictionaryType($item, $key)
     {
         if (isset($item[$key])) {
-            $tag = [
-                'internal_name' => $item[$key]['internal_name'],
-                'localized_tag_name' => $item[$key]['localized_tag_name'],
-            ];
-
+            $tag = ['localized_tag_name' => $item[$key]['localized_tag_name']];
             if (isset($item['color'])) {
                 $tag['color'] = $item[$key]['color'];
             }

@@ -16,7 +16,6 @@ class Version20171009131513 extends AbstractMigration
     public function up(Schema $schema)
     {
         $this->addSql("ALTER TABLE skins ADD COLUMN steam_price DECIMAL(10, 5) NOT NULL DEFAULT 0;");
-        $this->addSql("ALTER TABLE skins DROP COLUMN weapon_id;");
         $this->addSql("ALTER TABLE skins DROP COLUMN created_at;");
 
         $this->addSql("ALTER TABLE quality DROP COLUMN internal_name;");
@@ -24,9 +23,7 @@ class Version20171009131513 extends AbstractMigration
         $this->addSql("ALTER TABLE type_skins DROP COLUMN internal_name;");
         $this->addSql("ALTER TABLE item_set DROP COLUMN internal_name;");
         $this->addSql("ALTER TABLE rarity DROP COLUMN internal_name;");
-
-        $this->addSql("DROP TABLE IF EXISTS weapon;");
-        $this->addSql('CREATE UNIQUE INDEX IDX_skins_type_skins_quality_rarity_decor_item_set ON skins (type_skins_id, quality_id, rarity_id, decor_id, item_set_id);');
+        $this->addSql("ALTER TABLE weapon DROP COLUMN internal_name;");
     }
 
     /**

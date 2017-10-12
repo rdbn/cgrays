@@ -117,14 +117,13 @@ class AddSellHandler
             return $dictionary->getId();
         }
 
-        $values = ['localized_tag_name' => $item['localized_tag_name']];
         if ($tableName == 'rarity') {
-            $values['color'] = isset($item['color']) ? $item['color'] : 'fff';
+            $item['color'] = isset($item['color']) ? $item['color'] : 'fff';
         }
 
         $this->dbal->beginTransaction();
         try {
-            $this->dbal->insert($tableName, $values);
+            $this->dbal->insert($tableName, $item);
             $id = $this->dbal->lastInsertId();
             $this->dbal->commit();
         } catch (DBALException $e) {
@@ -151,6 +150,7 @@ class AddSellHandler
 
         $itemSetId = $this->getDictionary(ItemSet::class, 'item_set', $item['item_set']);
         $decorId = $this->getDictionary(Decor::class, 'decor', $item['decor']);
+        $weaponId = $this->getDictionary(Weapon::class, 'weapon', $item['weapon']);
         $rarityId = $this->getDictionary(Rarity::class,'rarity', $item['rarity']);
         $typeSkinId = $this->getDictionary(TypeSkins::class,'type_skins', $item['type_skins']);
         $qualityId = $this->getDictionary(Quality::class,'quality', $item['quality']);
@@ -162,6 +162,7 @@ class AddSellHandler
             $this->dbal->insert('skins', [
                 'item_set_id' => $itemSetId,
                 'decor_id' => $decorId,
+                'weapon_id' => $weaponId,
                 'rarity_id' => $rarityId,
                 'type_skins_id' => $typeSkinId,
                 'quality_id' => $qualityId,

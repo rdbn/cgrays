@@ -44,6 +44,11 @@ class LoadDictionarySkinsData extends AbstractFixture implements OrderedFixtureI
             $itemSet->setLocalizedTagName($name);
             $manager->persist($itemSet);
 
+            $weapon = new Weapon();
+            $weapon->setInternalName($name);
+            $weapon->setLocalizedTagName($name);
+            $manager->persist($weapon);
+
             $decor = new Decor();
             $decor->setLocalizedTagName($name);
             $manager->persist($decor);
