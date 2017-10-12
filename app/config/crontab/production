@@ -1,4 +1,4 @@
 # parser price skins
-0   0   *   *   *   /usr/bin/flock -n /tmp/parser_market runalarm -t 7200 /var/www/cgrays/current/bin/console processing:parser_market -vvv 730 --env=prod --no-debug >> /tmp/parser_market.log 2>&1
-*   *   *   *   *   /usr/bin/flock -n /tmp/parser_skins runalarm -t 3600 /var/www/cgrays/current/bin/console rabbitmq:consumer parser_skins -w -m 10 -vvv --env=prod --no-debug >> /tmp/parser_skins.log 2>&1
-*   *   *   *   *   /usr/bin/flock -n /tmp/parser_price runalarm -t 3600 /var/www/cgrays/current/bin/console rabbitmq:consumer parser_price -w -m 10 -vvv --env=prod --no-debug >> /tmp/parser_price.log 2>&1
+0   0   *   *   *   /usr/bin/flock -xn /tmp/parser_skins -c '/var/www/cgrays/current/bin/console processing:parser_market -vvv 730 --env=prod --no-debug' >> /tmp/parser_market.log 2>&1
+*   *   *   *   *   /usr/bin/flock -xn /tmp/parser_skins -c '/var/www/cgrays/current/bin/console rabbitmq:consumer parser_skins -w -m 10 -vvv --env=prod --no-debug' >> /tmp/parser_skins.log 2>&1
+*   *   *   *   *   /usr/bin/flock -xn /tmp/parser_skins -c '/var/www/cgrays/current/bin/console rabbitmq:consumer parser_price -w -m 10 -vvv --env=prod --no-debug' >> /tmp/parser_price.log 2>&1
