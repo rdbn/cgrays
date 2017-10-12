@@ -24,6 +24,11 @@ class SkinsConsumer implements ConsumerInterface
      */
     private $logger;
 
+    /**
+     * SkinsConsumer constructor.
+     * @param SkinsHandler $skinsHandler
+     * @param LoggerInterface $logger
+     */
     public function __construct(SkinsHandler $skinsHandler, LoggerInterface $logger)
     {
         $this->skinsHandler = $skinsHandler;
