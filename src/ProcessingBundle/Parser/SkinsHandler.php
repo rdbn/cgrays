@@ -114,7 +114,7 @@ class SkinsHandler
             'headers' => [
                 'Accept-Language' => 'ru,en-US;q=0.8,en;q=0.6,cs;q=0.4,es;q=0.2,de;q=0.2,fr;q=0.2,it;q=0.2,la;q=0.2,und;q=0.2,pl;q=0.2',
             ],
-            'proxy' => [$this->profyList[$key]],
+            'proxy' => $this->profyList[$key],
         ]);
         $skinHTML = $request->getBody();
 
