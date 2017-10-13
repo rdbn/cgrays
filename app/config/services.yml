@@ -127,6 +127,12 @@ services:
             - '@logger'
             - '%steam.steam_community_url%'
 
+    processing.parser.error_handler:
+        class: ProcessingBundle\Parser\ErrorHandler
+        arguments:
+            - '@doctrine.dbal.default_connection'
+            - '@logger'
+
     processing.service.parser_market_handler:
         class: ProcessingBundle\Services\ParserMarketHandler
         arguments:

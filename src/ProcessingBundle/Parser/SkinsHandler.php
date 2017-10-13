@@ -55,6 +55,29 @@ class SkinsHandler
     private $steamCommunityImageUrl;
 
     /**
+     * @var array
+     */
+    private $profyList = [
+        'tcp://195.154.163.181:3128',
+        'tcp://195.154.42.249:3128',
+        'tcp://163.172.93.129:3128',
+        'tcp://195.154.77.130:3128',
+        'tcp://176.31.174.1:9999',
+        'tcp://62.210.12.7:3128',
+        'tcp://51.254.132.238:80',
+        'tcp://137.74.254.242:3128',
+        'tcp://173.212.202.65:443',
+        'tcp://45.76.84.245:3128',
+        'tcp://45.77.67.187:3128',
+        'tcp://45.77.53.132:3128',
+        'tcp://93.192.41.216:80',
+        'tcp://89.19.240.170:3128',
+        'tcp://165.227.144.174:80',
+        'tcp://213.136.89.121:80',
+        'tcp://193.37.152.6:3128',
+    ];
+
+    /**
      * SkinsHandler constructor.
      * @param EntityManager $em
      * @param Connection $dbal
@@ -87,10 +110,12 @@ class SkinsHandler
     public function handler(array $skin)
     {
         $price = $skin['price'];
+        $key = rand(0, count($this->profyList));
         $request = $this->guzzle->request('GET', $skin['link'], [
             'headers' => [
                 'Accept-Language' => 'ru,en-US;q=0.8,en;q=0.6,cs;q=0.4,es;q=0.2,de;q=0.2,fr;q=0.2,it;q=0.2,la;q=0.2,und;q=0.2,pl;q=0.2',
             ],
+            // 'proxy' => $this->profyList[$key],
         ]);
         $skinHTML = $request->getBody();
 
@@ -161,7 +186,10 @@ class SkinsHandler
             $weaponName = trim($matches[1]);
         }
 
-        if (count($skin['descriptions']) == 7) {
+        if ($typeSkinsName == "Наклейка") {
+            $decorName = "Другое";
+            $itemSetName = "Другое";
+        } else if (count($skin['descriptions']) == 7) {
             $decorName = trim(explode(":", $skin['descriptions'][0]['value'])[1]);
             $itemSetName = trim($skin['descriptions'][4]['value']);
         } else {

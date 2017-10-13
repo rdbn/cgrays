@@ -10,6 +10,7 @@ namespace ProcessingBundle\Parser;
 
 use OldSound\RabbitMqBundle\RabbitMq\ConsumerInterface;
 use PhpAmqpLib\Message\AMQPMessage;
+use Psr\Log\LoggerInterface;
 
 class SkinsConsumer implements ConsumerInterface
 {
@@ -18,9 +19,27 @@ class SkinsConsumer implements ConsumerInterface
      */
     private $skinsHandler;
 
-    public function __construct(SkinsHandler $skinsHandler)
+    /**
+     * @var ErrorHandler
+     */
+    private $errorHandler;
+
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
+     * SkinsConsumer constructor.
+     * @param SkinsHandler $skinsHandler
+     * @param ErrorHandler $errorHandler
+     * @param LoggerInterface $logger
+     */
+    public function __construct(SkinsHandler $skinsHandler, ErrorHandler $errorHandler, LoggerInterface $logger)
     {
         $this->skinsHandler = $skinsHandler;
+        $this->errorHandler = $errorHandler;
+        $this->logger = $logger;
     }
 
     /**
@@ -30,7 +49,13 @@ class SkinsConsumer implements ConsumerInterface
     public function execute(AMQPMessage $msg)
     {
         $parameters = json_decode($msg->getBody(), 1);
-        $this->skinsHandler->handler($parameters);
+        try {
+            $this->skinsHandler->handler($parameters);
+        } catch (\Exception $e) {
+            var_dump($e->getCode());
+            $this->logger->error($e->getMessage());
+            $this->errorHandler->handler(json_encode($parameters));
+        }
 
         return self::MSG_ACK;
     }
