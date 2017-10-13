@@ -55,6 +55,29 @@ class SkinsHandler
     private $steamCommunityImageUrl;
 
     /**
+     * @var array
+     */
+    private $profyList = [
+        '195.154.163.181',
+        '195.154.42.249',
+        '163.172.93.129',
+        '195.154.77.130',
+        '176.31.174.1',
+        '62.210.12.7',
+        '51.254.132.238',
+        '137.74.254.242',
+        '173.212.202.65',
+        '45.76.84.245',
+        '45.77.67.187',
+        '45.77.53.132',
+        '93.192.41.216',
+        '89.19.240.170',
+        '165.227.144.174',
+        '213.136.89.121',
+        '193.37.152.6',
+    ];
+
+    /**
      * SkinsHandler constructor.
      * @param EntityManager $em
      * @param Connection $dbal
@@ -86,10 +109,12 @@ class SkinsHandler
      */
     public function handler(array $skin)
     {
+        $key = rand(0, count($this->profyList));
         $request = $this->guzzle->request('GET', $skin['link'], [
             'headers' => [
                 'Accept-Language' => 'ru,en-US;q=0.8,en;q=0.6,cs;q=0.4,es;q=0.2,de;q=0.2,fr;q=0.2,it;q=0.2,la;q=0.2,und;q=0.2,pl;q=0.2',
             ],
+            'proxy' => ["tcp://{$this->profyList[$key]}:80"],
         ]);
         $skinHTML = $request->getBody();
 
