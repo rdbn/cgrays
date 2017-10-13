@@ -20,6 +20,11 @@ class SkinsConsumer implements ConsumerInterface
     private $skinsHandler;
 
     /**
+     * @var ErrorHandler
+     */
+    private $errorHandler;
+
+    /**
      * @var LoggerInterface
      */
     private $logger;
@@ -27,11 +32,13 @@ class SkinsConsumer implements ConsumerInterface
     /**
      * SkinsConsumer constructor.
      * @param SkinsHandler $skinsHandler
+     * @param ErrorHandler $errorHandler
      * @param LoggerInterface $logger
      */
-    public function __construct(SkinsHandler $skinsHandler, LoggerInterface $logger)
+    public function __construct(SkinsHandler $skinsHandler, ErrorHandler $errorHandler, LoggerInterface $logger)
     {
         $this->skinsHandler = $skinsHandler;
+        $this->errorHandler = $errorHandler;
         $this->logger = $logger;
     }
 
@@ -45,8 +52,9 @@ class SkinsConsumer implements ConsumerInterface
         try {
             $this->skinsHandler->handler($parameters);
         } catch (\Exception $e) {
+            var_dump($e->getCode());
             $this->logger->error($e->getMessage());
-            return self::MSG_REJECT_REQUEUE;
+            $this->errorHandler->handler(json_encode($parameters));
         }
 
         return self::MSG_ACK;

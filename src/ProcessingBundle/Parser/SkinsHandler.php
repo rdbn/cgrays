@@ -109,6 +109,7 @@ class SkinsHandler
      */
     public function handler(array $skin)
     {
+        $price = $skin['price'];
         $key = rand(0, count($this->profyList));
         $request = $this->guzzle->request('GET', $skin['link'], [
             'headers' => [
@@ -124,7 +125,7 @@ class SkinsHandler
         $skin = array_shift($skin);
         $skin = array_shift($skin);
 
-        $this->addSkin($skin);
+        $this->addSkin($skin, $price);
     }
 
     /**
@@ -166,7 +167,7 @@ class SkinsHandler
      * @param array $skin
      * @throws \Exception
      */
-    private function addSkin(array $skin)
+    private function addSkin(array $skin, $price)
     {
         $type = explode(",", $skin['type']);
         if (count($type) == 2) {
@@ -232,6 +233,7 @@ class SkinsHandler
                 'icon_url_large' => $iconUrl,
                 'name' => $skin['name'],
                 'description' => $description,
+                'steam_price' => $price,
             ]);
 
             $this->dbal->commit();
