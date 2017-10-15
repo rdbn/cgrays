@@ -34,14 +34,14 @@ class CasesSkinsRepository extends EntityRepository
     }
 
     /**
-     * @param $casesId
+     * @param $casesSkinsId
      * @return array
      */
-    public function findCasesSkinsByCasesIdForUpdate($casesId)
+    public function findCasesSkinsByCasesIdForUpdate($casesSkinsId)
     {
         $dbal = $this->getEntityManager()->getConnection();
         $stmt = $dbal->prepare('SELECT * FROM cases_skins cs WHERE cs.id = :id FOR UPDATE;');
-        $stmt->bindParam('id', $casesId, \PDO::PARAM_INT);
+        $stmt->bindParam('id', $casesSkinsId, \PDO::PARAM_INT);
         $stmt->execute();
 
         return $stmt->fetch(\PDO::FETCH_ASSOC);

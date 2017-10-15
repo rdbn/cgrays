@@ -84,6 +84,10 @@ services:
         arguments:
             - AppBundle\Entity\SkinsPrice
 
+    app.repository.failed_links_skins:
+        class: AppBundle\Repository\FailedLinksSkinsRepository
+        arguments: ['@doctrine.dbal.default_connection']
+
     # twig function
     app.twig_extension:
         class: AppBundle\Twig\AppExtension
@@ -111,6 +115,24 @@ services:
             - '@doctrine.dbal.default_connection'
             - '@security.token_storage'
             - '@logger'
+
+    api.service.cases_user_sell_skins:
+        class: ApiBundle\Service\CasesUserSellSkinsHandler
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@doctrine.dbal.default_connection'
+
+    api.service.cases_user_pick_up_skins:
+        class: ApiBundle\Service\CasesUserPickUpSkinsHandler
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@doctrine.dbal.default_connection'
+
+    api.service.cases_contract:
+        class: ApiBundle\Service\CasesContractHandler
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@doctrine.dbal.default_connection'
 
     # ProcessingBundle
     processing.is_online.is_online_handler:

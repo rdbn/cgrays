@@ -139,7 +139,7 @@ class CasesController extends FOSRestController
 
         try {
             $case = $this->get('api.service.case_open')
-                ->handler($domainId, $id);
+                ->handler($domainId, $id, $this->getUser()->getId());
 
             if (!count($case)) {
                 throw new \Exception('Case is empty');
@@ -156,43 +156,85 @@ class CasesController extends FOSRestController
 
     /**
      * @param Request $request
-     * @param $skinsId
      * @Rest\Post("/cases/user/sell/skins")
      * @Rest\View()
      * @return Response
      */
-    public function getCasesUserSellSkinsAction(Request $request, $skinsId)
+    public function postCasesUserSellSkinsAction(Request $request)
     {
         $domainId = $request->headers->get('x-domain-id');
-        if (!$domainId) {
+        $skinsId = $request->request->get('skins_id');
+        $currencyCode = $request->request->get('currency_code');
+        if (!$domainId || $currencyCode || $skinsId) {
             $view = $this->view("Not found", 404);
             return $this->handleView($view);
         }
 
+        try {
+            $this->get('api.service.cases_user_sell_skins')
+                ->handler((int) $skinsId, (int) $this->getUser()->getId(), $domainId, $currencyCode);
 
+            $view = $this->view('success', 200);
+        } catch (\Exception $e) {
+            $this->get('logger')->error($e->getMessage());
+            $view = $this->view('Bad request', 400);
+        }
 
-        $view = $this->view('success', 200);
         return $this->handleView($view);
     }
 
     /**
      * @param Request $request
-     * @param $skinsId
      * @Rest\Post("/cases/user/pick-up/skins")
      * @Rest\View()
      * @return Response
      */
-    public function getCasesUserPickUpSkinsAction(Request $request, $skinsId)
+    public function postCasesUserPickUpSkinsAction(Request $request)
     {
         $domainId = $request->headers->get('x-domain-id');
-        if (!$domainId) {
+        $skinsId = $request->request->get('skins_id');
+        if (!$domainId || $skinsId) {
             $view = $this->view("Not found", 404);
             return $this->handleView($view);
         }
 
+        try {
+            $this->get('api.service.cases_user_pick_up_skins')
+                ->handler($skinsId, $this->getUser()->getId());
 
+            $view = $this->view('success', 200);
+        } catch (\Exception $e) {
+            $this->get('logger')->error($e->getMessage());
+            $view = $this->view('Bad Request', 400);
+        }
 
-        $view = $this->view('success', 200);
+        return $this->handleView($view);
+    }
+
+    /**
+     * @param Request $request
+     * @Rest\Post("/cases/contract")
+     * @return Response
+     */
+    public function postCasesContractAction(Request $request)
+    {
+        $domainId = $request->headers->get('x-domain-id');
+        $ids = $request->request->get('ids');
+        $currencyCode = $request->request->get('currency_code');
+        if ($domainId || $ids || $currencyCode) {
+            $view = $this->view("Not found", 404);
+            return $this->handleView($view);
+        }
+
+        try {
+            $this->get('api.service.cases_contract')
+                ->handler($ids, $domainId, $this->getUser()->getId(), $currencyCode);
+
+            $view = $this->view('success', 200);
+        } catch (\Exception $e) {
+            $view = $this->view('Bad request', 400);
+        }
+
         return $this->handleView($view);
     }
 }

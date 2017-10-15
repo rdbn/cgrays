@@ -57,6 +57,21 @@ class SkinsRepository extends EntityRepository
         $stmt->bindParam('names_skins', $namesSkins);
         $stmt->execute();
 
-        return $stmt->fetchAll();
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * @param $skinsId
+     * @return array
+     */
+    public function findSkinsForUpdateById(int $skinsId)
+    {
+        $dbal = $this->getEntityManager()->getConnection();
+
+        $stmt = $dbal->prepare('SELECT s.* FROM skins s WHERE s.id = :skins_id FOR UPDATE');
+        $stmt->bindParam('skins_id', $skinsId, \PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetch(\PDO::FETCH_ASSOC);
     }
 }
