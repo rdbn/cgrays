@@ -62,6 +62,8 @@
                         <h4>{{ skin.name|strlen(15) }}</h4>
                         <p>
                             <strong><span>{{ skin.price }} <span class="glyphicon glyphicon-rub text-danger"></span></span></strong>
+                        </p>
+                        <p>
                             {% if is_granted("ROLE_USER") %}
                                 {% if skin.user_id != app.user.id %}
                                     <a href="{{ path('app.skins_trade.fast_trade', { 'skinsPriceId': skin.price_id }) }}" class="btn btn-action">
