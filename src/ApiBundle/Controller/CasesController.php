@@ -165,20 +165,20 @@ class CasesController extends FOSRestController
         $domainId = $request->headers->get('x-domain-id');
         $skinsId = $request->request->get('skins_id');
         $currencyCode = $request->request->get('currency_code');
-        if (!$domainId || $currencyCode || $skinsId) {
+        if (!$domainId || !$currencyCode || !$skinsId) {
             $view = $this->view("Not found", 404);
             return $this->handleView($view);
         }
 
-        try {
+        // try {
             $this->get('api.service.cases_user_sell_skins')
                 ->handler((int) $skinsId, (int) $this->getUser()->getId(), $domainId, $currencyCode);
 
             $view = $this->view('success', 200);
-        } catch (\Exception $e) {
-            $this->get('logger')->error($e->getMessage());
-            $view = $this->view('Bad request', 400);
-        }
+//        } catch (\Exception $e) {
+//            $this->get('logger')->error($e->getMessage());
+//            $view = $this->view('Bad request', 400);
+//        }
 
         return $this->handleView($view);
     }
@@ -193,7 +193,7 @@ class CasesController extends FOSRestController
     {
         $domainId = $request->headers->get('x-domain-id');
         $skinsId = $request->request->get('skins_id');
-        if (!$domainId || $skinsId) {
+        if (!$domainId || !$skinsId) {
             $view = $this->view("Not found", 404);
             return $this->handleView($view);
         }
@@ -221,7 +221,7 @@ class CasesController extends FOSRestController
         $domainId = $request->headers->get('x-domain-id');
         $ids = $request->request->get('ids');
         $currencyCode = $request->request->get('currency_code');
-        if ($domainId || $ids || $currencyCode) {
+        if (!$domainId || !$ids || !$currencyCode) {
             $view = $this->view("Not found", 404);
             return $this->handleView($view);
         }

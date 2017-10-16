@@ -59,7 +59,7 @@ class CasesContractHandler
         $currency = $this->em->getRepository(Currency::class)
             ->findOneBy(['code' => $currencyCode]);
 
-        if (!$casesDomain) {
+        if (!$currency) {
             throw new \Exception('Not found currency');
         }
 
