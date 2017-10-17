@@ -6,7 +6,7 @@ use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
 /**
- * Auto-generated Migration: Please modify to your needs!
+ * Create tables currency, cases_balance_user
  */
 class Version20171014164502 extends AbstractMigration
 {
@@ -31,7 +31,7 @@ class Version20171014164502 extends AbstractMigration
           cases_domain_id INT NOT NULL,
           user_id INT NOT NULL,
           balance DECIMAL(10, 5) NOT NULL DEFAULT 0,
-          create_at TIMESTAMPTZ NOT NULL,
+          created_at TIMESTAMPTZ NOT NULL,
           last_update TIMESTAMPTZ NOT NULL
         );
         ");

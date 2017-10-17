@@ -8,6 +8,8 @@
 
 namespace AppBundle\DataFixtures\ORM;
 
+use AppBundle\Entity\CasesCategory;
+use AppBundle\Entity\CasesDomain;
 use AppBundle\Entity\Decor;
 use AppBundle\Entity\ItemSet;
 use AppBundle\Entity\Quality;
@@ -52,6 +54,18 @@ class LoadDictionarySkinsData extends AbstractFixture implements OrderedFixtureI
             $decor = new Decor();
             $decor->setLocalizedTagName($name);
             $manager->persist($decor);
+        }
+
+        for ($i = 0; $i < 5; $i++) {
+            $casesDomain = new CasesDomain();
+            $casesDomain->setDomain('http://test' . uniqid() . '.ru');
+
+            $manager->persist($casesDomain);
+
+            $casesCategory = new CasesCategory();
+            $casesCategory->setName('Test' . uniqid());
+
+            $manager->persist($casesCategory);
         }
 
         $manager->flush();

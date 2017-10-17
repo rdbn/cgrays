@@ -21,17 +21,13 @@ class LoadCasesData extends AbstractFixture implements OrderedFixtureInterface
 {
     public function load(ObjectManager $manager)
     {
-        for ($i = 0; $i < 5; $i++) {
-            $casesDomain = new CasesDomain();
-            $casesDomain->setDomain('http://test' . uniqid() . '.ru');
+        $casesCategories = $manager->getRepository(CasesCategory::class)
+            ->findAll();
 
-            $manager->persist($casesDomain);
+        $casesDomains = $manager->getRepository(CasesDomain::class)
+            ->findAll();
 
-            $casesCategory = new CasesCategory();
-            $casesCategory->setName('Test' . uniqid());
-
-            $manager->persist($casesCategory);
-
+        foreach ($casesCategories as $key => $casesCategory) {
             $skins = $manager->getRepository(Skins::class)
                 ->findBy([], [], 5, 0);
 
@@ -39,7 +35,7 @@ class LoadCasesData extends AbstractFixture implements OrderedFixtureInterface
                 $cases = new Cases();
                 $cases->setName('Test' . uniqid());
                 $cases->setCasesCategory($casesCategory);
-                $cases->setCasesDomain($casesDomain);
+                $cases->setCasesDomain($casesDomains[$key]);
                 $cases->setPrice(rand(5, 20));
                 $cases->setImage('image/300.png');
 

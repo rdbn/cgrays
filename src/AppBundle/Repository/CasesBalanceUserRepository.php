@@ -32,7 +32,7 @@ class CasesBalanceUserRepository extends EntityRepository
         FOR UPDATE
         ");
         $stmt->bindParam('user_id', $userId, \PDO::PARAM_INT);
-        $stmt->bindParam('currency', $currencyId, \PDO::PARAM_INT);
+        $stmt->bindParam('currency_id', $currencyId, \PDO::PARAM_INT);
         $stmt->bindParam('cases_domain_id', $casesDomainId, \PDO::PARAM_INT);
         $stmt->execute();
 

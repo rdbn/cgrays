@@ -11,10 +11,10 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="AppBundle\Repository\CasesBalanceUserRepository")
- * @ORM\Table(name="cases_balance_user")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\BalanceUserRepository")
+ * @ORM\Table(name="balance_user")
  */
-class CasesBalanceUser
+class BalanceUser
 {
     /**
      * @ORM\Column(type="integer")
@@ -28,12 +28,6 @@ class CasesBalanceUser
      * @ORM\JoinColumn(name="currency_id", referencedColumnName="id")
      */
     protected $currency;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CasesDomain")
-     * @ORM\JoinColumn(name="cases_domain_id", referencedColumnName="id")
-     */
-    protected $casesDomain;
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
@@ -81,7 +75,7 @@ class CasesBalanceUser
      *
      * @param string $balance
      *
-     * @return CasesBalanceUser
+     * @return BalanceUser
      */
     public function setBalance($balance)
     {
@@ -105,7 +99,7 @@ class CasesBalanceUser
      *
      * @param \DateTime $createdAt
      *
-     * @return CasesBalanceUser
+     * @return BalanceUser
      */
     public function setCreatedAt($createdAt)
     {
@@ -129,7 +123,7 @@ class CasesBalanceUser
      *
      * @param \DateTime $lastUpdate
      *
-     * @return CasesBalanceUser
+     * @return BalanceUser
      */
     public function setLastUpdate($lastUpdate)
     {
@@ -153,7 +147,7 @@ class CasesBalanceUser
      *
      * @param \AppBundle\Entity\Currency $currency
      *
-     * @return CasesBalanceUser
+     * @return BalanceUser
      */
     public function setCurrency(\AppBundle\Entity\Currency $currency = null)
     {
@@ -173,35 +167,11 @@ class CasesBalanceUser
     }
 
     /**
-     * Set casesDomain
-     *
-     * @param \AppBundle\Entity\CasesDomain $casesDomain
-     *
-     * @return CasesBalanceUser
-     */
-    public function setCasesDomain(\AppBundle\Entity\CasesDomain $casesDomain = null)
-    {
-        $this->casesDomain = $casesDomain;
-
-        return $this;
-    }
-
-    /**
-     * Get casesDomain
-     *
-     * @return \AppBundle\Entity\CasesDomain
-     */
-    public function getCasesDomain()
-    {
-        return $this->casesDomain;
-    }
-
-    /**
      * Set user
      *
      * @param \AppBundle\Entity\User $user
      *
-     * @return CasesBalanceUser
+     * @return BalanceUser
      */
     public function setUser(\AppBundle\Entity\User $user = null)
     {

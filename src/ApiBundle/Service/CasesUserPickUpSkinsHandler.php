@@ -42,11 +42,13 @@ class CasesUserPickUpSkinsHandler
      */
     public function handler($skinsId, $userId)
     {
+        $date = new \DateTime();
+
         $this->dbal->beginTransaction();
         try {
             $this->dbal->insert(
                 'cases_skins_pick_up_user',
-                ['skins_id' => $skinsId, 'user_id' => $userId]
+                ['skins_id' => $skinsId, 'user_id' => $userId, 'created_at' => $date->format('Y-m-d H:i:s')]
             );
 
             $this->dbal->commit();

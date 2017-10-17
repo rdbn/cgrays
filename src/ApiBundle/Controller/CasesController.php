@@ -170,15 +170,15 @@ class CasesController extends FOSRestController
             return $this->handleView($view);
         }
 
-        // try {
+        try {
             $this->get('api.service.cases_user_sell_skins')
                 ->handler((int) $skinsId, (int) $this->getUser()->getId(), $domainId, $currencyCode);
 
             $view = $this->view('success', 200);
-//        } catch (\Exception $e) {
-//            $this->get('logger')->error($e->getMessage());
-//            $view = $this->view('Bad request', 400);
-//        }
+        } catch (\Exception $e) {
+            $this->get('logger')->error($e->getMessage());
+            $view = $this->view($e->getMessage(), 400);
+        }
 
         return $this->handleView($view);
     }
@@ -205,7 +205,7 @@ class CasesController extends FOSRestController
             $view = $this->view('success', 200);
         } catch (\Exception $e) {
             $this->get('logger')->error($e->getMessage());
-            $view = $this->view('Bad Request', 400);
+            $view = $this->view($e->getMessage(), 400);
         }
 
         return $this->handleView($view);
@@ -232,7 +232,8 @@ class CasesController extends FOSRestController
 
             $view = $this->view('success', 200);
         } catch (\Exception $e) {
-            $view = $this->view('Bad request', 400);
+            $this->get('logger')->error($e->getMessage());
+            $view = $this->view($e->getMessage(), 400);
         }
 
         return $this->handleView($view);

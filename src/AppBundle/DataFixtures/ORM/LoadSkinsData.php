@@ -58,6 +58,7 @@ class LoadSkinsData extends AbstractFixture implements OrderedFixtureInterface
             $skins->setName("Product " . uniqid());
             $skins->setIconUrl("image/300.png");
             $skins->setIconUrlLarge("image/300.png");
+            $skins->setSteamPrice(rand(10, 100));
             $skins->setDescription("
                 Зачарованная стамеска для создания гнезд под любые самоцветы, кроме потусторонних и призматических. 
                 Этот инструмент можно применить на странице информации о предмете. Откройте арсенал и дважды нажмите 
