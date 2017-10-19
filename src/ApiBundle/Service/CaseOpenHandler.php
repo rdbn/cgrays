@@ -34,6 +34,11 @@ class CaseOpenHandler
     private $user;
 
     /**
+     * @var GamesService
+     */
+    private $gamesService;
+
+    /**
      * @var LoggerInterface
      */
     private $logger;
@@ -43,13 +48,21 @@ class CaseOpenHandler
      * @param EntityManager $em
      * @param Connection $dbal
      * @param TokenStorageInterface $tokenStorage
+     * @param GamesService $gamesService
      * @param LoggerInterface $logger
      */
-    public function __construct(EntityManager $em, Connection $dbal, TokenStorageInterface $tokenStorage, LoggerInterface $logger)
+    public function __construct(
+        EntityManager $em,
+        Connection $dbal,
+        TokenStorageInterface $tokenStorage,
+        GamesService $gamesService,
+        LoggerInterface $logger
+    )
     {
         $this->em = $em;
         $this->dbal = $dbal;
         $this->user = $tokenStorage->getToken()->getUser();
+        $this->gamesService = $gamesService;
         $this->logger = $logger;
     }
 
@@ -100,7 +113,8 @@ class CaseOpenHandler
             throw new \Exception($e->getMessage());
         }
 
-        unset($skins['cases_skins_id'], $skins['count_drop'], $skins['count']);
+        $this->gamesService->flushRedisGame($userId, $skins['id']);
+        unset($skins['id'], $skins['cases_skins_id'], $skins['count_drop'], $skins['count']);
 
         return $skins;
     }

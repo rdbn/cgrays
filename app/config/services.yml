@@ -119,6 +119,7 @@ services:
             - '@doctrine.orm.entity_manager'
             - '@doctrine.dbal.default_connection'
             - '@security.token_storage'
+            - '@api.service.games'
             - '@logger'
 
     api.service.cases_user_sell_skins:
@@ -138,6 +139,23 @@ services:
         arguments:
             - '@doctrine.orm.entity_manager'
             - '@doctrine.dbal.default_connection'
+
+    api.service.games:
+        class: ApiBundle\Service\GamesService
+        arguments:
+            - '@snc_redis.default_client'
+
+    api.validator.domain_id:
+        class: ApiBundle\Validator\DomainIdValidator
+        arguments: ['@doctrine.orm.entity_manager']
+        tags:
+            - { name: validator.constraint_validator, alias: api.validator.domain_id }
+
+    api.validator.currency:
+        class: ApiBundle\Validator\CurrencyValidator
+        arguments: ['@doctrine.orm.entity_manager']
+        tags:
+            - { name: validator.constraint_validator, alias: api.validator.currency }
 
     # ProcessingBundle
     processing.is_online.is_online_handler:

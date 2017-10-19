@@ -33,6 +33,5 @@ class PageValidator extends ConstraintValidator
 
             return;
         }
-
     }
 }

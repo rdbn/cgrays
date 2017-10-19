@@ -9,6 +9,7 @@
 namespace AppBundle\Entity;
 
 use AppBundle\Modal\DictionaryInterface;
+use AppBundle\Service\GenerateUUID;
 use AppBundle\Services\UploadImageService;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -49,23 +50,9 @@ class CasesDomain
 
     public function __construct()
     {
-        $this->uuid = $this->genUuid();
+        $this->uuid = GenerateUUID::getUUID();
         $this->createdAt = new \DateTime();
         $this->cases = new ArrayCollection();
-    }
-
-    /**
-     * @return string
-     */
-    private function genUuid()
-    {
-        return sprintf( '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
-            mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ),
-            mt_rand( 0, 0xffff ),
-            mt_rand( 0, 0x0fff ) | 0x4000,
-            mt_rand( 0, 0x3fff ) | 0x8000,
-            mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff )
-        );
     }
 
     /**

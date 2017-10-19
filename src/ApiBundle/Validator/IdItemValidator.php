@@ -37,6 +37,5 @@ class IdItemValidator extends ConstraintValidator
 
             return;
         }
-
     }
 }
