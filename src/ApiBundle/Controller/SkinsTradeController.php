@@ -2,9 +2,7 @@
 
 namespace ApiBundle\Controller;
 
-use AppBundle\Entity\SkinsPrice;
-use AppBundle\Entity\SkinsTrade;
-use Doctrine\DBAL\DBALException;
+use ApiBundle\Validator\SkinsPriceIdConstraint;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\FOSRestController;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,21 +18,22 @@ class SkinsTradeController extends FOSRestController
      */
     public function postOrderAddAction(Request $request)
     {
-        $productPriceId = (int)$request->request->get('productPriceId');
-        $productPrice = $this->getDoctrine()->getRepository(SkinsPrice::class)
-            ->findOneBy(["id" => $productPriceId]);
+        $skinsPriceId = $request->request->get('skins_price_id');
+        $skinsPriceIdConstraint = new SkinsPriceIdConstraint();
+        $validator = $this->get('validator')
+            ->validate($skinsPriceId, $skinsPriceIdConstraint);
+
+        if (!count($validator)) {
+            $view = $this->view($validator->get(0)->getMessage(), 400);
+            return $this->handleView($view);
+        }
 
         try {
-            $order = new SkinsTrade();
-            $order->setSkinsPrice($productPrice);
-            $order->setUsers($this->getUser());
+            $countSkinsTradeUser = $this->get('api.service.add_skins_trade')
+                ->handler($skinsPriceId, $this->getUser()->getId());
 
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($order);
-            $em->flush();
-
-            $view = $this->view("success", 200);
-        } catch (DBALException $e) {
+            $view = $this->view($countSkinsTradeUser, 200);
+        } catch (\Exception $e) {
             $this->get('logger')->error($e->getMessage());
             $view = $this->view("Bad request", 400);
         }
@@ -43,23 +42,29 @@ class SkinsTradeController extends FOSRestController
     }
 
     /**
-     * @param int $orderId
+     * @param Request $request
      *
-     * @Rest\Post("/order/remove/{orderId}")
+     * @Rest\Post("/order/remove")
      * @Rest\View()
      * @return string
      */
-    public function postOrderRemoveAction($orderId)
+    public function postOrderRemoveAction(Request $request)
     {
-        $order = $this->getDoctrine()->getRepository(SkinsTrade::class)
-            ->findOneBy(["id" => $orderId]);
+        $skinsPriceId = $request->request->get('skins_price_id');
+        $skinsPriceIdConstraint = new SkinsPriceIdConstraint();
+        $validator = $this->get('validator')
+            ->validate($skinsPriceId, $skinsPriceIdConstraint);
+
+        if (!count($validator)) {
+            $view = $this->view($validator->get(0)->getMessage(), 400);
+            return $this->handleView($view);
+        }
 
         try {
-            $em = $this->getDoctrine()->getManager();
-            $em->remove($order);
-            $em->flush();
+            $countSkins = $this->get('api.service.remove_skins_trade')
+                ->handler($skinsPriceId, $this->getUser()->getId());
 
-            $view = $this->view("successful", 200);
+            $view = $this->view($countSkins, 200);
         } catch (\Exception $e) {
             $this->get('logger')->error($e->getMessage());
             $view = $this->view("Bad request", 400);

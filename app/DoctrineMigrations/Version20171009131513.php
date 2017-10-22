@@ -6,7 +6,7 @@ use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
 /**
- * Auto-generated Migration: Please modify to your needs!
+ * Alter tables skins, quality, decor, type_skins, item_set, rarity, weapon
  */
 class Version20171009131513 extends AbstractMigration
 {

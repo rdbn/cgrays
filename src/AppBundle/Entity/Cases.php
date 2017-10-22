@@ -8,7 +8,6 @@
 
 namespace AppBundle\Entity;
 
-use AppBundle\Modal\DictionaryInterface;
 use AppBundle\Services\UploadImageService;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;

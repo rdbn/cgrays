@@ -2,16 +2,18 @@
 /**
  * Created by PhpStorm.
  * User: rdbn
- * Date: 06.07.17
- * Time: 10:26
+ * Date: 18.10.17
+ * Time: 21:35
  */
 
 namespace ApiBundle\Validator;
 
+use AppBundle\Entity\Currency;
+use Doctrine\ORM\EntityManager;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
-class IdItemValidator extends ConstraintValidator
+class SkinsPriceIdValidator extends ConstraintValidator
 {
     /**
      * @param mixed $value
@@ -19,23 +21,14 @@ class IdItemValidator extends ConstraintValidator
      */
     public function validate($value, Constraint $constraint)
     {
-        if (!isset($value['id'])) {
-            $this->context->buildViolation($constraint->message)
-                ->addViolation();
+        preg_match('/[^0-9]+/gi', $value, $matches);
 
-            return;
-        }
-
-        $ids = explode(':', $value['id']);
-        $classId = (int) $ids[0];
-        $instanceId = (int) $ids[1];
-        $assetId = (int) $ids[2];
-
-        if ($classId == 0 && $instanceId == 0 && $assetId == 0) {
+        if (!count($matches)) {
             $this->context->buildViolation($constraint->message)
                 ->addViolation();
 
             return;
         }
     }
+
 }

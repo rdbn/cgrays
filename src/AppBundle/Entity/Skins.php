@@ -97,11 +97,17 @@ class Skins
      */
     protected $casesSkins;
 
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\CasesSkinsDropUser", mappedBy="skins")
+     */
+    protected $casesSkinsDropUser;
+
     public function __construct()
     {
         $this->steamPrice = 0;
         $this->skinsPrice = new ArrayCollection();
         $this->casesSkins = new ArrayCollection();
+        $this->casesSkinsDropUser = new ArrayCollection();
     }
 
     public function __toString()
@@ -449,5 +455,39 @@ class Skins
     public function getCasesSkins()
     {
         return $this->casesSkins;
+    }
+
+    /**
+     * Add casesSkinsDropUser
+     *
+     * @param \AppBundle\Entity\CasesSkinsDropUser $casesSkinsDropUser
+     *
+     * @return Skins
+     */
+    public function addCasesSkinsDropUser(\AppBundle\Entity\CasesSkinsDropUser $casesSkinsDropUser)
+    {
+        $this->casesSkinsDropUser[] = $casesSkinsDropUser;
+
+        return $this;
+    }
+
+    /**
+     * Remove casesSkinsDropUser
+     *
+     * @param \AppBundle\Entity\CasesSkinsDropUser $casesSkinsDropUser
+     */
+    public function removeCasesSkinsDropUser(\AppBundle\Entity\CasesSkinsDropUser $casesSkinsDropUser)
+    {
+        $this->casesSkinsDropUser->removeElement($casesSkinsDropUser);
+    }
+
+    /**
+     * Get casesSkinsDropUser
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getCasesSkinsDropUser()
+    {
+        return $this->casesSkinsDropUser;
     }
 }

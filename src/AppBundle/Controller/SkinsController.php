@@ -95,18 +95,27 @@ class SkinsController extends Controller
      */
     public function productAction($skinsPriceId)
     {
+        $user = $this->getUser();
+        $em = $this->getDoctrine()->getManager();
+
         /* @var SkinsPrice $skin */
-        $skin = $this->getDoctrine()->getRepository(SkinsPrice::class)
+        $skin = $em->getRepository(SkinsPrice::class)
             ->findSkinsPriceById($skinsPriceId);
 
-        $skins = $this->getDoctrine()->getRepository(SkinsPrice::class)
+        $skins = $em->getRepository(SkinsPrice::class)
             ->findSkinsPriceBySkinsId($skin->getSkins()->getId(), $skinsPriceId);
 
-        $countSkinsTrade = $this->getDoctrine()->getRepository(SkinsTrade::class)
-            ->findCountSkinsTradeByUserId($skin->getSkins()->getId());
+        if ($user) {
+            $countSkinsTrade = $em->getRepository(SkinsTrade::class)
+                ->findCountSkinsTradeByUserId($user->getId());
+
+            $checkSkinsTradeUser = $em->getRepository(SkinsTrade::class)
+                ->findOneBy(['skinsPrice' => $skinsPriceId, 'users' => $user]);
+        }
 
         return $this->render('default/skin.html.twig', [
-            'countSkinsTrade' => $countSkinsTrade,
+            'checkSkinsTradeUser' => empty($checkSkinsTradeUser) ? true : false,
+            'countSkinsTrade' => isset($countSkinsTrade) ? $countSkinsTrade : 0,
             'skins' => $skins,
             'skin' => $skin,
         ]);

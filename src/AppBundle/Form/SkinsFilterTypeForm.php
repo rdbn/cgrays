@@ -59,6 +59,14 @@ class SkinsFilterTypeForm extends AbstractType
                 "placeholder" => "Набор",
                 "attr" => ["class" => "form-control selectpicker", "data-live-search" => "true"]
             ])
+            ->add("weapon", EntityType::class, [
+                "label" => false,
+                "required" => false,
+                "class" => Weapon::class,
+                "choice_label" => "localizedTagName",
+                "placeholder" => "Оружие",
+                "attr" => ["class" => "form-control selectpicker", "data-live-search" => "true"]
+            ])
             ->add("quality", EntityType::class, [
                 "label" => false,
                 "required" => false,

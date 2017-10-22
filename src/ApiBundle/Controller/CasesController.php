@@ -2,6 +2,8 @@
 
 namespace ApiBundle\Controller;
 
+use ApiBundle\Validator\CurrencyConstraint;
+use ApiBundle\Validator\DomainIdConstraint;
 use AppBundle\Entity\Cases;
 use AppBundle\Entity\CasesSkins;
 use AppBundle\Entity\CasesCategory;
@@ -13,12 +15,22 @@ use Symfony\Component\HttpFoundation\Response;
 class CasesController extends FOSRestController
 {
     /**
+     * @param Request $request
+     *
      * @Rest\Get("/cases/category")
      * @Rest\View(serializerGroups={"cases_category"})
      * @return Response
      */
-    public function getCategoryCasesAction()
+    public function getCategoryCasesAction(Request $request)
     {
+        $domainId = $request->headers->get('x-domain-id');
+        $domainIdConstraint = new DomainIdConstraint();
+        $validator = $this->get('validator')->validate($domainId, $domainIdConstraint);
+        if (count($validator) > 0) {
+            $view = $this->view("Not found", 404);
+            return $this->handleView($view);
+        }
+
         $categoryCases = $this->getDoctrine()->getRepository(CasesCategory::class)
             ->findAll();
 
@@ -42,6 +54,13 @@ class CasesController extends FOSRestController
     public function getCasesCategoryAction(Request $request, $categoryId)
     {
         $domainId = $request->headers->get('x-domain-id');
+        $domainIdConstraint = new DomainIdConstraint();
+        $validator = $this->get('validator')->validate($domainId, $domainIdConstraint);
+        if (count($validator) > 0) {
+            $view = $this->view("Not found", 404);
+            return $this->handleView($view);
+        }
+
         $cases = $this->getDoctrine()->getRepository(Cases::class)
             ->findCasesByCategoryId($domainId, $categoryId);
 
@@ -87,6 +106,13 @@ class CasesController extends FOSRestController
     public function getCasesAction(Request $request, $casesId)
     {
         $domainId = $request->headers->get('x-domain-id');
+        $domainIdConstraint = new DomainIdConstraint();
+        $validator = $this->get('validator')->validate($domainId, $domainIdConstraint);
+        if (count($validator) > 0) {
+            $view = $this->view("Not found", 404);
+            return $this->handleView($view);
+        }
+
         /* @var Cases $case */
         $case = $this->getDoctrine()->getRepository(Cases::class)
             ->findCasesSkinsByDomainIdAndCasesId($domainId, $casesId);
@@ -132,14 +158,16 @@ class CasesController extends FOSRestController
     public function getCasesOpenAction(Request $request, $id)
     {
         $domainId = $request->headers->get('x-domain-id');
-        if (!$domainId) {
+        $domainIdConstraint = new DomainIdConstraint();
+        $validator = $this->get('validator')->validate($domainId, $domainIdConstraint);
+        if (count($validator) > 0) {
             $view = $this->view("Not found", 404);
             return $this->handleView($view);
         }
 
         try {
             $case = $this->get('api.service.case_open')
-                ->handler($domainId, $id);
+                ->handler($domainId, $id, $this->getUser()->getId());
 
             if (!count($case)) {
                 throw new \Exception('Case is empty');
@@ -156,43 +184,125 @@ class CasesController extends FOSRestController
 
     /**
      * @param Request $request
-     * @param $skinsId
      * @Rest\Post("/cases/user/sell/skins")
      * @Rest\View()
      * @return Response
      */
-    public function getCasesUserSellSkinsAction(Request $request, $skinsId)
+    public function postCasesUserSellSkinsAction(Request $request)
     {
         $domainId = $request->headers->get('x-domain-id');
-        if (!$domainId) {
+        $domainIdConstraint = new DomainIdConstraint();
+        $validator = $this->get('validator')->validate($domainId, $domainIdConstraint);
+        if (count($validator) > 0) {
             $view = $this->view("Not found", 404);
             return $this->handleView($view);
         }
 
+        $currencyCode = $request->request->get('currency_code');
+        $currencyConstraint = new CurrencyConstraint();
+        $validator = $this->get('validator')->validate($currencyCode, $currencyConstraint);
+        if (count($validator) > 0) {
+            $view = $this->view($validator->get(0)->getMessage(), 404);
+            return $this->handleView($view);
+        }
 
+        $userId = $this->getUser()->getId();
+        $gameService = $this->get('api.service.games');
+        if (!$gameService->checkGameUserId($userId)) {
+            $view = $this->view("Not found", 404);
+            return $this->handleView($view);
+        }
 
-        $view = $this->view('success', 200);
+        try {
+            $this->get('api.service.cases_user_sell_skins')
+                ->handler((int) $gameService->getGame($userId), (int) $this->getUser()->getId(), $domainId, $currencyCode);
+
+            $gameService->clearGame($userId);
+            $view = $this->view('success', 200);
+        } catch (\Exception $e) {
+            $this->get('logger')->error($e->getMessage());
+            $view = $this->view($e->getMessage(), 400);
+        }
+
         return $this->handleView($view);
     }
 
     /**
      * @param Request $request
-     * @param $skinsId
      * @Rest\Post("/cases/user/pick-up/skins")
      * @Rest\View()
      * @return Response
      */
-    public function getCasesUserPickUpSkinsAction(Request $request, $skinsId)
+    public function postCasesUserPickUpSkinsAction(Request $request)
     {
         $domainId = $request->headers->get('x-domain-id');
-        if (!$domainId) {
+        $domainIdConstraint = new DomainIdConstraint();
+        $validator = $this->get('validator')->validate($domainId, $domainIdConstraint);
+        if (count($validator) > 0) {
             $view = $this->view("Not found", 404);
             return $this->handleView($view);
         }
 
+        $userId = $this->getUser()->getId();
+        $gameService = $this->get('api.service.games');
+        if (!$gameService->checkGameUserId($userId)) {
+            $view = $this->view("Not found", 404);
+            return $this->handleView($view);
+        }
 
+        try {
+            $this->get('api.service.cases_user_pick_up_skins')
+                ->handler((int)$gameService->getGame($userId), $userId);
 
-        $view = $this->view('success', 200);
+            $gameService->clearGame($userId);
+            $view = $this->view('success', 200);
+        } catch (\Exception $e) {
+            $this->get('logger')->error($e->getMessage());
+            $view = $this->view($e->getMessage(), 400);
+        }
+
+        return $this->handleView($view);
+    }
+
+    /**
+     * @param Request $request
+     * @Rest\Post("/cases/contract")
+     * @return Response
+     */
+    public function postCasesContractAction(Request $request)
+    {
+        $domainId = $request->headers->get('x-domain-id');
+        $domainIdConstraint = new DomainIdConstraint();
+        $validator = $this->get('validator')->validate($domainId, $domainIdConstraint);
+        if (count($validator) > 0) {
+            $view = $this->view("Not found", 404);
+            return $this->handleView($view);
+        }
+
+        $currencyCode = $request->request->get('currency_code');
+        $currencyConstraint = new CurrencyConstraint();
+        $validator = $this->get('validator')->validate($domainId, $currencyConstraint);
+        if (count($validator) > 0) {
+            $view = $this->view($validator->get(0)->getMessage(), 404);
+            return $this->handleView($view);
+        }
+
+        $ids = $request->request->get('ids');
+        if (!$ids) {
+            $view = $this->view("Not found", 404);
+            return $this->handleView($view);
+        }
+
+        try {
+            $this->get('api.service.cases_contract')
+                ->handler($ids, $domainId, $this->getUser()->getId(), $currencyCode);
+
+            $view = $this->view('success', 200);
+        } catch (\Exception $e) {
+            $this->get('logger')->error($e->getMessage());
+            $view = $this->view($e->getMessage(), 400);
+        }
+
         return $this->handleView($view);
     }
 }

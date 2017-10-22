@@ -34,6 +34,11 @@ class CaseOpenHandler
     private $user;
 
     /**
+     * @var GamesService
+     */
+    private $gamesService;
+
+    /**
      * @var LoggerInterface
      */
     private $logger;
@@ -43,23 +48,32 @@ class CaseOpenHandler
      * @param EntityManager $em
      * @param Connection $dbal
      * @param TokenStorageInterface $tokenStorage
+     * @param GamesService $gamesService
      * @param LoggerInterface $logger
      */
-    public function __construct(EntityManager $em, Connection $dbal, TokenStorageInterface $tokenStorage, LoggerInterface $logger)
+    public function __construct(
+        EntityManager $em,
+        Connection $dbal,
+        TokenStorageInterface $tokenStorage,
+        GamesService $gamesService,
+        LoggerInterface $logger
+    )
     {
         $this->em = $em;
         $this->dbal = $dbal;
         $this->user = $tokenStorage->getToken()->getUser();
+        $this->gamesService = $gamesService;
         $this->logger = $logger;
     }
 
     /**
      * @param $domainId
      * @param $id
+     * @param $userId
      * @return array
      * @throws \Exception
      */
-    public function handler($domainId, $id)
+    public function handler($domainId, $id, $userId)
     {
         $skins = $this->em->getRepository(CasesSkins::class)
             ->findSkinsByCasesId($domainId, $id);
@@ -67,6 +81,8 @@ class CaseOpenHandler
         if (!count($skins)) {
             return [];
         }
+
+        $date = new \DateTime();
 
         $this->dbal->beginTransaction();
         try {
@@ -80,6 +96,15 @@ class CaseOpenHandler
                 ['id' => $skins['cases_skins_id']]
             );
 
+            $this->dbal->insert(
+                'cases_skins_drop_user',
+                [
+                    'skins_id' => $skins['id'],
+                    'user_id' => $userId,
+                    'created_at' => $date->format('Y-m-d H:i:s'),
+                ]
+            );
+
             $this->dbal->commit();
         } catch (DBALException $e) {
             $this->dbal->rollBack();
@@ -88,7 +113,8 @@ class CaseOpenHandler
             throw new \Exception($e->getMessage());
         }
 
-        //unset($skins['cases_skins_id'], $skins['count_drop']);
+        $this->gamesService->flushRedisGame($userId, $skins['id']);
+        unset($skins['id'], $skins['cases_skins_id'], $skins['count_drop'], $skins['count']);
 
         return $skins;
     }

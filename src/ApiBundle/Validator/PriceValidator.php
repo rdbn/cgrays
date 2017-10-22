@@ -33,6 +33,5 @@ class PriceValidator extends ConstraintValidator
 
             return;
         }
-
     }
 }

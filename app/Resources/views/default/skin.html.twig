@@ -11,14 +11,20 @@
             <div class="col-lg-4 top20">
                 <img src="{{ asset(skin.skins.iconUrlLarge) }}" alt="{{ skin.skins.name }}" class="img-thumbnail">
                 {% if is_granted("ROLE_USER") %}
-                    <div class="btn-group top20">
+                    <div class="btn-group top20 card-btn">
                         {% if skin.users.id != app.user.id %}
                             <a class="btn btn-action btn-lg" href="{{ path('app.skins_trade.fast_trade', { 'skinsPriceId': skin.id }) }}">
                                 <span class="glyphicon glyphicon-share-alt"></span> Купить
                             </a>
-                            <button class="btn btn-action btn-lg add-basket" data-product-price="{{ skin.id }}">
-                                <span class="glyphicon glyphicon-shopping-cart"></span>
-                            </button>
+                            {% if checkSkinsTradeUser %}
+                                <button class="btn btn-action btn-lg basket-btn add-basket" data-product-price="{{ skin.id }}">
+                                    <span class="glyphicon glyphicon-shopping-cart"></span>
+                                </button>
+                            {% else %}
+                                <button class="btn btn-action btn-lg basket-btn remove-basket" data-product-price="{{ skin.id }}">
+                                    <span class="glyphicon glyphicon-remove"></span>
+                                </button>
+                            {% endif %}
                         {% else %}
                             <button class="btn btn-action btn-lg disabled" data-toggle="tooltip" data-placement="top" title="Вы владелец данного предмета.">
                                 <span class="glyphicon glyphicon-share-alt"></span> Купить
@@ -29,7 +35,7 @@
                         {% endif %}
                     </div>
                     <p class="top10">
-                        Товаров в корзине: <strong><span class="text-action">{{ countSkinsTrade }}</span></strong>
+                        Товаров в корзине: <strong><span class="text-action count_skins_trade">{{ countSkinsTrade }}</span></strong>
                     </p>
                     {% if skin.users.id == app.user.id %}
                         <div class="jumbotron top20">

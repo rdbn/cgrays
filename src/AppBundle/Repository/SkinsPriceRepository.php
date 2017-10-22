@@ -217,7 +217,7 @@ class SkinsPriceRepository extends EntityRepository
     {
         $dbal = $this->getEntityManager()->getConnection();
         $stmt = $dbal->prepare('
-        SELECT class_id, instance_id, id, price FROM skins_price WHERE id = :id FOR UPDATE
+        SELECT id, class_id, instance_id, id, price FROM skins_price WHERE id = :id FOR UPDATE
         ');
         $stmt->bindParam('id', $productPriceId, \PDO::PARAM_INT);
         $stmt->execute();
