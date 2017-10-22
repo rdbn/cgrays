@@ -8,12 +8,9 @@
 
 namespace AppBundle\Entity;
 
-use AppBundle\Modal\DictionaryInterface;
-use AppBundle\Service\GenerateUUID;
-use AppBundle\Services\UploadImageService;
+use AppBundle\Services\GenerateUUID;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * @ORM\Entity()

@@ -145,6 +145,18 @@ services:
         arguments:
             - '@snc_redis.default_client'
 
+    api.service.add_skins_trade:
+        class: ApiBundle\Service\SkinsTrade\AddSkinsTradeHandler
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@doctrine.dbal.default_connection'
+
+    api.service.remove_skins_trade:
+        class: ApiBundle\Service\SkinsTrade\RemoveSkinsTradeHandler
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@doctrine.dbal.default_connection'
+
     api.validator.domain_id:
         class: ApiBundle\Validator\DomainIdValidator
         arguments: ['@doctrine.orm.entity_manager']

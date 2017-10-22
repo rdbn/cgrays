@@ -1,13 +1,24 @@
 var Order = function () {
-    var add = function (elementBtn) {
-        var productPriceId = elementBtn.attr('data-product-price');
-
+    var action = function (elementBtn, action) {
         $.ajax({
-            url: "/api/order/add",
+            url: "/api/order/" + action,
             method: "POST",
-            data: { productPriceId: productPriceId },
+            data: { skins_price_id: elementBtn.attr('data-product-price') },
             statusCode: {
-                200: function () {
+                200: function (data) {
+                    $('.count_skins_trade').html(data);
+
+                    var element = $('.basket-btn');
+                    if (element.hasClass('add-basket')) {
+                        element.html('<span class="glyphicon glyphicon-remove"></span>');
+                        element.addClass('remove-basket');
+                        element.removeClass('add-basket');
+                    } else {
+                        element.html('<span class="glyphicon glyphicon-shopping-cart"></span>');
+                        element.addClass('add-basket');
+                        element.removeClass('remove-basket');
+                    }
+
                     elementBtn.removeClass('disabled');
                 },
                 400: function () {
@@ -23,10 +34,18 @@ var Order = function () {
 
     return {
         add: function () {
-            $(".add-basket").click(function () {
+            $(".card-btn").on("click", ".add-basket", function () {
                 var elementBtn = $(this);
                 if (!elementBtn.hasClass('disabled')) {
-                    add(elementBtn);
+                    action(elementBtn, "add");
+                }
+            });
+        },
+        remove: function () {
+            $(".card-btn").on("click", ".remove-basket", function () {
+                var elementBtn = $(this);
+                if (!elementBtn.hasClass('disabled')) {
+                    action(elementBtn, "remove");
                 }
             });
         }
@@ -36,4 +55,5 @@ var Order = function () {
 $(document).ready(function () {
     var order = Order();
     order.add();
+    order.remove();
 });

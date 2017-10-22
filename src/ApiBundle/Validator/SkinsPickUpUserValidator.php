@@ -35,7 +35,7 @@ class SkinsPickUpUserValidator extends ConstraintValidator
      */
     public function validate($value, Constraint $constraint)
     {
-        preg_match("//", $value, $matches);
+        preg_match("/[^0-9,]+/gi", $value, $matches);
         if (count($matches) > 0) {
             $this->context->buildViolation($constraint->message)
                 ->addViolation();
