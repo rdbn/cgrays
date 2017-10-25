@@ -76,7 +76,7 @@ class BasketPaymentSkinsService
     {
         $this->dbal->beginTransaction();
         try {
-            $skinsPrice = $this->priceRepository->findSkinsPriceForUpdateBySkinsPriceIds($skinsPriceIds);
+            $skinsPrices = $this->priceRepository->findSkinsPriceForUpdateBySkinsPriceIds($skinsPriceIds);
             $sum = $this->priceRepository->findSumSkinsPriceBySkinsPriceIds($skinsPriceIds);
             $user = $this->balanceUserRepository->findBalanceUserForUpdateByUserIdCurrencyId($userId, $currencyId);
 
@@ -89,12 +89,7 @@ class BasketPaymentSkinsService
             $this->updateBalanceUser($userId, $currencyId, $balance);
             $this->updateSkinsPriceIds($skinsPriceIds, $userId);
             $this->insertPayment($userId, $currencyId, $balance);
-
-            $this->producer->publish(json_encode([
-                'id' => $skinsPrice['id'],
-                'class_id' => $skinsPrice['class_id'],
-                'instance_id' => $skinsPrice['instance_id'],
-            ]));
+            $this->sendSkinsTrade($skinsPrices);
 
             $this->dbal->commit();
         } catch (DBALException $e) {
@@ -160,5 +155,16 @@ class BasketPaymentSkinsService
             'payment_information' => $balance,
             'created_at' => $date,
         ]);
+    }
+
+    private function sendSkinsTrade($skinsPrices)
+    {
+        foreach ($skinsPrices as $skinsPrice) {
+            $this->producer->publish(json_encode([
+                'id' => $skinsPrice['id'],
+                'class_id' => $skinsPrice['class_id'],
+                'instance_id' => $skinsPrice['instance_id'],
+            ]));
+        }
     }
 }
