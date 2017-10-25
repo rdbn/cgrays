@@ -8,7 +8,7 @@
             <tbody>
             {% if orders is defined %}
                 {% for order in orders %}
-                    <tr id="order-{{ order.id }}" class="order">
+                    <tr id="order-{{ order.price_id }}" class="order">
                         <td class="col-lg-3 col-md-3 col-sm-4 col-xs-6">
                             <a href="{{ path('app.skins.skins_price', { "id": order.price_id}) }}">
                                 <img class="img-thumbnail" src="{{ asset(order.icon_url) }}" alt="{{ order.name }}" />
@@ -17,8 +17,10 @@
                         <td>
                             <h4 class="media-heading">{{ order.name }}</h4>
                             <div class="jumbotron">
-                                <p><strong class="text-size24">{{ order.price }}</strong> <span class="glyphicon glyphicon-rub text-danger"></span></p>
-                                <button data-order="{{ order.id }}" class="btn btn-action" data-toggle="modal" data-target="#remove-modal">
+                                <p>
+                                    <strong class="text-size24">{{ order.price }}</strong> <span class="glyphicon glyphicon-rub text-danger"></span>
+                                </p>
+                                <button data-price-id="{{ order.price_id }}" class="btn btn-action" data-toggle="modal" data-target="#remove-modal">
                                     Удалить
                                 </button>
                             </div>
@@ -32,12 +34,12 @@
         <div class="jumbotron">
             <p><strong>После покупки этот товар нельзя будет обменивать одну неделю.</strong></p>
             {{ form_start(form) }}
-            <div class="form-group">
-                <label>
-                    {{ form_widget(form.check_rule) }} Я принимаю условия.
-                </label>
-            </div>
-            {{ form_widget(form.submit) }}
+                <div class="form-group">
+                    <label>
+                        {{ form_widget(form.check_rule) }} Я принимаю условия.
+                    </label>
+                </div>
+                {{ form_widget(form.submit) }}
             {{ form_end(form) }}
         </div>
         {% endif %}

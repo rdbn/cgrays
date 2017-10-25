@@ -55,11 +55,6 @@ class User implements UserInterface, EquatableInterface, \Serializable, SteamUse
     protected $salt;
 
     /**
-     * @ORM\Column(type="decimal", precision=7, scale=2)
-     */
-    protected $balance;
-
-    /**
      * @ORM\Column(type="string", length=128)
      */
     protected $avatar;
@@ -116,6 +111,11 @@ class User implements UserInterface, EquatableInterface, \Serializable, SteamUse
     protected $casesSkinsDropUser;
 
     /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\BalanceUser", mappedBy="user")
+     */
+    protected $balanceUser;
+
+    /**
      * Unmapped property to handle change password
      */
     private $plainPassword;
@@ -127,7 +127,6 @@ class User implements UserInterface, EquatableInterface, \Serializable, SteamUse
 
     public function __construct()
     {
-        $this->balance = 0;
         $this->isOnline = false;
         $this->isSell= false;
         $this->hrefTrade = "";
@@ -136,6 +135,7 @@ class User implements UserInterface, EquatableInterface, \Serializable, SteamUse
         $this->createdAt = new \DateTime();
         $this->lastOnline = new \DateTime();
 
+        $this->balanceUser = new ArrayCollection();
         $this->roles = new ArrayCollection();
         $this->skinsTrade = new ArrayCollection();
         $this->skinsPrice = new ArrayCollection();
@@ -397,30 +397,6 @@ class User implements UserInterface, EquatableInterface, \Serializable, SteamUse
         $this->salt = $salt;
 
         return $this;
-    }
-
-    /**
-     * Set balance
-     *
-     * @param string $balance
-     *
-     * @return User
-     */
-    public function setBalance($balance)
-    {
-        $this->balance = $balance;
-
-        return $this;
-    }
-
-    /**
-     * Get balance
-     *
-     * @return string
-     */
-    public function getBalance()
-    {
-        return $this->balance;
     }
 
     /**
@@ -719,5 +695,39 @@ class User implements UserInterface, EquatableInterface, \Serializable, SteamUse
     public function getCasesSkinsDropUser()
     {
         return $this->casesSkinsDropUser;
+    }
+
+    /**
+     * Add balanceUser
+     *
+     * @param \AppBundle\Entity\BalanceUser $balanceUser
+     *
+     * @return User
+     */
+    public function addBalanceUser(\AppBundle\Entity\BalanceUser $balanceUser)
+    {
+        $this->balanceUser[] = $balanceUser;
+
+        return $this;
+    }
+
+    /**
+     * Remove balanceUser
+     *
+     * @param \AppBundle\Entity\BalanceUser $balanceUser
+     */
+    public function removeBalanceUser(\AppBundle\Entity\BalanceUser $balanceUser)
+    {
+        $this->balanceUser->removeElement($balanceUser);
+    }
+
+    /**
+     * Get balanceUser
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getBalanceUser()
+    {
+        return $this->balanceUser;
     }
 }

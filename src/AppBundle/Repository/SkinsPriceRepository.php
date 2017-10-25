@@ -188,10 +188,10 @@ class SkinsPriceRepository extends EntityRepository
     }
 
     /**
-     * @param int $productPriceId
+     * @param int $skinsPriceId
      * @return mixed
      */
-    public function findSkinsPriceById($productPriceId)
+    public function findSkinsPriceById($skinsPriceId)
     {
         $qb = $this->createQueryBuilder("sp");
         $qb
@@ -200,7 +200,7 @@ class SkinsPriceRepository extends EntityRepository
             ->join("s.quality", "q")
             ->andWhere("sp.id = :skins_price_id")
             ->andWhere("sp.isSell = true")
-            ->setParameter("skins_price_id", $productPriceId);
+            ->setParameter("skins_price_id", $skinsPriceId);
 
         try {
             return $qb->getQuery()->getSingleResult();
@@ -210,19 +210,47 @@ class SkinsPriceRepository extends EntityRepository
     }
 
     /**
-     * @param $productPriceId
+     * @param $skinsPriceId
      * @return mixed
      */
-    public function findSkinsPriceForUpdateBySkinsPriceId($productPriceId)
+    public function findSkinsPriceForUpdateBySkinsPriceId($skinsPriceId)
     {
         $dbal = $this->getEntityManager()->getConnection();
         $stmt = $dbal->prepare('
-        SELECT id, class_id, instance_id, id, price FROM skins_price WHERE id = :id FOR UPDATE
+        SELECT id, class_id, instance_id, price FROM skins_price WHERE id = :id FOR UPDATE
         ');
-        $stmt->bindParam('id', $productPriceId, \PDO::PARAM_INT);
+        $stmt->bindParam('id', $skinsPriceId, \PDO::PARAM_INT);
         $stmt->execute();
 
         return $stmt->fetch();
+    }
+
+    /**
+     * @param $skinsPriceIds
+     * @return mixed
+     */
+    public function findSkinsPriceForUpdateBySkinsPriceIds($skinsPriceIds)
+    {
+        $dbal = $this->getEntityManager()->getConnection();
+        $stmt = $dbal->prepare("
+        SELECT id, class_id, instance_id, price FROM skins_price WHERE id IN ({$skinsPriceIds}) FOR UPDATE
+        ");
+        $stmt->execute();
+
+        return $stmt->fetch();
+    }
+
+    /**
+     * @param $skinsPriceIds
+     * @return mixed
+     */
+    public function findSumSkinsPriceBySkinsPriceIds($skinsPriceIds)
+    {
+        $dbal = $this->getEntityManager()->getConnection();
+        $stmt = $dbal->prepare("SELECT SUM(price) as all_sum FROM skins_price WHERE id IN ({$skinsPriceIds})");
+        $stmt->execute();
+
+        return $stmt->fetch(\PDO::FETCH_COLUMN);
     }
 
     public function querySonata()
