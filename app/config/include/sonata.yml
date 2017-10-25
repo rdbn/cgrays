@@ -10,6 +10,12 @@ sonata_block:
             contexts: [admin]
 
 services:
+    sonata_admin.admin.currency:
+        class: AdminBundle\Admin\CurrencyAdmin
+        arguments: [~, AppBundle\Entity\Currency, ~]
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: Финансы, label: Валюты, show_mosaic_button: false }
+
     sonata_admin.admin.news:
         class: AdminBundle\Admin\NewsAdmin
         arguments: [~, AppBundle\Entity\News, ~]
