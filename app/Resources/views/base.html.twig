@@ -53,7 +53,8 @@
                             <ul id="username" class="nav navbar-nav navbar-right" data-username="{{ username }}">
                                 <li>
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                        Баланс: {{ app.user.balance }} <span class="glyphicon glyphicon-rub text-danger"></span> <span class="caret"></span>
+                                        Баланс: {{ app.user.balanceUser.first.balance|round(2, 'ceil') }}
+                                        <span class="glyphicon glyphicon-rub text-danger"></span> <span class="caret"></span>
                                     </a>
                                     <ul class="dropdown-menu">
                                         <li><a href="{{ path('app.payment.payment_list') }}">История платежей</a></li>

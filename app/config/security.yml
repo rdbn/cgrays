@@ -59,6 +59,8 @@ security:
         - { path: ^/login$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api/login_check, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/user, roles: ROLE_USER }
+        - { path: ^/payment, roles: ROLE_USER }
+        - { path: ^/basket, roles: ROLE_USER }
         - { path: ^/api, roles: ROLE_USER }
         - { path: ^/backend, roles: ROLE_ADMIN }
         - { path: ^/admin, roles: ROLE_ADMIN }

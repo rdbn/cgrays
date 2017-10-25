@@ -2,6 +2,7 @@
 
 namespace AppBundle\Form;
 
+use AppBundle\Entity\Currency;
 use AppBundle\Entity\Payment;
 use AppBundle\Entity\PaymentSystem;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -24,8 +25,16 @@ class PaymentTypeForm extends AbstractType
                 'label' => false,
                 'class' => PaymentSystem::class,
                 'choice_label' => 'name',
+                'mapped' => false,
                 'attr' => ['class' => 'form-control'],
-                'placeholder' => 'Выберите способ оплаты.',
+                'placeholder' => 'Выберите способ оплаты',
+            ])
+            ->add('currency', EntityType::class, [
+                'label' => false,
+                'class' => Currency::class,
+                'choice_label' => 'name',
+                'attr' => ['class' => 'form-control'],
+                'placeholder' => 'Выберите валюту',
             ])
             ->add('sum_payment', TextType::class, [
                 'label' => false,

@@ -59,13 +59,22 @@ services:
     # Ввод/Вывод денег и оплата товара
     app.service.payment.pay_in_out:
         class: AppBundle\Services\Payment\PayInOutService
-        arguments: ['@doctrine.dbal.default_connection', '@app.repository.user', '@logger']
+        arguments: ['@doctrine.dbal.default_connection', '@app.repository.balance_user', '@logger']
 
-    app.service.payment.payment_skins:
-        class: AppBundle\Services\Payment\PaymentSkinsService
+    app.service.payment.hot_payment_skins:
+        class: AppBundle\Services\Payment\HotPaymentSkinsService
         arguments:
             - '@doctrine.dbal.default_connection'
-            - '@app.repository.user'
+            - '@app.repository.balance_user'
+            - '@app.repository.skins_price'
+            - '@old_sound_rabbit_mq.trade_product_producer'
+            - '@logger'
+
+    app.service.payment.basket_payment_skins:
+        class: AppBundle\Services\Payment\BasketPaymentSkinsService
+        arguments:
+            - '@doctrine.dbal.default_connection'
+            - '@app.repository.balance_user'
             - '@app.repository.skins_price'
             - '@old_sound_rabbit_mq.trade_product_producer'
             - '@logger'
@@ -88,6 +97,18 @@ services:
         factory: ['@doctrine.orm.entity_manager', getRepository]
         arguments:
             - AppBundle\Entity\SkinsPrice
+
+    app.repository.balance_user:
+        class: AppBundle\Repository\BalanceUserRepository
+        factory: ['@doctrine.orm.entity_manager', getRepository]
+        arguments:
+            - AppBundle\Entity\BalanceUser
+
+    app.repository.currency:
+        class: AppBundle\Repository\CurrencyRepository
+        factory: ['@doctrine.orm.entity_manager', getRepository]
+        arguments:
+            - AppBundle\Entity\Currency
 
     app.repository.failed_links_skins:
         class: AppBundle\Repository\FailedLinksSkinsRepository
@@ -204,3 +225,10 @@ services:
         class: AppBundle\EventListener\SwitchUserListener
         tags:
             - { name: kernel.event_listener, event: security.switch_user, method: onSwitchUser }
+
+    app.currency_listener:
+        class: AppBundle\EventListener\AuthenticationListener
+        arguments: ['@app.repository.currency']
+        tags:
+            - { name: kernel.event_listener, event: security.interactive_login, method: onAuthenticationSuccess
+             }

@@ -15,7 +15,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\CurrencyRepository")
  * @ORM\Table(name="currency")
  */
 class Currency

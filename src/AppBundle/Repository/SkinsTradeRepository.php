@@ -8,11 +8,16 @@
 
 namespace AppBundle\Repository;
 
+use AppBundle\Entity\SkinsTrade;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityRepository;
 
 class SkinsTradeRepository extends EntityRepository
 {
+    /**
+     * @param $id
+     * @return array
+     */
     public function findOrderSkinsByUserId($id)
     {
         $dbal = $this->getEntityManager()->getConnection();
@@ -28,10 +33,12 @@ class SkinsTradeRepository extends EntityRepository
             ->from("skins_trade", "so")
             ->leftJoin("so", "skins_price", "sp", "so.skins_price_id = sp.id")
             ->leftJoin("sp", "skins", "s", "sp.skins_id = s.id")
-            ->where("so.user_id = :id");
+            ->andWhere("so.user_id = :id")
+            ->andWhere("so.status = :status");
 
         $stmt = $dbal->prepare($qb->getSQL());
-        $stmt->bindParam("id", $id, \PDO::PARAM_INT);
+        $stmt->bindValue("id", $id, \PDO::PARAM_INT);
+        $stmt->bindValue("status", SkinsTrade::SKINS_BUY, \PDO::PARAM_STR);
         $stmt->execute();
 
         try {
@@ -41,6 +48,10 @@ class SkinsTradeRepository extends EntityRepository
         }
     }
 
+    /**
+     * @param $id
+     * @return array|bool|string
+     */
     public function findSumAllOrderSkinsByUserId($id)
     {
         $dbal = $this->getEntityManager()->getConnection();

@@ -9,14 +9,14 @@
 namespace AppBundle\Services\Payment;
 
 use AppBundle\Entity\SkinsTrade;
+use AppBundle\Repository\BalanceUserRepository;
 use AppBundle\Repository\SkinsPriceRepository;
-use AppBundle\Repository\UserRepository;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
 use OldSound\RabbitMqBundle\RabbitMq\ProducerInterface;
 use Psr\Log\LoggerInterface;
 
-class PaymentSkinsService
+class HotPaymentSkinsService
 {
     /**
      * @var Connection
@@ -24,9 +24,9 @@ class PaymentSkinsService
     private $dbal;
 
     /**
-     * @var UserRepository
+     * @var BalanceUserRepository
      */
-    private $userRepository;
+    private $balanceUserRepository;
 
     /**
      * @var SkinsPriceRepository
@@ -46,33 +46,33 @@ class PaymentSkinsService
     /**
      * PaymentProductService constructor.
      * @param Connection $dbal
-     * @param UserRepository $userRepository
+     * @param BalanceUserRepository $balanceUserRepository
      * @param SkinsPriceRepository $priceRepository
      * @param ProducerInterface $producer
      * @param LoggerInterface $logger
      */
     public function __construct(
         Connection $dbal,
-        UserRepository $userRepository,
+        BalanceUserRepository $balanceUserRepository,
         SkinsPriceRepository $priceRepository,
         ProducerInterface $producer,
         LoggerInterface $logger
     )
     {
         $this->dbal = $dbal;
-        $this->userRepository = $userRepository;
+        $this->balanceUserRepository = $balanceUserRepository;
         $this->priceRepository = $priceRepository;
         $this->producer = $producer;
         $this->logger = $logger;
     }
 
     /**
-     * @param int $paymentSystemId
+     * @param int $currencyId
      * @param int $skinsPriceId
      * @param int $userId
-     * @param boolean $isFastTrade
+     * @throws \Exception
      */
-    public function handler($paymentSystemId, $skinsPriceId, $userId, $isFastTrade = false)
+    public function handler($currencyId, $skinsPriceId, $userId)
     {
         $date = new \DateTime();
         $date = $date->format('Y-m-d H:i:s');
@@ -80,26 +80,38 @@ class PaymentSkinsService
         $this->dbal->beginTransaction();
         try {
             $skinsPrice = $this->priceRepository->findSkinsPriceForUpdateBySkinsPriceId($skinsPriceId);
-            $user = $this->userRepository->findUserForUpdateById($userId);
+            $user = $this->balanceUserRepository->findBalanceUserForUpdateByUserIdCurrencyId($userId, $currencyId);
 
             $balance = (int) $user['balance'] - $skinsPrice['price'];
-            $this->dbal->update('users', ['balance' => $balance], ['id' => $userId]);
-            $this->dbal->update('skins_price', ['is_remove' => true], ['id' => $skinsPriceId]);
-            $this->dbal->insert('payment', [
+            if ((int) $balance < 0) {
+                throw new \Exception("Balance user - {$userId} < skins price: {$skinsPriceId}", '403');
+            }
+
+            $this->dbal->update(
+                'balance_user',
+                ['balance' => $balance],
+                ['user_id' => $userId, 'currency_id' => $currencyId]
+            );
+
+            $this->dbal->update(
+                'skins_price',
+                ['is_remove' => true],
+                ['id' => $skinsPriceId]
+            );
+
+            $this->dbal->insert('skins_trade', [
                 'user_id' => $userId,
-                'payment_system_id' => $paymentSystemId,
-                'payment_information' => $balance,
+                'skins_price_id' => $skinsPriceId,
+                'status' => SkinsTrade::SKINS_BEGIN_TRADE,
                 'created_at' => $date,
             ]);
 
-            if ($isFastTrade) {
-                $this->dbal->insert('skins_trade', [
-                    'user_id' => $userId,
-                    'skins_price_id' => $skinsPriceId,
-                    'status' => SkinsTrade::SKINS_BEGIN_TRADE,
-                    'created_at' => $date,
-                ]);
-            }
+            $this->dbal->insert('payment', [
+                'user_id' => $userId,
+                'currency_id' => $currencyId,
+                'payment_information' => $balance,
+                'created_at' => $date,
+            ]);
 
             $this->producer->publish(json_encode([
                 'id' => $skinsPrice['id'],
@@ -110,7 +122,7 @@ class PaymentSkinsService
             $this->dbal->commit();
         } catch (DBALException $e) {
             $this->dbal->rollBack();
-            $this->logger->error("userId: {$userId}, skinsPriceId: {$skinsPriceId}. " . $e->getMessage());
+            throw new \Exception("userId: {$userId}, skinsPriceId: {$skinsPriceId}. " . $e->getMessage());
         }
     }
 }

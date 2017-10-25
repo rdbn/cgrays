@@ -9,7 +9,7 @@
 namespace AppBundle\Services\Payment;
 
 use AppBundle\Entity\User;
-use AppBundle\Repository\UserRepository;
+use AppBundle\Repository\BalanceUserRepository;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
 use Psr\Log\LoggerInterface;
@@ -23,9 +23,9 @@ class PayInOutService
     private $dbal;
 
     /**
-     * @var UserRepository
+     * @var BalanceUserRepository
      */
-    private $userRepository;
+    private $balanceUserRepository;
 
     /**
      * @var LoggerInterface
@@ -35,13 +35,13 @@ class PayInOutService
     /**
      * AddBalanceService constructor.
      * @param Connection $dbal
-     * @param UserRepository $userRepository
+     * @param BalanceUserRepository $balanceUserRepository
      * @param LoggerInterface $logger
      */
-    public function __construct(Connection $dbal, UserRepository $userRepository, LoggerInterface $logger)
+    public function __construct(Connection $dbal, BalanceUserRepository $balanceUserRepository, LoggerInterface $logger)
     {
         $this->dbal = $dbal;
-        $this->userRepository = $userRepository;
+        $this->balanceUserRepository = $balanceUserRepository;
         $this->logger = $logger;
     }
 
@@ -58,12 +58,14 @@ class PayInOutService
             $date = $date->format('Y-m-d H:i:s');
 
             $userId = $user->getId();
-            $paymentSystemId = $form->get('paymentSystem')->getData()->getId();
+            $paymentSystemName = $form->get('paymentSystem')->getData()->getName();
+            $currencyId = $form->get('currency')->getData()->getId();
             $sumPayment = (int)$form->get('sum_payment')->getData();
 
             $this->dbal->beginTransaction();
             try {
-                $user = $this->userRepository->findUserForUpdateById($userId);
+                $user = $this->balanceUserRepository
+                    ->findBalanceUserForUpdateByUserIdCurrencyId($userId, $currencyId);
 
                 $balance = $user['balance'];
                 if ($actionPay == 'in') {
@@ -72,11 +74,15 @@ class PayInOutService
                     $balance -= $sumPayment;
                 }
 
-                $this->dbal->update('users', ['balance' => $balance], ['id' => $userId]);
+                $this->dbal->update(
+                    'balance_user',
+                    ['balance' => $balance],
+                    ['currency_id' => $currencyId, 'user_id' => $userId]
+                );
+
                 $this->dbal->insert('payment', [
-                    'payment_system_id' => $paymentSystemId,
                     'user_id' => $userId,
-                    'payment_information' => "Information {$actionPay}: {$sumPayment}",
+                    'payment_information' => "Information {$paymentSystemName} {$actionPay}: {$sumPayment}",
                     'created_at' => $date,
                 ]);
 

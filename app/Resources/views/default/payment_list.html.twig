@@ -10,15 +10,15 @@
                 <table class="table">
                     <thead>
                         <tr>
-                            <th>Платежная система</th>
                             <th>Информация о платеже</th>
+                            <th>Валюта</th>
                         </tr>
                     </thead>
                     <tbody>
                     {% for payment in payments %}
                         <tr>
-                            <td>{{ payment.paymentSystem.name }}</td>
                             <td>{{ payment.paymentInformation }}</td>
+                            <td>{{ payment.currency.name }}</td>
                         </tr>
                     {% endfor %}
                     </tbody>

@@ -11,8 +11,8 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Table(name="payment")
  * @ORM\Entity()
+ * @ORM\Table(name="payment")
  */
 class Payment
 {
@@ -30,10 +30,10 @@ class Payment
     protected $user;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\PaymentSystem", inversedBy="payment")
-     * @ORM\JoinColumn(name="payment_system_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Currency")
+     * @ORM\JoinColumn(name="currency_id", referencedColumnName="id")
      */
-    protected $paymentSystem;
+    protected $currency;
 
     /**
      * @ORM\Column(name="payment_information", type="string")
@@ -52,7 +52,7 @@ class Payment
     {
         $this->createdAt = new \DateTime();
     }
-    
+
     /**
      * Get id
      *
@@ -88,6 +88,30 @@ class Payment
     }
 
     /**
+     * Set createdAt
+     *
+     * @param \DateTime $createdAt
+     *
+     * @return Payment
+     */
+    public function setCreatedAt($createdAt)
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    /**
+     * Get createdAt
+     *
+     * @return \DateTime
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+    /**
      * Set user
      *
      * @param \AppBundle\Entity\User $user
@@ -112,50 +136,26 @@ class Payment
     }
 
     /**
-     * Set paymentSystem
+     * Set currency
      *
-     * @param \AppBundle\Entity\PaymentSystem $paymentSystem
+     * @param \AppBundle\Entity\Currency $currency
      *
      * @return Payment
      */
-    public function setPaymentSystem(\AppBundle\Entity\PaymentSystem $paymentSystem = null)
+    public function setCurrency(\AppBundle\Entity\Currency $currency = null)
     {
-        $this->paymentSystem = $paymentSystem;
+        $this->currency = $currency;
 
         return $this;
     }
 
     /**
-     * Get paymentSystem
+     * Get currency
      *
-     * @return \AppBundle\Entity\PaymentSystem
+     * @return \AppBundle\Entity\Currency
      */
-    public function getPaymentSystem()
+    public function getCurrency()
     {
-        return $this->paymentSystem;
-    }
-
-    /**
-     * Set createdAt
-     *
-     * @param \DateTime $createdAt
-     *
-     * @return Payment
-     */
-    public function setCreatedAt($createdAt)
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
-    /**
-     * Get createdAt
-     *
-     * @return \DateTime
-     */
-    public function getCreatedAt()
-    {
-        return $this->createdAt;
+        return $this->currency;
     }
 }
