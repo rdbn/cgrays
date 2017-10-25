@@ -19,11 +19,6 @@ services:
         arguments: ['@doctrine.orm.default_entity_manager', '@app.service.user_service', '%steam.user_class%']
 
     # AppBundle
-    app.listener.user:
-        class: AppBundle\EventListener\UserPersistSubscriber
-        tags:
-            - { name: doctrine.event_subscriber, connection: default }
-
     app.service.user_service:
         class: AppBundle\Services\SteamUserService
         arguments: ['@steam.api_steam_profile', '@app.service.upload_image']
@@ -221,14 +216,24 @@ services:
             - '@logger'
 
     # listener
+    app.listener.user:
+        class: AppBundle\EventListener\UserPersistSubscriber
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }
+
     app.switch_user_listener:
         class: AppBundle\EventListener\SwitchUserListener
         tags:
             - { name: kernel.event_listener, event: security.switch_user, method: onSwitchUser }
 
-    app.currency_listener:
+    app.authorization_listener:
         class: AppBundle\EventListener\AuthenticationListener
         arguments: ['@app.repository.currency']
         tags:
-            - { name: kernel.event_listener, event: security.interactive_login, method: onAuthenticationSuccess
-             }
+            - { name: kernel.event_listener, event: security.interactive_login, method: onAuthenticationSuccess }
+
+    app.currency_listener:
+        class: AppBundle\EventListener\CurrencyListener
+        arguments: ["@app.repository.currency", "@security.token_storage"]
+        tags:
+            - { name: kernel.event_listener, event: security.switch_user, method: onKernelRequest }
