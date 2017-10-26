@@ -3,7 +3,9 @@
 
         {% if previous is defined %}
             <li>
-                <a rel="prev text-action" href="{{ path(route, query|merge({(pageParameterName): previous})) }}">&laquo;&nbsp;{{ 'label_previous'|trans({}, 'KnpPaginatorBundle') }}</a>
+                <a rel="prev" href="{{ path(route, query|merge({(pageParameterName): previous})) }}">
+                    <span class="text-action">&laquo;&nbsp;{{ 'label_previous'|trans({}, 'KnpPaginatorBundle') }}</span>
+                </a>
             </li>
         {% else %}
             <li class="disabled">
@@ -29,10 +31,12 @@
         {% for page in pagesInRange %}
             {% if page != current %}
                 <li>
-                    <a href="{{ path(route, query|merge({(pageParameterName): page})) }}">{{ page }}</a>
+                    <a href="{{ path(route, query|merge({(pageParameterName): page})) }}">
+                        <span class="text-action">{{ page }}</span>
+                    </a>
                 </li>
             {% else %}
-                <li class="active">
+                <li class="active pagination-action">
                     <span>{{ page }}</span>
                 </li>
             {% endif %}
@@ -47,7 +51,9 @@
                     </li>
                 {% else %}
                     <li>
-                        <a href="{{ path(route, query|merge({(pageParameterName): (pageCount - 1)})) }}">{{ pageCount -1 }}</a>
+                        <a href="{{ path(route, query|merge({(pageParameterName): (pageCount - 1)})) }}">
+                            <span class="text-action">{{ pageCount -1 }}</span>
+                        </a>
                     </li>
                 {% endif %}
             {% endif %}
@@ -58,7 +64,9 @@
 
         {% if next is defined %}
             <li>
-                <a rel="next text-action" href="{{ path(route, query|merge({(pageParameterName): next})) }}">{{ 'label_next'|trans({}, 'KnpPaginatorBundle') }}&nbsp;&raquo;</a>
+                <a rel="next" href="{{ path(route, query|merge({(pageParameterName): next})) }}">
+                    <span class="text-action">{{ 'label_next'|trans({}, 'KnpPaginatorBundle') }}&nbsp;&raquo;</span>
+                </a>
             </li>
         {% else %}
             <li class="disabled">

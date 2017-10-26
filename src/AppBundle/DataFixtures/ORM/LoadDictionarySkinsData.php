@@ -27,7 +27,7 @@ class LoadDictionarySkinsData extends AbstractFixture implements OrderedFixtureI
      */
     public function load(ObjectManager $manager)
     {
-        for ($i = 0; $i < 15; $i++) {
+        for ($i = 0; $i < 30; $i++) {
             $name = uniqid();
             $typeProduct = new TypeSkins();
             $typeProduct->setLocalizedTagName($name);

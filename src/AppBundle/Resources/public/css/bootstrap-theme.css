@@ -83,7 +83,7 @@
 .btn-action:hover,
 .btn-action:focus { color:#fff; background: #FF8C00; }
 .btn-action:active { background: #FF8C00; }
-
+.pagination-action>span { color:#fff !important; background-color: #FF8C00 !important; border-color: #FF8C00 !important; }
 
 /*******************************/
 /*           Jumbotron         */

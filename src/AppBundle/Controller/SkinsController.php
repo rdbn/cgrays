@@ -46,7 +46,7 @@ class SkinsController extends Controller
         $pagination = $paginator->paginate(
             $products,
             $request->query->getInt("page", 1),
-            $request->query->getInt("limit", 12)
+            $request->query->getInt("limit", 24)
         );
 
         return $this->render('default/skins.html.twig', [

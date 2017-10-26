@@ -28,7 +28,7 @@ class LoadSkinsData extends AbstractFixture implements OrderedFixtureInterface
         $users = $manager->getRepository(User::class)
             ->findAll();
 
-        for ($i = 0; $i < 15; $i++) {
+        for ($i = 0; $i < 30; $i++) {
             $id = $i + 1;
             $typeProduct = $manager->getRepository(TypeSkins::class)
                 ->findOneBy(["id" => $id]);
