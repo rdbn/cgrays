@@ -60,18 +60,21 @@ class UserRepository extends EntityRepository
     }
 
     /**
+     * @param int $secondDuration
      * @return array
      */
-    public function findUserIsNotOnline()
+    public function findUserIsNotOnline($secondDuration)
     {
         $dbal = $this->getEntityManager()->getConnection();
         $stmt = $dbal->prepare('
         SELECT u.id FROM users u
         WHERE 
-          extract(EPOCH FROM current_timestamp - u.last_online) > 60 
+          extract(EPOCH FROM current_timestamp - u.last_online) > :second_duration
+          AND u.is_not_check_online = FALSE 
           AND u.is_online = FALSE
           AND u.is_sell = TRUE; 
         ');
+        $stmt->bindParam('second_duration', $secondDuration, \PDO::PARAM_INT);
         $stmt->execute();
 
         return $stmt->fetchAll();

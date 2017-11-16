@@ -16,6 +16,7 @@ use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\DoctrineORMAdminBundle\Datagrid\ProxyQuery;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -46,6 +47,10 @@ class UserAdmin extends AbstractAdmin
             ])
             ->add('isOnline')
             ->add('isSell')
+            ->add('isNotCheckOnline',  CheckboxType::class, [
+                'label' => 'Не проверять на онлайн',
+                'required' => false,
+            ])
             ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'invalid_message' => 'Значения паролей не совпадают.',
@@ -93,6 +98,9 @@ class UserAdmin extends AbstractAdmin
             ])
             ->add('isSell', 'boolean', [
                 'label' => 'Включен трейд или нет'
+            ])
+            ->add('isNotCheckOnline', 'boolean', [
+                'label' => 'Не проверять на онлайн'
             ])
             ->add('lastOnline', 'date', [
                 'label' => 'Время последнего захода',

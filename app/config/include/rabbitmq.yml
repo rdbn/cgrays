@@ -36,12 +36,6 @@ old_sound_rabbit_mq:
             exchange_options: {name: 'is_online_user', type: direct}
             callback:         processing.online_user.is_online
 
-        trade_product:
-            connection:       default
-            queue_options:    {name: 'trade_product'}
-            exchange_options: {name: 'trade_product', type: fanout}
-            callback:         processing.trade.trade
-
         parser_price:
             connection:       default
             queue_options:    {name: 'parser_price'}
@@ -58,10 +52,6 @@ services:
     processing.online_user.is_online:
         class: ProcessingBundle\OnlineUser\IsOnlineConsumer
         arguments: ['@doctrine.dbal.default_connection', '@processing.is_online.is_online_handler']
-
-    processing.trade.trade:
-        class: ProcessingBundle\Trade\TradeConsumer
-        arguments: ['@doctrine.dbal.default_connection', '@logger']
 
     processing.parser.price:
         class: ProcessingBundle\Parser\PriceConsumer

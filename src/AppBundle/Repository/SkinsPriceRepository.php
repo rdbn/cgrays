@@ -97,12 +97,15 @@ class SkinsPriceRepository extends EntityRepository
         $qb
             ->addSelect("sp.id as price_id")
             ->addSelect("s.id as skins_id")
+            ->addSelect("sp.user_id")
             ->addSelect("s.name")
             ->addSelect("s.icon_url")
             ->addSelect("sp.price")
             ->from("skins_price", "sp")
             ->leftJoin("sp" , "skins", "s", "s.id = sp.skins_id")
+            ->leftJoin("sp" , "users", "u", "sp.user_id = u.id")
             ->andWhere("sp.skins_id = :id")
+            ->andWhere('u.is_sell = TRUE')
             ->andWhere('sp.is_sell = TRUE')
             ->andWhere('sp.is_remove = FALSE')
             ->setParameter("id", $id);
@@ -130,8 +133,10 @@ class SkinsPriceRepository extends EntityRepository
             ->addSelect("sp.price")
             ->from("skins_price", "sp")
             ->leftJoin("sp" , "skins", "s", "s.id = sp.skins_id")
+            ->leftJoin("sp" , "users", "u", "sp.user_id = u.id")
             ->andWhere("sp.skins_id = :skins_id")
             ->andWhere("sp.id <> :skins_price_id")
+            ->andWhere('u.is_sell = TRUE')
             ->andWhere('sp.is_sell = TRUE')
             ->andWhere('sp.is_remove = FALSE');
 

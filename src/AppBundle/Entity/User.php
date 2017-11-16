@@ -86,6 +86,11 @@ class User implements UserInterface, EquatableInterface, \Serializable, SteamUse
     protected $isSell;
 
     /**
+     * @ORM\Column(name="is_not_check_online", type="boolean", options={"default": false})
+     */
+    protected $isNotCheckOnline;
+
+    /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\SkinsTrade", mappedBy="users")
      */
     protected $skinsTrade;
@@ -128,7 +133,8 @@ class User implements UserInterface, EquatableInterface, \Serializable, SteamUse
     public function __construct()
     {
         $this->isOnline = false;
-        $this->isSell= false;
+        $this->isSell = false;
+        $this->isNotCheckOnline = false;
         $this->hrefTrade = "";
         $this->salt = md5(uniqid(time(), true));
 
@@ -493,6 +499,30 @@ class User implements UserInterface, EquatableInterface, \Serializable, SteamUse
     public function getIsSell()
     {
         return $this->isSell;
+    }
+
+    /**
+     * Set isNotCheckOnline
+     *
+     * @param boolean $isNotCheckOnline
+     *
+     * @return User
+     */
+    public function setIsNotCheckOnline($isNotCheckOnline)
+    {
+        $this->isNotCheckOnline = $isNotCheckOnline;
+
+        return $this;
+    }
+
+    /**
+     * Get isNotCheckOnline
+     *
+     * @return boolean
+     */
+    public function getIsNotCheckOnline()
+    {
+        return $this->isNotCheckOnline;
     }
 
     /**
