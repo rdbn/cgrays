@@ -9,6 +9,7 @@
 namespace ProcessingBundle\OnlineUser;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\DBALException;
 use OldSound\RabbitMqBundle\RabbitMq\ConsumerInterface;
 use PhpAmqpLib\Message\AMQPMessage;
 use Psr\Log\LoggerInterface;
@@ -21,19 +22,19 @@ class IsOnlineConsumer implements ConsumerInterface
     private $dbal;
 
     /**
-     * @var IsOnlineHandler
+     * @var LoggerInterface
      */
-    private $isOnlineHandler;
+    private $logger;
 
     /**
      * IsOnlineConsumer constructor.
      * @param Connection $dbal
-     * @param IsOnlineHandler $isOnlineHandler
+     * @param LoggerInterface $logger
      */
-    public function __construct(Connection $dbal, IsOnlineHandler $isOnlineHandler)
+    public function __construct(Connection $dbal, LoggerInterface $logger)
     {
         $this->dbal = $dbal;
-        $this->isOnlineHandler = $isOnlineHandler;
+        $this->logger = $logger;
     }
 
     /**
@@ -48,11 +49,25 @@ class IsOnlineConsumer implements ConsumerInterface
             return self::MSG_REJECT;
         }
 
-        $this->isOnlineHandler
-            ->handler(
-                $user['username'],
-                $user['is_online']
+        $date = new \DateTime();
+        $currentDateTime = $date->format('Y-m-d H:i:s');
+
+        $this->dbal->beginTransaction();
+        try {
+            $this->dbal->update(
+                'users',
+                [
+                    'is_online' => (boolean) $user['is_online'] ? 'TRUE' : 'FALSE',
+                    'last_online' => $currentDateTime,
+                ],
+                ['username' => $user['username']]
             );
+
+            $this->dbal->commit();
+        } catch (DBALException $e) {
+            $this->dbal->rollBack();
+            $this->logger->error($e->getMessage());
+        }
 
         return self::MSG_ACK;
     }
