@@ -38,7 +38,7 @@ class CasesListService
             $listCases = $this->getListCases($casesId);
         }
         $skins = $this->em->getRepository(Skins::class)
-            ->findAll();
+            ->findBy([], [], 42, 0);
 
         $listSkins = [];
         foreach ($skins as $index => $skin) {
