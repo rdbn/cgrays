@@ -50,7 +50,7 @@ class CasesUserPickUpSkinsHandler
                 'cases_skins_pick_up_user',
                 [
                     'skins_id' => $resultGame['skins_id'],
-                    'cases_domain_id' => $resultGame['cases_skins_id'],
+                    'cases_domain_id' => $resultGame['cases_domain_id'],
                     'user_id' => $userId,
                     'created_at' => $date->format('Y-m-d H:i:s')
                 ]

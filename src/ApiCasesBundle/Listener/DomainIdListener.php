@@ -8,7 +8,7 @@
 
 namespace ApiCasesBundle\Listener;
 
-use ApiCasesBundle\Validator\UniqueCasesStaticPageConstraint;
+use ApiCasesBundle\Validator\DomainIdConstraint;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -45,7 +45,7 @@ class DomainIdListener
 
         $request = $event->getRequest();
         $domainId = $request->headers->get('x-domain-id');
-        $domainIdConstraint = new UniqueCasesStaticPageConstraint();
+        $domainIdConstraint = new DomainIdConstraint();
         $validator = $this->validator->validate($domainId, $domainIdConstraint);
         if (count($validator) > 0) {
             $event->setResponse(new Response("Not found", 404));

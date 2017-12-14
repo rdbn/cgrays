@@ -19,7 +19,7 @@ class DomainIdConstraint extends Constraint
 
     public function validatedBy()
     {
-        return UniqueCasesStaticPageValidator::class;
+        return DomainIdValidator::class;
     }
 
 }

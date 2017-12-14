@@ -115,7 +115,7 @@ class CaseOpenHandler
 
         $this->gamesService->flushRedisGame($userId, [
             'skins_id' => $skins['id'],
-            'cases_id' => $skins['cases_skins_id']
+            'cases_domain_id' => $skins['cases_domain_id']
         ]);
         unset($skins['id'], $skins['cases_skins_id'], $skins['count_drop'], $skins['count']);
 

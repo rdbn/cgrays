@@ -68,7 +68,7 @@ class GameController extends FOSRestController
         }
 
         try {
-            $resultGame = json_encode($gameService->getGame($userId), 1);
+            $resultGame = json_decode($gameService->getGame($userId), 1);
             $this->get('api_cases.service.cases_user_sell_skins')
                 ->handler($resultGame, (int) $this->getUser()->getId(), $domainId, $currencyCode);
 
