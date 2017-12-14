@@ -45,6 +45,11 @@ class CasesDomain
      */
     protected $cases;
 
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\CasesStaticPage", mappedBy="casesDomain")
+     */
+    protected $casesStaticPage;
+
     public function __construct()
     {
         $this->uuid = GenerateUUID::getUUID();

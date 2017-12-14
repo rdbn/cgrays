@@ -13,3 +13,7 @@ imports:
     - { resource: include/sonata.yml }
     - { resource: include/swiftmailer.yml }
     - { resource: include/lexik_jwt_authentication.yml }
+    - { resource: "@AdminBundle/Resources/config/services.yml" }
+    - { resource: "@ApiBundle/Resources/config/services.yml" }
+    - { resource: "@ApiCasesBundle/Resources/config/services.yml" }
+    - { resource: "@ProcessingBundle/Resources/config/services.yml" }

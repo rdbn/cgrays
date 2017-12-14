@@ -1,0 +1,15 @@
+AppBundle\Entity\User:
+    exclusion_policy: ALL
+    properties:
+        username:
+            expose: true
+            groups: [cases_user]
+        avatar:
+            expose: true
+            groups: [cases_user]
+        balanceUser:
+            expose: true
+            groups: [cases_user]
+        createdAt:
+            expose: true
+            groups: [cases_user]

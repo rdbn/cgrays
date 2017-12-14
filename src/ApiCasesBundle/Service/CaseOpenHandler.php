@@ -6,7 +6,7 @@
  * Time: 10:24
  */
 
-namespace ApiBundle\Service;
+namespace ApiCasesBundle\Service;
 
 use AppBundle\Entity\CasesSkins;
 use AppBundle\Entity\User;
@@ -68,15 +68,15 @@ class CaseOpenHandler
 
     /**
      * @param $domainId
-     * @param $id
+     * @param $casesId
      * @param $userId
      * @return array
      * @throws \Exception
      */
-    public function handler($domainId, $id, $userId)
+    public function handler($domainId, $casesId, $userId)
     {
         $skins = $this->em->getRepository(CasesSkins::class)
-            ->findSkinsByCasesId($domainId, $id);
+            ->findSkinsByCasesId($domainId, $casesId);
 
         if (!count($skins)) {
             return [];
@@ -113,7 +113,10 @@ class CaseOpenHandler
             throw new \Exception($e->getMessage());
         }
 
-        $this->gamesService->flushRedisGame($userId, $skins['id']);
+        $this->gamesService->flushRedisGame($userId, [
+            'skins_id' => $skins['id'],
+            'cases_id' => $skins['cases_skins_id']
+        ]);
         unset($skins['id'], $skins['cases_skins_id'], $skins['count_drop'], $skins['count']);
 
         return $skins;

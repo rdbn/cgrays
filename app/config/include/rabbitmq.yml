@@ -51,7 +51,7 @@ old_sound_rabbit_mq:
 services:
     processing.online_user.is_online:
         class: ProcessingBundle\OnlineUser\IsOnlineConsumer
-        arguments: ['@doctrine.dbal.default_connection', '@processing.is_online.is_online_handler']
+        arguments: ['@doctrine.dbal.default_connection', '@logger']
 
     processing.parser.price:
         class: ProcessingBundle\Parser\PriceConsumer

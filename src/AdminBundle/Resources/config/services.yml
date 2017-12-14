@@ -1,0 +1,114 @@
+services:
+    admin.admin.currency:
+        class: AdminBundle\Admin\CurrencyAdmin
+        arguments: [~, AppBundle\Entity\Currency, ~]
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: Финансы, label: Валюты, show_mosaic_button: false }
+
+    admin.admin.news:
+        class: AdminBundle\Admin\NewsAdmin
+        arguments: [~, AppBundle\Entity\News, ~]
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: Информация, label: Новости, show_mosaic_button: false }
+
+    admin.admin.static_page:
+        class: AdminBundle\Admin\StaticPageAdmin
+        arguments: [~, AppBundle\Entity\StaticPage, ~]
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: Информация, label: Страницы с инф., show_mosaic_button: false }
+
+    admin.admin.user:
+        class: AdminBundle\Admin\UserAdmin
+        arguments: [~, AppBundle\Entity\User, ~]
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: Пользователи, label: Список пользователей, show_mosaic_button: false }
+
+    admin.admin.role:
+        class: AdminBundle\Admin\RoleAdmin
+        arguments: [~, AppBundle\Entity\Role, ~]
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: Пользователи, label: Парва доступа, show_mosaic_button: false }
+
+    admin.admin.cases:
+        class: AdminBundle\Admin\CasesAdmin
+        arguments: [~, AppBundle\Entity\Cases, AdminBundle:CasesCRUD]
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: Кейсы, label: Кейсы, show_mosaic_button: false }
+        calls:
+            - [ setTemplate, [edit, admin/cases_edit.html.twig]]
+        public: true
+
+    admin.admin.cases_category:
+        class: AdminBundle\Admin\CasesCategoryAdmin
+        arguments: [~, AppBundle\Entity\CasesCategory, ~]
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: Кейсы, label: Категории, show_mosaic_button: false }
+
+    admin.admin.cases_domain:
+        class: AdminBundle\Admin\CasesDomainAdmin
+        arguments: [~, AppBundle\Entity\CasesDomain, ~]
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: Кейсы, label: Домены, show_mosaic_button: false }
+
+    admin.admin.cases_static_page:
+        class: AdminBundle\Admin\CasesStaticPageAdmin
+        arguments: [~, AppBundle\Entity\CasesStaticPage, ~]
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: Кейсы, label: Пол. информация, show_mosaic_button: false }
+
+    admin.admin.rarity:
+        class: AdminBundle\Admin\RarityAdmin
+        arguments: [~, AppBundle\Entity\Rarity, ~]
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: Скины, label: Древность, show_mosaic_button: false }
+
+    admin.admin.quality:
+        class: AdminBundle\Admin\QualityAdmin
+        arguments: [~, AppBundle\Entity\Quality, ~]
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: Скины, label: Качество, show_mosaic_button: false }
+
+    admin.admin.weapon:
+        class: AdminBundle\Admin\WeaponAdmin
+        arguments: [~, AppBundle\Entity\Weapon, ~]
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: Скины, label: Оружие, show_mosaic_button: false }
+
+    admin.admin.item_set:
+        class: AdminBundle\Admin\ItemSetAdmin
+        arguments: [~, AppBundle\Entity\ItemSet, ~]
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: Скины, label: Набор, show_mosaic_button: false }
+
+    admin.admin.type_skins:
+        class: AdminBundle\Admin\TypeSkinsAdmin
+        arguments: [~, AppBundle\Entity\TypeSkins, ~]
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: Скины, label: Тип, show_mosaic_button: false }
+
+    admin.admin.decor:
+        class: AdminBundle\Admin\DecorAdmin
+        arguments: [~, AppBundle\Entity\Decor, ~]
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: Скины, label: Оформление, show_mosaic_button: false }
+
+    admin.admin.skins:
+        class: AdminBundle\Admin\SkinsAdmin
+        arguments: [~, AppBundle\Entity\Skins, ~]
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: Скины, label: Основа для скинов, show_mosaic_button: false }
+
+    admin.admin.skins_price:
+        class: AdminBundle\Admin\SkinsPriceAdmin
+        arguments: [~, AppBundle\Entity\SkinsPrice, ~]
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: Скины, label: Скины на продаже, show_mosaic_button: false }
+
+    admin.service.cases_list:
+        class: AdminBundle\Service\CasesListService
+        arguments: ['@doctrine.orm.default_entity_manager']
+
+    admin.listener.cases:
+        class: AdminBundle\EventListener\CasesPersistSubscriber
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }

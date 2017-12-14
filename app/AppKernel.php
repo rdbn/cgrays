@@ -41,6 +41,7 @@ class AppKernel extends Kernel
             new SteamBundle\SteamBundle(),
             new ProcessingBundle\ProcessingBundle(),
             // new DotaBundle\DotaBundle(),
+            new ApiCasesBundle\ApiCasesBundle(),
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {

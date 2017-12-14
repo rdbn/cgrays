@@ -58,6 +58,9 @@ security:
     access_control:
         - { path: ^/login$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api/login_check, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/cases/list, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/cases/skins, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/cases/static, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/user, roles: ROLE_USER }
         - { path: ^/payment, roles: ROLE_USER }
         - { path: ^/basket, roles: ROLE_USER }

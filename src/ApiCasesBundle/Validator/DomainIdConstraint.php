@@ -6,20 +6,20 @@
  * Time: 21:34
  */
 
-namespace ApiBundle\Validator;
+namespace ApiCasesBundle\Validator;
 
 use Symfony\Component\Validator\Constraint;
 
-class SkinsPickUoUserConstraint extends Constraint
+class DomainIdConstraint extends Constraint
 {
     /**
      * @var string
      */
-    public $message = 'Не верный ids скинов.';
+    public $message = 'Не верный домен id.';
 
     public function validatedBy()
     {
-        return CurrencyValidator::class;
+        return UniqueCasesStaticPageValidator::class;
     }
 
 }

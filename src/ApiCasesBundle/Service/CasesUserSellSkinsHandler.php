@@ -2,22 +2,21 @@
 /**
  * Created by PhpStorm.
  * User: rdbn
- * Date: 15.10.17
- * Time: 15:57
+ * Date: 14.10.17
+ * Time: 19:30
  */
 
-namespace ApiBundle\Service;
+namespace ApiCasesBundle\Service;
 
 use AppBundle\Entity\CasesBalanceUser;
 use AppBundle\Entity\CasesDomain;
-use AppBundle\Entity\CasesSkinsPickUpUser;
 use AppBundle\Entity\Currency;
 use AppBundle\Entity\Skins;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManager;
 
-class CasesContractHandler
+class CasesUserSellSkinsHandler
 {
     /**
      * @var EntityManager
@@ -30,7 +29,7 @@ class CasesContractHandler
     private $dbal;
 
     /**
-     * CasesContractHandler constructor.
+     * CasesUserSellSkinsHandler constructor.
      * @param EntityManager $em
      * @param Connection $dbal
      */
@@ -41,13 +40,13 @@ class CasesContractHandler
     }
 
     /**
-     * @param array $skinsPickUpUserIds
+     * @param array $resultGame
+     * @param int $userId
      * @param $domainId
-     * @param $userId
      * @param $currencyCode
      * @throws \Exception
      */
-    public function handler(array $skinsPickUpUserIds, $domainId, $userId, $currencyCode)
+    public function handler(array $resultGame, int $userId, $domainId, $currencyCode)
     {
         $casesDomain = $this->em->getRepository(CasesDomain::class)
             ->findOneBy(['uuid' => $domainId]);
@@ -65,25 +64,20 @@ class CasesContractHandler
 
         $this->dbal->beginTransaction();
         try {
-            $casesUserBalance = $this->em->getRepository(CasesBalanceUser::class)
-                ->findUserBalanceForUpdateByUserIdCurrencyIdDomain($userId, $currency->getId(), $casesDomain->getId());
+            $skins = $this->em->getRepository(Skins::class)
+                ->findSkinsForUpdateById($resultGame['skins_id']);
 
-            $casesSkinsPickUpUser = $this->em->getRepository(CasesSkinsPickUpUser::class)
-                ->findSkinsForUpdateByIds($skinsPickUpUserIds);
-
-            $sum = 0;
-            foreach ($casesSkinsPickUpUser as $item) {
-                $skin = $this->em->getRepository(Skins::class)
-                    ->findSkinsForUpdateById($item['skins_id']);
-
-                $sum += $skin['steam_price'];
-                $this->dbal->delete('cases_skins_pick_up_user', ['id' => $item['id']]);
-            }
+            $userBalance = $this->em->getRepository(CasesBalanceUser::class)
+                ->findUserBalanceForUpdateByUserIdCurrencyIdDomain(
+                    $userId,
+                    $currency->getId(),
+                    $casesDomain->getId()
+                );
 
             $this->dbal->update(
                 'cases_balance_user',
-                ['balance' => (int)$casesUserBalance['balance'] + (int) $sum],
-                ['id' => $casesUserBalance['id']]
+                ['balance' => (int) $skins['steam_price'] + (int) $userBalance['balance']],
+                ['id' => $userBalance['id']]
             );
 
             $this->dbal->commit();
