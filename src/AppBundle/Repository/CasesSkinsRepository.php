@@ -57,7 +57,7 @@ class CasesSkinsRepository extends EntityRepository
         $dbal = $this->getEntityManager()->getConnection();
         $stmt = $dbal->prepare('
         SELECT
-          s.id, s.name, s.icon_url, cs.id as cases_skins_id, cs.count_drop, cs.count
+          s.id, s.name, s.icon_url, cs.id as cases_skins_id, cs.count_drop, cs.count, cd.id as cases_domain_id
         FROM cases_skins cs
           LEFT JOIN cases c ON cs.cases_id = c.id
           LEFT JOIN cases_domain cd ON c.cases_domain_id = cd.id

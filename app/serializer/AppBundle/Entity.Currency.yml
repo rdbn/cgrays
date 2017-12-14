@@ -1,0 +1,9 @@
+AppBundle\Entity\Currency:
+    exclusion_policy: ALL
+    properties:
+        name:
+            expose: true
+            groups: [cases_user]
+        code:
+            expose: true
+            groups: [cases_user]

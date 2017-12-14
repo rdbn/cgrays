@@ -1,0 +1,30 @@
+services:
+    api.service.validator_item_sell:
+        class: ApiBundle\Service\ValidatorItemSellService
+        arguments: ['@validator']
+
+    api.service.news_like:
+        class: ApiBundle\Service\NewsLikeService
+        arguments: ['@doctrine.orm.entity_manager', '@security.token_storage', '@logger']
+
+    api.service.news_comment:
+        class: ApiBundle\Service\NewsCommentService
+        arguments: ['@doctrine.dbal.default_connection', '@security.token_storage', '@logger']
+
+    api.service.add_skins_trade:
+        class: ApiBundle\Service\SkinsTrade\AddSkinsTradeHandler
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@doctrine.dbal.default_connection'
+
+    api.service.remove_skins_trade:
+        class: ApiBundle\Service\SkinsTrade\RemoveSkinsTradeHandler
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@doctrine.dbal.default_connection'
+
+    api.validator.currency:
+        class: ApiBundle\Validator\CurrencyValidator
+        arguments: ['@doctrine.orm.entity_manager']
+        tags:
+            - { name: validator.constraint_validator, alias: api.validator.currency }

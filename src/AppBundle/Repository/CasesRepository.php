@@ -14,23 +14,25 @@ class CasesRepository extends EntityRepository
 {
     /**
      * @param string $domainId
-     * @param int $categoryId
      * @return array
      */
-    public function findCasesByCategoryId($domainId, $categoryId)
+    public function findCasesByCategoryId($domainId)
     {
-        $qb = $this->createQueryBuilder('c');
-        $qb
-            ->addSelect('cs')
-            ->leftJoin('c.casesDomain', 'cd')
-            ->leftJoin('c.casesSkins', 'cs')
-            ->leftJoin('c.casesCategory', 'cc')
-            ->where('cc.id = :categoryId')
-            ->andWhere('cd.uuid = :uuid')
-            ->setParameter('categoryId', $categoryId)
-            ->setParameter('uuid', $domainId);
+        $dbal = $this->getEntityManager()->getConnection();
+        $stmt = $dbal->prepare('
+        SELECT  
+          c.id, c.name, c.image, c.price, c.created_at, c.cases_category_id as category_id,
+          CASE WHEN cs.count = cs.count_drop THEN 1 ELSE 0 END as is_empty
+        FROM cases c
+          LEFT JOIN cases_domain cd ON c.cases_domain_id = cd.id 
+          LEFT JOIN cases_category cc ON c.cases_category_id = cc.id
+          LEFT JOIN cases_skins cs ON c.id = cs.cases_id
+        WHERE cd.uuid = :domain_id
+        ');
+        $stmt->bindParam('domain_id', $domainId, \PDO::PARAM_INT);
+        $stmt->execute();
 
-        return $qb->getQuery()->getResult();
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
     /**

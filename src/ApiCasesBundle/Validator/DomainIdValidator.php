@@ -6,7 +6,7 @@
  * Time: 21:35
  */
 
-namespace ApiBundle\Validator;
+namespace ApiCasesBundle\Validator;
 
 use AppBundle\Entity\CasesDomain;
 use Doctrine\ORM\EntityManager;

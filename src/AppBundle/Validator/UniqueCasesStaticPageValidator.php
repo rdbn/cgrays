@@ -6,14 +6,15 @@
  * Time: 21:35
  */
 
-namespace ApiBundle\Validator;
+namespace AppBundle\Validator;
 
-use AppBundle\Entity\CasesSkinsPickUpUser;
+use AppBundle\Entity\CasesDomain;
+use AppBundle\Entity\CasesStaticPage;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
-class SkinsPickUpUserValidator extends ConstraintValidator
+class UniqueCasesStaticPageValidator extends ConstraintValidator
 {
     /**
      * @var EntityManager
@@ -30,23 +31,18 @@ class SkinsPickUpUserValidator extends ConstraintValidator
     }
 
     /**
-     * @param mixed $value
+     * @param CasesStaticPage $value
      * @param Constraint $constraint
      */
     public function validate($value, Constraint $constraint)
     {
-        preg_match("/[^0-9,]+/gi", $value, $matches);
-        if (count($matches) > 0) {
-            $this->context->buildViolation($constraint->message)
-                ->addViolation();
+        $typePage = $value->getTypePage();
+        $uuid = $value->getCasesDomain()->getUuid();
 
-            return;
-        }
+        $casesDomain = $this->em->getRepository(CasesStaticPage::class)
+            ->findStaticPageByDomainIdAndPageName($typePage, $uuid);
 
-        $skinsPickUpUser = $this->em->getRepository(CasesSkinsPickUpUser::class)
-            ->findSkinsForUpdateByIds($value);
-
-        if (!count($skinsPickUpUser)) {
+        if (!$casesDomain) {
             $this->context->buildViolation($constraint->message)
                 ->addViolation();
 

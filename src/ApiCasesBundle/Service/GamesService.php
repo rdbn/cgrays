@@ -6,7 +6,7 @@
  * Time: 0:39
  */
 
-namespace ApiBundle\Service;
+namespace ApiCasesBundle\Service;
 
 use Predis\Client;
 
@@ -37,11 +37,11 @@ class GamesService
 
     /**
      * @param $userId
-     * @param $skinsId
+     * @param $resultGame
      */
-    public function flushRedisGame($userId, $skinsId)
+    public function flushRedisGame($userId, array $resultGame)
     {
-        $this->redis->set("games_{$userId}", $skinsId);
+        $this->redis->set("games_{$userId}", json_encode($resultGame));
     }
 
     /**

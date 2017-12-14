@@ -15,7 +15,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\CasesCategoryRepository")
  * @ORM\Table(name="cases_category")
  */
 class CasesCategory

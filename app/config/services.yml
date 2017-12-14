@@ -1,15 +1,5 @@
 services:
-    # AdminBundle
-    admin.service.cases_list:
-        class: AdminBundle\Service\CasesListService
-        arguments: ['@doctrine.orm.default_entity_manager']
-
-    admin.listener.cases:
-        class: AdminBundle\EventListener\CasesPersistSubscriber
-        tags:
-            - { name: doctrine.event_subscriber, connection: default }
-
-    # SteamBundle
+    # AppBundle
     apikey_authenticator:
         class:  AppBundle\Security\ApiKeyAuthenticator
         public: false
@@ -18,7 +8,6 @@ services:
         class: AppBundle\Security\SteamUserProvider
         arguments: ['@doctrine.orm.default_entity_manager', '@app.service.user_service', '%steam.user_class%']
 
-    # AppBundle
     app.service.user_service:
         class: AppBundle\Services\SteamUserService
         arguments: ['@steam.api_steam_profile', '@app.service.upload_image']
@@ -116,105 +105,6 @@ services:
         tags:
             - { name: twig.extension }
 
-    # ApiBundle
-    api.service.validator_item_sell:
-        class: ApiBundle\Service\ValidatorItemSellService
-        arguments: ['@validator']
-
-    api.service.news_like:
-        class: ApiBundle\Service\NewsLikeService
-        arguments: ['@doctrine.orm.entity_manager', '@security.token_storage', '@logger']
-
-    api.service.news_comment:
-        class: ApiBundle\Service\NewsCommentService
-        arguments: ['@doctrine.dbal.default_connection', '@security.token_storage', '@logger']
-
-    api.service.case_open:
-        class: ApiBundle\Service\CaseOpenHandler
-        arguments:
-            - '@doctrine.orm.entity_manager'
-            - '@doctrine.dbal.default_connection'
-            - '@security.token_storage'
-            - '@api.service.games'
-            - '@logger'
-
-    api.service.cases_user_sell_skins:
-        class: ApiBundle\Service\CasesUserSellSkinsHandler
-        arguments:
-            - '@doctrine.orm.entity_manager'
-            - '@doctrine.dbal.default_connection'
-
-    api.service.cases_user_pick_up_skins:
-        class: ApiBundle\Service\CasesUserPickUpSkinsHandler
-        arguments:
-            - '@doctrine.orm.entity_manager'
-            - '@doctrine.dbal.default_connection'
-
-    api.service.cases_contract:
-        class: ApiBundle\Service\CasesContractHandler
-        arguments:
-            - '@doctrine.orm.entity_manager'
-            - '@doctrine.dbal.default_connection'
-
-    api.service.games:
-        class: ApiBundle\Service\GamesService
-        arguments:
-            - '@snc_redis.default_client'
-
-    api.service.add_skins_trade:
-        class: ApiBundle\Service\SkinsTrade\AddSkinsTradeHandler
-        arguments:
-            - '@doctrine.orm.entity_manager'
-            - '@doctrine.dbal.default_connection'
-
-    api.service.remove_skins_trade:
-        class: ApiBundle\Service\SkinsTrade\RemoveSkinsTradeHandler
-        arguments:
-            - '@doctrine.orm.entity_manager'
-            - '@doctrine.dbal.default_connection'
-
-    api.validator.domain_id:
-        class: ApiBundle\Validator\DomainIdValidator
-        arguments: ['@doctrine.orm.entity_manager']
-        tags:
-            - { name: validator.constraint_validator, alias: api.validator.domain_id }
-
-    api.validator.currency:
-        class: ApiBundle\Validator\CurrencyValidator
-        arguments: ['@doctrine.orm.entity_manager']
-        tags:
-            - { name: validator.constraint_validator, alias: api.validator.currency }
-
-    # ProcessingBundle
-    processing.is_online.is_online_handler:
-        class: ProcessingBundle\OnlineUser\IsOnlineHandler
-        arguments: ['@doctrine.dbal.default_connection', '@app.repository.user', '@logger']
-
-    processing.parser.skins_handler:
-        class: ProcessingBundle\Parser\SkinsHandler
-        arguments:
-            - '@doctrine.orm.entity_manager'
-            - '@doctrine.dbal.default_connection'
-            - '@guzzle.client.steam'
-            - '@app.service.upload_image'
-            - '@logger'
-            - '%steam.steam_community_url%'
-
-    processing.parser.error_handler:
-        class: ProcessingBundle\Parser\ErrorHandler
-        arguments:
-            - '@doctrine.dbal.default_connection'
-            - '@logger'
-
-    processing.service.parser_market_handler:
-        class: ProcessingBundle\Services\ParserMarketHandler
-        arguments:
-            - '@app.repository.skins'
-            - '@old_sound_rabbit_mq.parser_price_producer'
-            - '@old_sound_rabbit_mq.parser_skins_producer'
-            - '@steam.api_market'
-            - '@logger'
-
     # listener
     app.listener.user:
         class: AppBundle\EventListener\UserPersistSubscriber
@@ -237,3 +127,9 @@ services:
         arguments: ["@app.repository.currency", "@security.token_storage"]
         tags:
             - { name: kernel.event_listener, event: security.switch_user, method: onKernelRequest }
+
+    app.validator.unique_cases_statis_page:
+        class: AppBundle\Validator\UniqueCasesStaticPageValidator
+        arguments: ['@doctrine.orm.entity_manager']
+        tags:
+            - { name: validator.constraint_validator }

@@ -6,7 +6,7 @@
  * Time: 22:43
  */
 
-namespace ApiBundle\Service;
+namespace ApiCasesBundle\Service;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
@@ -36,11 +36,11 @@ class CasesUserPickUpSkinsHandler
     }
 
     /**
-     * @param $skinsId
+     * @param array $resultGame
      * @param $userId
      * @throws \Exception
      */
-    public function handler($skinsId, $userId)
+    public function handler(array $resultGame, $userId)
     {
         $date = new \DateTime();
 
@@ -48,7 +48,12 @@ class CasesUserPickUpSkinsHandler
         try {
             $this->dbal->insert(
                 'cases_skins_pick_up_user',
-                ['skins_id' => $skinsId, 'user_id' => $userId, 'created_at' => $date->format('Y-m-d H:i:s')]
+                [
+                    'skins_id' => $resultGame['skins_id'],
+                    'cases_domain_id' => $resultGame['cases_domain_id'],
+                    'user_id' => $userId,
+                    'created_at' => $date->format('Y-m-d H:i:s')
+                ]
             );
 
             $this->dbal->commit();

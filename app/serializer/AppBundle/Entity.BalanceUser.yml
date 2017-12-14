@@ -1,0 +1,9 @@
+AppBundle\Entity\BalanceUser:
+    exclusion_policy: ALL
+    properties:
+        currency:
+            expose: true
+            groups: [cases_user]
+        balance:
+            expose: true
+            groups: [cases_user]
