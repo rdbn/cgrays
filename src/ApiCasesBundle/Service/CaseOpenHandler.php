@@ -115,10 +115,15 @@ class CaseOpenHandler
 
         $this->gamesService->flushRedisGame($userId, [
             'skins_id' => $skins['id'],
-            'cases_domain_id' => $skins['cases_domain_id']
+            'cases_domain_id' => $skins['cases_domain_id'],
         ]);
         unset($skins['id'], $skins['cases_skins_id'], $skins['count_drop'], $skins['count']);
 
-        return $skins;
+        return [
+            'weapon_name' => $skins['weapon'],
+            'skin_name' => $skins['name'],
+            'rarity' => $skins['rarity'],
+            'steam_image' => "/{$skins['icon_url']}",
+        ];
     }
 }

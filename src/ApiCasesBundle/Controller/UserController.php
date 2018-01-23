@@ -40,4 +40,17 @@ class UserController extends FOSRestController
         $view = $this->view($skins, 200);
         return $this->handleView($view);
     }
+
+    /**
+     * @Rest\Get("/user/tops")
+     * @Rest\View(serializerGroups={"cases_user"})
+     * @return Response
+     */
+    public function getUserTopsAction()
+    {
+        $user = $this->getUser();
+
+        $view = $this->view($user, 200);
+        return $this->handleView($view);
+    }
 }

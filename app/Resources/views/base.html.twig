@@ -165,6 +165,8 @@
         <script src="{{ asset('bundles/app/js/template.js') }}"></script>
         <script src="{{ asset('bundles/app/js/socket.io.min.js') }}"></script>
         {% block javascripts %}{% endblock %}
-        <script src="{{ asset('bundles/app/js/is-online.js') }}"></script>
+        {% if is_granted("ROLE_USER") %}
+            <script src="{{ asset('bundles/app/js/is-online.js') }}"></script>
+        {% endif %}
     </body>
 </html>

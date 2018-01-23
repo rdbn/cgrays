@@ -36,6 +36,11 @@ class CasesDomain
     protected $uuid;
 
     /**
+     * @ORM\Column(name="steam_api_key", type="string", length=255)
+     */
+    protected $steamApiKey;
+
+    /**
      * @ORM\Column(name="created_at", type="datetime", type="datetime")
      */
     protected $createdAt;
@@ -55,6 +60,11 @@ class CasesDomain
         $this->uuid = GenerateUUID::getUUID();
         $this->createdAt = new \DateTime();
         $this->cases = new ArrayCollection();
+    }
+
+    public function __toString()
+    {
+        return $this->domain;
     }
 
     /**
@@ -113,6 +123,30 @@ class CasesDomain
     public function getUuid()
     {
         return $this->uuid;
+    }
+
+    /**
+     * Set steamApiKey
+     *
+     * @param string $steamApiKey
+     *
+     * @return CasesDomain
+     */
+    public function setSteamApiKey($steamApiKey)
+    {
+        $this->steamApiKey = $steamApiKey;
+
+        return $this;
+    }
+
+    /**
+     * Get steamApiKey
+     *
+     * @return string
+     */
+    public function getSteamApiKey()
+    {
+        return $this->steamApiKey;
     }
 
     /**

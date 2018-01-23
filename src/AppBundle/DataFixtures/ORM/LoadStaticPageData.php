@@ -8,6 +8,8 @@
 
 namespace AppBundle\DataFixtures\ORM;
 
+use AppBundle\Entity\CasesDomain;
+use AppBundle\Entity\CasesStaticPage;
 use AppBundle\Entity\StaticPage;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
@@ -20,10 +22,7 @@ class LoadStaticPageData extends AbstractFixture implements OrderedFixtureInterf
      */
     public function load(ObjectManager $manager)
     {
-        $news = new StaticPage();
-        $news->setTypePage('information');
-        $news->setText('
-        Правила покупки на сайте https://cgrays.com
+        $text = 'Правила покупки на сайте https://cgrays.com
 Данные правила являются разъяснениями и не заменяют условия договора.
 
 Наша система работает по принципу биржи: все предложения о продаже и покупке формируются нашими пользователями. Пользователям гарантированно предлагается самый выгодный из вариантов покупки и продажи. Система не гарантирует, что после совершения сделки не появится более выгодное предложение.
@@ -40,10 +39,25 @@ class LoadStaticPageData extends AbstractFixture implements OrderedFixtureInterf
 Уведомление об ответственности
 Предлагаемые товары и услуги предоставляются не по заказу лица либо предприятия, эксплуатирующего систему WebMoney Transfer. Мы являемся независимым предприятием, оказывающим услуги, и самостоятельно принимаем решения о ценах и предложениях. Предприятия, эксплуатирующие систему WebMoney Transfer, не получают комиссионных вознаграждений или иных вознаграждений за участие в предоставлении услуг и не несут никакой ответственности за нашу деятельность.
 
-Аттестация, произведенная со стороны WebMoney Transfer, лишь подтверждает наши реквизиты для связи и удостоверяет личность. Она осуществляется по нашему желанию и не означает, что мы каким-либо образом связаны с продажами операторов системы WebMoney.
-        ');
+Аттестация, произведенная со стороны WebMoney Transfer, лишь подтверждает наши реквизиты для связи и удостоверяет личность. Она осуществляется по нашему желанию и не означает, что мы каким-либо образом связаны с продажами операторов системы WebMoney.';
 
-        $manager->persist($news);
+        $staticPage = new StaticPage();
+        $staticPage->setTypePage('information');
+        $staticPage->setText($text);
+
+        $manager->persist($staticPage);
+
+        $casesDomains = $manager->getRepository(CasesDomain::class)
+            ->findAll();
+
+        foreach ($casesDomains as $casesDomain) {
+            $casesStaticPage = new CasesStaticPage();
+            $casesStaticPage->setTypePage('faq');
+            $casesStaticPage->setCasesDomain($casesDomain);
+            $casesStaticPage->setText($text);
+
+            $manager->persist($casesStaticPage);
+        }
         $manager->flush();
     }
 

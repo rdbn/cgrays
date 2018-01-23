@@ -11,6 +11,7 @@ namespace AdminBundle\Service;
 use AppBundle\Entity\CasesSkins;
 use AppBundle\Entity\Skins;
 use Doctrine\ORM\EntityManager;
+use Psr\Log\LoggerInterface;
 
 class CasesListService
 {
@@ -20,25 +21,35 @@ class CasesListService
     private $em;
 
     /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
      * CasesListService constructor.
      * @param EntityManager $em
+     * @param LoggerInterface $logger
      */
-    public function __construct(EntityManager $em)
+    public function __construct(EntityManager $em, LoggerInterface $logger)
     {
         $this->em = $em;
+        $this->logger = $logger;
     }
 
     /**
      * @param $casesId
+     * @param $offset
+     * @param $limit
+     * @param array $filter
      * @return array
      */
-    public function getList($casesId = null)
+    public function getList($casesId = null, $offset = 0, $limit = 18, array $filter = [])
     {
         if ($casesId) {
             $listCases = $this->getListCases($casesId);
         }
         $skins = $this->em->getRepository(Skins::class)
-            ->findBy([], [], 42, 0);
+            ->findAllSkinsByFilter($filter, $offset, $limit);
 
         $listSkins = [];
         foreach ($skins as $index => $skin) {
@@ -62,6 +73,23 @@ class CasesListService
         }
 
         return $listSkins;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCountSkins()
+    {
+        try {
+            $countSkins = $this->em->getRepository(Skins::class)
+                ->getCountSkins();
+
+            return $countSkins;
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
+        }
+
+        return 0;
     }
 
     /**

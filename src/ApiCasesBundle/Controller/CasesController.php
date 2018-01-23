@@ -74,8 +74,10 @@ class CasesController extends FOSRestController
             /* @var CasesSkins $casesSkin */
             $skins['skins'][$key] = [
                 'id' => $casesSkin->getSkins()->getId(),
-                'name' => $casesSkin->getSkins()->getName(),
-                'icon_url' => $casesSkin->getSkins()->getIconUrl(),
+                'skin_name' => $casesSkin->getSkins()->getName(),
+                'steam_image' => "/{$casesSkin->getSkins()->getIconUrl()}",
+                'weapon_name' => $casesSkin->getSkins()->getWeapon()->getLocalizedTagName(),
+                'rarity' => $casesSkin->getSkins()->getRarity()->getLocalizedTagName(),
             ];
 
             $skins['skins'][$key]['is_empty'] = true;

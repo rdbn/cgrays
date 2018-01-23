@@ -13,4 +13,10 @@ class ConnectController extends Controller
      * @Route("/connect/steam", name="connect_steam")
      */
     public function indexAction(Request $request) {}
+
+    /**
+     * @param Request $request
+     * @Route("/api/connect/steam", name="cases_connect_steam")
+     */
+    public function apiAction(Request $request) {}
 }
