@@ -8,6 +8,7 @@
 
 namespace AdminBundle\Controller;
 
+use AdminBundle\Form\CasesFormFilterType;
 use AdminBundle\Form\CasesFormType;
 use AppBundle\Entity\Cases;
 use Sonata\AdminBundle\Controller\CRUDController as Controller;
@@ -18,8 +19,6 @@ class CasesCRUDController extends Controller
     {
         $request = $this->getRequest();
         $this->admin->setFormTabs(['default' => ['groups' => []]]);
-
-        $listCasesSkins = $this->get('admin.service.cases_list')->getList();
 
         $cases = new Cases();
         $form = $this->createForm(CasesFormType::class, $cases, [
@@ -37,11 +36,16 @@ class CasesCRUDController extends Controller
             return $this->redirectToRoute('sonata_cases_edit', ['id' => $cases->getId()]);
         }
 
+        $formFilter = $this->createForm(CasesFormFilterType::class);
+        $listCasesSkins = $this->get('admin.service.cases_list');
+
         return $this->render($this->admin->getTemplate('edit'), [
             'action' => 'create',
             'object' => $cases,
-            'listCasesSkins' => $listCasesSkins,
+            'listCasesSkins' => $listCasesSkins->getList(),
+            'countSkins' => $listCasesSkins->getCountSkins(),
             'form' => $form->createView(),
+            'formFilter' => $formFilter->createView(),
         ], null);
     }
 
@@ -56,7 +60,6 @@ class CasesCRUDController extends Controller
         if (!$cases) {
             throw $this->createNotFoundException(sprintf('unable to find the object with id : %s', $id));
         }
-        $listCasesSkins = $this->get('admin.service.cases_list')->getList($id);
 
         $form = $this->createForm(CasesFormType::class, $cases, [
             'action' => $this->generateUrl('sonata_cases_edit', ['id' => $id]),
@@ -73,11 +76,16 @@ class CasesCRUDController extends Controller
             return $this->redirectToRoute('sonata_cases_edit', ['id' => $cases->getId()]);
         }
 
+        $formFilter = $this->createForm(CasesFormFilterType::class);
+        $listCasesSkins = $this->get('admin.service.cases_list');
+
         return $this->render($this->admin->getTemplate('edit'), [
             'action' => 'edit',
             'object' => $cases,
-            'listCasesSkins' => $listCasesSkins,
+            'listCasesSkins' => $listCasesSkins->getList($id),
+            'countSkins' => $listCasesSkins->getCountSkins(),
             'form' => $form->createView(),
+            'formFilter' => $formFilter->createView(),
         ], null);
     }
 }

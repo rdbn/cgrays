@@ -34,6 +34,8 @@ class CasesAdmin extends AbstractAdmin
     {
         $filter
             ->add('name')
+            ->add('casesCategory')
+            ->add('casesDomain')
             ->add('createdAt');
     }
 

@@ -18,7 +18,7 @@ class StaticPageController extends FOSRestController
      * @Rest\View()
      * @return Response
      */
-    public function indexAction(Request $request, $typePage)
+    public function getPageAction(Request $request, $typePage)
     {
         $domainId = $request->headers->get('x-domain-id');
         $staticPage = $this->getDoctrine()->getRepository(CasesStaticPage::class)

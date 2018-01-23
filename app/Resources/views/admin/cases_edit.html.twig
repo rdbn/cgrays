@@ -56,21 +56,118 @@
                             <img src="{{ asset(object.image) }}" class="img-thumbnail" />
                         </div>
                     {% endif %}
+                    <h3>Фильтр по скинам кейса:</h3>
+                    <div class="form-group">
+                        {{ form_label(formFilter.name) }}
+                        <div class="sonata-ba-field sonata-ba-field-standard-natural">
+                            <div class="input-group">
+                                {{ form_widget(formFilter.name, {'attr': {'class': 'form-control'}}) }}
+                                <span class="input-group-btn">
+                                    <button id="send-filter" class="btn btn-primary" type="button">
+                                        <span class="glyphicon glyphicon-search"></span>
+                                    </button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                {{ form_label(formFilter.decor) }}
+                                <div class="sonata-ba-field sonata-ba-field-standard-natural">
+                                    {{ form_widget(formFilter.decor, {'attr': {'class': 'form-control'}}) }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                {{ form_label(formFilter.quality) }}
+                                <div class="sonata-ba-field sonata-ba-field-standard-natural">
+                                    {{ form_widget(formFilter.quality, {'attr': {'class': 'form-control'}}) }}
+                                </div>
+                            </div>
+                        </div><div class="col-lg-4">
+                            <div class="form-group">
+                                {{ form_label(formFilter.itemSet) }}
+                                <div class="sonata-ba-field sonata-ba-field-standard-natural">
+                                    {{ form_widget(formFilter.itemSet, {'attr': {'class': 'form-control'}}) }}
+                                </div>
+                            </div>
+                        </div><div class="col-lg-4">
+                            <div class="form-group">
+                                {{ form_label(formFilter.rarity) }}
+                                <div class="sonata-ba-field sonata-ba-field-standard-natural">
+                                    {{ form_widget(formFilter.rarity, {'attr': {'class': 'form-control'}}) }}
+                                </div>
+                            </div>
+                        </div><div class="col-lg-4">
+                            <div class="form-group">
+                                {{ form_label(formFilter.weapon) }}
+                                <div class="sonata-ba-field sonata-ba-field-standard-natural">
+                                    {{ form_widget(formFilter.weapon, {'attr': {'class': 'form-control'}}) }}
+                                </div>
+                            </div>
+                        </div><div class="col-lg-4">
+                            <div class="form-group">
+                                {{ form_label(formFilter.typeSkins) }}
+                                <div class="sonata-ba-field sonata-ba-field-standard-natural">
+                                    {{ form_widget(formFilter.typeSkins, {'attr': {'class': 'form-control'}}) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <h3>Список скинов в кейсе:</h3>
                     <div class="row">
-                    {% for casesSkins in listCasesSkins %}
+                        <div id="load-skins-img" class="col-md-12 text-center hidden">
+                            <img src="{{ asset('bundles/app/image/ajax-loader.gif') }}" />
+                        </div>
+                    </div>
+                    <div id="cases-list" class="row top20">
+                        {% for casesSkins in listCasesSkins %}
                         <div class="col-lg-2">
                             <div class="thumbnail skins {% if casesSkins.is_skins_case %}check-skins{% endif %}">
                                 <img src="{{ asset(casesSkins.icon_url) }}" alt="{{ casesSkins.name }}">
                                 <div class="caption">
-                                    <h3>{{ casesSkins.name }}</h3>
+                                    <h5>{{ casesSkins.name }}</h5>
                                     <p>
-                                        <input class="form-control skins-count" data-skins-id="{{ casesSkins.skins_id }}" name="rate_drop_item" type="text" placeholder="Коэфицент" value="{{ casesSkins.count }}" />
+                                        <input
+                                                class="form-control skins-count"
+                                                data-skins-id="{{ casesSkins.skins_id }}"
+                                                name="rate_drop_item"
+                                                type="text"
+                                                placeholder="Коэфицент"
+                                                value="{{ casesSkins.count }}" />
                                     </p>
                                 </div>
                             </div>
                         </div>
-                    {% endfor %}
+                        {% endfor %}
+                    </div>
+                    <div class="row">
+                        {% set offset = app.request.query.get('offset', 0) %}
+                        {% set limit = app.request.query.get('limit', 18) %}
+                        {% set countPage = (countSkins / limit)|round(0, 'ceil') %}
+                        <div class="col-md-12">
+                            <nav aria-label="Page navigation">
+                                <ul class="pagination">
+                                    {% set currentPage = (limit - offset) / countPage %}
+                                    {% for page in range(1, countPage) %}
+                                        <li {% if page == '' %}class="active"{% endif %}>
+                                            <a
+                                                    class="page-button"
+                                                    href="#"
+                                                    aria-label="Previous"
+                                                    data-page="{{ page }}"
+                                                    data-offset="{{ offset }}"
+                                                    data-limit="{{ limit }}">
+                                                {{ page }}
+                                            </a>
+                                        </li>
+                                        {% set offset = limit + offset %}
+                                    {% endfor %}
+                                </ul>
+                            </nav>
+                        </div>
                     </div>
                 </div>
             </div>

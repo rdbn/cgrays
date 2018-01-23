@@ -56,9 +56,16 @@ class LoadDictionarySkinsData extends AbstractFixture implements OrderedFixtureI
             $manager->persist($decor);
         }
 
+        $casesDomain = new CasesDomain();
+        $casesDomain->setDomain('http://casesopen.loc');
+        $casesDomain->setSteamApiKey('72375542F1B6D85628155E5820CB5FA4');
+
+        $manager->persist($casesDomain);
+
         for ($i = 0; $i < 5; $i++) {
             $casesDomain = new CasesDomain();
             $casesDomain->setDomain('http://test' . uniqid() . '.ru');
+            $casesDomain->setSteamApiKey(uniqid());
 
             $manager->persist($casesDomain);
 

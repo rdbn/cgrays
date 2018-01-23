@@ -74,4 +74,75 @@ class SkinsRepository extends EntityRepository
 
         return $stmt->fetch(\PDO::FETCH_ASSOC);
     }
+
+    /**
+     * @return bool|string
+     * @throws \Doctrine\DBAL\DBALException
+     */
+    public function getCountSkins()
+    {
+        $dbal = $this->getEntityManager()->getConnection();
+        $stmt = $dbal->prepare("SELECT COUNT(id) as count_skins FROM skins");
+        $stmt->execute();
+
+        return $stmt->fetchColumn();
+    }
+
+    /**
+     * @param $dataFilters
+     * @param $offset
+     * @param $limit
+     * @return array
+     */
+    public function findAllSkinsByFilter($dataFilters, $offset, $limit)
+    {
+        $qb = $this->createQueryBuilder('s');
+        $qb
+            ->setFirstResult($offset)
+            ->setMaxResults($limit);
+
+        if (isset($dataFilters['name'])) {
+            $qb
+                ->andWhere('s.name = :name')
+                ->setParameter('name', $dataFilters['name']);
+        }
+
+        if (isset($dataFilters['typeSkins'])) {
+            $qb
+                ->andWhere('s.typeSkins = :type_skins')
+                ->setParameter('type_skins', $dataFilters['typeSkins']);
+        }
+
+        if (isset($dataFilters['decor'])) {
+            $qb
+                ->andWhere('s.decor = :decor')
+                ->setParameter('decor', $dataFilters['decor']);
+        }
+
+        if (isset($dataFilters['rarity'])) {
+            $qb
+                ->andWhere('s.rarity = :rarity')
+                ->setParameter('rarity', $dataFilters['rarity']);
+        }
+
+        if (isset($dataFilters['itemSet'])) {
+            $qb
+                ->andWhere('s.itemSet = :item_set')
+                ->setParameter('item_set', $dataFilters['itemSet']);
+        }
+
+        if (isset($dataFilters['weapon'])) {
+            $qb
+                ->andWhere('s.weapon = :weapon')
+                ->setParameter('weapon', $dataFilters['weapon']);
+        }
+
+        if (isset($dataFilters['quality'])) {
+            $qb
+                ->andWhere('s.quality = :quality')
+                ->setParameter('quality', $dataFilters['quality']);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
 }

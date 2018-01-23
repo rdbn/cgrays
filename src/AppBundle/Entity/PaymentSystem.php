@@ -30,19 +30,6 @@ class PaymentSystem
     protected $name;
 
     /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Payment", mappedBy="paymentSystem")
-     */
-    protected $payment;
-
-    /**
-     * PaymentSystem constructor.
-     */
-    public function __construct()
-    {
-        $this->payment = new ArrayCollection();
-    }
-
-    /**
      * Get id
      *
      * @return integer
@@ -74,39 +61,5 @@ class PaymentSystem
     public function getName()
     {
         return $this->name;
-    }
-
-    /**
-     * Add payment
-     *
-     * @param \AppBundle\Entity\Payment $payment
-     *
-     * @return PaymentSystem
-     */
-    public function addPayment(\AppBundle\Entity\Payment $payment)
-    {
-        $this->payment[] = $payment;
-
-        return $this;
-    }
-
-    /**
-     * Remove payment
-     *
-     * @param \AppBundle\Entity\Payment $payment
-     */
-    public function removePayment(\AppBundle\Entity\Payment $payment)
-    {
-        $this->payment->removeElement($payment);
-    }
-
-    /**
-     * Get payment
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getPayment()
-    {
-        return $this->payment;
     }
 }

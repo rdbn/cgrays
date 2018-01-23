@@ -21,7 +21,7 @@ class CasesRepository extends EntityRepository
         $dbal = $this->getEntityManager()->getConnection();
         $stmt = $dbal->prepare('
         SELECT  
-          c.id, c.name, c.image, c.price, c.created_at, c.cases_category_id as category_id,
+          DISTINCT c.id, c.name, c.image, c.price, c.created_at, c.cases_category_id as category_id,
           CASE WHEN cs.count = cs.count_drop THEN 1 ELSE 0 END as is_empty
         FROM cases c
           LEFT JOIN cases_domain cd ON c.cases_domain_id = cd.id 
