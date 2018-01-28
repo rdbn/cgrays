@@ -25,38 +25,44 @@ class CasesFormFilterType extends AbstractType
     {
         $builder
             ->add('name', TextType::class, [
-                'label' => 'Название скина'
+                'label' => 'Название скина',
+                'required' => false,
             ])
             ->add('rarity', EntityType::class, [
                 'class' => Rarity::class,
                 'choice_label' => 'localizedTagName',
-                'label' => 'Редкость'
+                'label' => 'Редкость',
+                'required' => false,
             ])
             ->add('itemSet', EntityType::class, [
                 'class' => ItemSet::class,
                 'choice_label' => 'localizedTagName',
-                'label' => 'Набор'
+                'label' => 'Набор',
+                'required' => false,
             ])
-
             ->add('quality', EntityType::class, [
                 'class' => Quality::class,
                 'choice_label' => 'localizedTagName',
-                'label' => 'Категория'
+                'label' => 'Категория',
+                'required' => false,
             ])
             ->add('typeSkins', EntityType::class, [
                 'class' => TypeSkins::class,
                 'choice_label' => 'localizedTagName',
-                'label' => 'Тип'
+                'label' => 'Тип',
+                'required' => false,
             ])
             ->add('weapon', EntityType::class, [
                 'class' => Weapon::class,
                 'choice_label' => 'localizedTagName',
-                'label' => 'Оружие'
+                'label' => 'Оружие',
+                'required' => false,
             ])
             ->add('decor', EntityType::class, [
                 'class' => Decor::class,
                 'choice_label' => 'localizedTagName',
-                'label' => 'Оформление'
+                'label' => 'Оформление',
+                'required' => false,
             ]);
     }
 

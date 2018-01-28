@@ -9,6 +9,7 @@
 namespace AppBundle\Repository;
 
 use AppBundle\Entity\User;
+use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Driver\PDOException;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
@@ -114,6 +115,23 @@ class UserRepository extends EntityRepository
             return $qb->getQuery()->getSingleResult();
         } catch (\Exception $e) {
             return [];
+        }
+    }
+
+    /**
+     * @param $domainId
+     * @return bool|int|string
+     */
+    public function getCountUserByDomainId($domainId)
+    {
+        $dbal = $this->getEntityManager()->getConnection();
+        try {
+            $stmt = $dbal->prepare("SELECT count(u.id) as count_user FROM users u");
+            $stmt->execute();
+
+            return $stmt->fetchColumn();
+        } catch (DBALException $e) {
+            return 0;
         }
     }
 }

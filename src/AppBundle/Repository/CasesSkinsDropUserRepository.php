@@ -14,9 +14,10 @@ use Doctrine\ORM\EntityRepository;
 class CasesSkinsDropUserRepository extends EntityRepository
 {
     /**
+     * @param string $domainId
      * @return array
      */
-    public function findLastSkinsDrop()
+    public function findLastSkinsDrop($domainId)
     {
         $dbal = $this->getEntityManager()->getConnection();
         try {
@@ -40,6 +41,23 @@ class CasesSkinsDropUserRepository extends EntityRepository
             return $stmt->fetchAll(\PDO::FETCH_ASSOC);
         } catch (DBALException $e) {
             return [];
+        }
+    }
+
+    /**
+     * @param string $domainId
+     * @return string|boolean
+     */
+    public function getCountSkinsDrop($domainId)
+    {
+        $dbal = $this->getEntityManager()->getConnection();
+        try {
+            $stmt = $dbal->prepare("SELECT count(csdu.id) as count_drop_skins FROM cases_skins_drop_user csdu");
+            $stmt->execute();
+
+            return $stmt->fetchColumn();
+        } catch (DBALException $e) {
+            return 0;
         }
     }
 }
