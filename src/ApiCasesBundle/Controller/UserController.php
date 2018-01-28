@@ -42,6 +42,11 @@ class UserController extends FOSRestController
         $skins = $this->getDoctrine()->getRepository(CasesSkinsPickUpUser::class)
             ->findSkinsByUserIdAndDomainId($userId, $domainId);
 
+        $skins = array_map(function ($item) {
+            $item['skin_name'] = mb_strimwidth($item['skin_name'], 0, 15, '...', 'utf-8');
+            return $item;
+        }, $skins);
+
         $view = $this->view($skins, 200);
         return $this->handleView($view);
     }

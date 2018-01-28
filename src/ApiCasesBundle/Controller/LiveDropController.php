@@ -26,6 +26,11 @@ class LiveDropController extends FOSRestController
         $listSkins = $this->getDoctrine()->getRepository(CasesSkinsDropUser::class)
             ->findLastSkinsDrop();
 
+        $listSkins = array_map(function ($item) {
+            $item['skin_name'] = mb_strimwidth($item['skin_name'], 0, 15, '...', 'utf-8');
+            return $item;
+        }, $listSkins);
+
         $view = $this->view($listSkins, 200);
         return $this->handleView($view);
     }
