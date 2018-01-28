@@ -14,7 +14,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\CasesSkinsDropUserRepository")
  * @ORM\Table(name="cases_skins_drop_user")
  */
 class CasesSkinsDropUser

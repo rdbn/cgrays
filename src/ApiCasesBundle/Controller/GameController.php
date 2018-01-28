@@ -8,7 +8,7 @@
 
 namespace ApiCasesBundle\Controller;
 
-use ApiBundle\Validator\CurrencyConstraint;
+use AppBundle\Entity\Currency;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\FOSRestController;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,9 +26,24 @@ class GameController extends FOSRestController
     public function getCasesOpenAction(Request $request, $casesId)
     {
         $domainId = $request->headers->get('x-domain-id');
+        $currency = $this->getDoctrine()->getRepository(Currency::class)
+            ->findOneBy(['code' => $request->headers->get('x-currency-code')]);
+
+        if (!$currency) {
+            $view = $this->view('Не верный код валюты.', 404);
+            return $this->handleView($view);
+        }
+
+//        $userId = $this->getUser()->getId();
+//        $gameService = $this->get('api_cases.service.games');
+//        if ($gameService->checkGameUserId($userId)) {
+//            $view = $this->view(['error' => 'Game is not end'], 400);
+//            return $this->handleView($view);
+//        }
+
         try {
             $case = $this->get('api_cases.service.case_open')
-                ->handler($domainId, $casesId, $this->getUser()->getId());
+                ->handler($domainId, $casesId, $this->getUser()->getId(), $currency->getId());
 
             if (!count($case)) {
                 throw new \Exception('Case is empty');
@@ -52,11 +67,11 @@ class GameController extends FOSRestController
     public function postCasesUserSellSkinsAction(Request $request)
     {
         $domainId = $request->headers->get('x-domain-id');
-        $currencyCode = $request->request->get('currency_code');
-        $currencyConstraint = new CurrencyConstraint();
-        $validator = $this->get('validator')->validate($currencyCode, $currencyConstraint);
-        if (count($validator) > 0) {
-            $view = $this->view($validator->get(0)->getMessage(), 404);
+        $currency = $this->getDoctrine()->getRepository(Currency::class)
+            ->findOneBy(['code' => $request->headers->get('x-currency-code')]);
+
+        if (!$currency) {
+            $view = $this->view('Не верный код валюты.', 404);
             return $this->handleView($view);
         }
 
@@ -69,11 +84,11 @@ class GameController extends FOSRestController
 
         try {
             $resultGame = json_decode($gameService->getGame($userId), 1);
-            $this->get('api_cases.service.cases_user_sell_skins')
-                ->handler($resultGame, (int) $this->getUser()->getId(), $domainId, $currencyCode);
+            $userBalance = $this->get('api_cases.service.cases_user_sell_skins')
+                ->handler($resultGame, (int) $this->getUser()->getId(), $domainId, $currency->getId());
 
             $gameService->clearGame($userId);
-            $view = $this->view('success', 200);
+            $view = $this->view(['balance' => $userBalance], 200);
         } catch (\Exception $e) {
             $this->get('logger')->error($e->getMessage());
             $view = $this->view($e->getMessage(), 400);
@@ -119,11 +134,11 @@ class GameController extends FOSRestController
     public function postCasesContractAction(Request $request)
     {
         $domainId = $request->headers->get('x-domain-id');
-        $currencyCode = $request->request->get('currency_code');
-        $currencyConstraint = new CurrencyConstraint();
-        $validator = $this->get('validator')->validate($domainId, $currencyConstraint);
-        if (count($validator) > 0) {
-            $view = $this->view($validator->get(0)->getMessage(), 404);
+        $currency = $this->getDoctrine()->getRepository(Currency::class)
+            ->findOneBy(['code' => $request->headers->get('x-currency-code')]);
+
+        if (!$currency) {
+            $view = $this->view('Не верный код валюты.', 404);
             return $this->handleView($view);
         }
 
@@ -135,7 +150,7 @@ class GameController extends FOSRestController
 
         try {
             $this->get('api_cases.service.cases_contract')
-                ->handler($ids, $domainId, $this->getUser()->getId(), $currencyCode);
+                ->handler($ids, $domainId, $this->getUser()->getId(), $currency->getId());
 
             $view = $this->view('success', 200);
         } catch (\Exception $e) {

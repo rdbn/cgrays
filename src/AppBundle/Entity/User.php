@@ -121,6 +121,11 @@ class User implements UserInterface, EquatableInterface, \Serializable, SteamUse
     protected $balanceUser;
 
     /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\CasesBalanceUser", mappedBy="user")
+     */
+    protected $casesBalanceUser;
+
+    /**
      * Unmapped property to handle change password
      */
     private $plainPassword;

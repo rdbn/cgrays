@@ -8,6 +8,7 @@
 
 namespace ApiCasesBundle\Service;
 
+use AppBundle\Entity\CasesBalanceUser;
 use AppBundle\Entity\CasesSkins;
 use AppBundle\Entity\User;
 use Doctrine\DBAL\Connection;
@@ -70,10 +71,11 @@ class CaseOpenHandler
      * @param $domainId
      * @param $casesId
      * @param $userId
+     * @param $currencyId
      * @return array
      * @throws \Exception
      */
-    public function handler($domainId, $casesId, $userId)
+    public function handler($domainId, $casesId, $userId, $currencyId)
     {
         $skins = $this->em->getRepository(CasesSkins::class)
             ->findSkinsByCasesId($domainId, $casesId);
@@ -90,10 +92,22 @@ class CaseOpenHandler
             $this->em->getRepository(CasesSkins::class)
                 ->findCasesSkinsByCasesIdForUpdate($skins['cases_skins_id']);
 
+            $casesBalanceUser = $this->em->getRepository(CasesBalanceUser::class)
+                ->findUserBalanceForUpdateByUserIdCurrencyIdDomain(
+                    $userId, $currencyId, $skins['cases_domain_id']
+                );
+
             $this->dbal->update(
                 'cases_skins',
                 ['count_drop' => $skins['count_drop'] + 1],
                 ['id' => $skins['cases_skins_id']]
+            );
+
+            $balance = (int) $casesBalanceUser['balance'] - (int) $skins['cases_price'];
+            $this->dbal->update(
+                'cases_balance_user',
+                ['balance' => $balance],
+                ['id' => $casesBalanceUser['id']]
             );
 
             $this->dbal->insert(
@@ -124,6 +138,7 @@ class CaseOpenHandler
             'skin_name' => $skins['name'],
             'rarity' => $skins['rarity'],
             'steam_image' => "/{$skins['icon_url']}",
+            'balance' => $balance,
         ];
     }
 }

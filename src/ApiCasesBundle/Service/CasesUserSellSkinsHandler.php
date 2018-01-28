@@ -10,7 +10,6 @@ namespace ApiCasesBundle\Service;
 
 use AppBundle\Entity\CasesBalanceUser;
 use AppBundle\Entity\CasesDomain;
-use AppBundle\Entity\Currency;
 use AppBundle\Entity\Skins;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
@@ -43,23 +42,17 @@ class CasesUserSellSkinsHandler
      * @param array $resultGame
      * @param int $userId
      * @param $domainId
-     * @param $currencyCode
+     * @param $currencyId
      * @throws \Exception
+     * @return int
      */
-    public function handler(array $resultGame, int $userId, $domainId, $currencyCode)
+    public function handler(array $resultGame, int $userId, $domainId, $currencyId)
     {
         $casesDomain = $this->em->getRepository(CasesDomain::class)
             ->findOneBy(['uuid' => $domainId]);
 
         if (!$casesDomain) {
             throw new \Exception('Not found domain');
-        }
-
-        $currency = $this->em->getRepository(Currency::class)
-            ->findOneBy(['code' => $currencyCode]);
-
-        if (!$currency) {
-            throw new \Exception('Not found currency');
         }
 
         $this->dbal->beginTransaction();
@@ -70,20 +63,19 @@ class CasesUserSellSkinsHandler
             $userBalance = $this->em->getRepository(CasesBalanceUser::class)
                 ->findUserBalanceForUpdateByUserIdCurrencyIdDomain(
                     $userId,
-                    $currency->getId(),
+                    $currencyId,
                     $casesDomain->getId()
                 );
 
-            $this->dbal->update(
-                'cases_balance_user',
-                ['balance' => (int) $skins['steam_price'] + (int) $userBalance['balance']],
-                ['id' => $userBalance['id']]
-            );
+            $balance = (int) $skins['steam_price'] + (int) $userBalance['balance'];
+            $this->dbal->update('cases_balance_user', ['balance' => $balance], ['id' => $userBalance['id']]);
 
             $this->dbal->commit();
         } catch (DBALException $e) {
             $this->dbal->rollBack();
             throw new \Exception($e->getMessage());
         }
+
+        return $balance;
     }
 }

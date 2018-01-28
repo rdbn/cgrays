@@ -36,7 +36,7 @@ class CasesBalanceUser
     protected $casesDomain;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="casesBalanceUser")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     protected $user;

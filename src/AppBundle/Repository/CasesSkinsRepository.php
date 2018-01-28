@@ -65,7 +65,8 @@ class CasesSkinsRepository extends EntityRepository
           cs.count, 
           cd.id as cases_domain_id,
           w.localized_tag_name as weapon,
-          r.localized_tag_name as rarity
+          r.localized_tag_name as rarity,
+          c.price as cases_price
         FROM cases_skins cs
           LEFT JOIN cases c ON cs.cases_id = c.id
           LEFT JOIN cases_domain cd ON c.cases_domain_id = cd.id

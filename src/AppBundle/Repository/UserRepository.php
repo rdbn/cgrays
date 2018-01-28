@@ -92,4 +92,28 @@ class UserRepository extends EntityRepository
 
         return $qb;
     }
+
+    /**
+     * @param $userId
+     * @param $domainId
+     * @return mixed
+     */
+    public function findUserInformationByUserIdAndDomainId($userId, $domainId)
+    {
+        $qb = $this->createQueryBuilder('u');
+        $qb
+            ->addSelect('cbu')
+            ->leftJoin('u.casesBalanceUser', 'cbu')
+            ->leftJoin('cbu.casesDomain', 'cd')
+            ->where('u.id = :user_id')
+            ->andWhere('cd.uuid = :domain_id')
+            ->setParameter('user_id', $userId)
+            ->setParameter('domain_id', $domainId);
+
+        try {
+            return $qb->getQuery()->getSingleResult();
+        } catch (\Exception $e) {
+            return [];
+        }
+    }
 }

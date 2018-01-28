@@ -4,10 +4,13 @@ AppBundle\Entity\User:
         username:
             expose: true
             groups: [cases_user]
+        steamId:
+            expose: true
+            groups: [cases_user]
         avatar:
             expose: true
             groups: [cases_user]
-        balanceUser:
+        casesBalanceUser:
             expose: true
             groups: [cases_user]
         createdAt:

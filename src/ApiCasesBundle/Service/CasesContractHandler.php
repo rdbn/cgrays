@@ -11,7 +11,6 @@ namespace ApiCasesBundle\Service;
 use AppBundle\Entity\CasesBalanceUser;
 use AppBundle\Entity\CasesDomain;
 use AppBundle\Entity\CasesSkinsPickUpUser;
-use AppBundle\Entity\Currency;
 use AppBundle\Entity\Skins;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
@@ -44,10 +43,10 @@ class CasesContractHandler
      * @param array $skinsPickUpUserIds
      * @param $domainId
      * @param $userId
-     * @param $currencyCode
+     * @param $currencyId
      * @throws \Exception
      */
-    public function handler(array $skinsPickUpUserIds, $domainId, $userId, $currencyCode)
+    public function handler(array $skinsPickUpUserIds, $domainId, $userId, $currencyId)
     {
         $casesDomain = $this->em->getRepository(CasesDomain::class)
             ->findOneBy(['uuid' => $domainId]);
@@ -56,17 +55,10 @@ class CasesContractHandler
             throw new \Exception('Not found domain');
         }
 
-        $currency = $this->em->getRepository(Currency::class)
-            ->findOneBy(['code' => $currencyCode]);
-
-        if (!$currency) {
-            throw new \Exception('Not found currency');
-        }
-
         $this->dbal->beginTransaction();
         try {
             $casesUserBalance = $this->em->getRepository(CasesBalanceUser::class)
-                ->findUserBalanceForUpdateByUserIdCurrencyIdDomain($userId, $currency->getId(), $casesDomain->getId());
+                ->findUserBalanceForUpdateByUserIdCurrencyIdDomain($userId, $currencyId, $casesDomain->getId());
 
             $casesSkinsPickUpUser = $this->em->getRepository(CasesSkinsPickUpUser::class)
                 ->findSkinsForUpdateByIds($skinsPickUpUserIds);

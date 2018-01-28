@@ -38,9 +38,10 @@ class CasesSkinsPickUpUserRepository extends EntityRepository
         $dbal = $this->getEntityManager()->getConnection();
         $stmt = $dbal->prepare("
         SELECT 
-           s.name, s.icon_url_large, s.steam_price
+          s.name as skin_name, s.icon_url as steam_image, s.steam_price as price, w.localized_tag_name as weapon_name
         FROM cases_skins_pick_up_user cspuu
           LEFT JOIN skins s ON cspuu.skins_id = s.id
+          LEFT JOIN weapon w ON s.weapon_id = w.id
           LEFT JOIN cases_domain cd ON cspuu.cases_domain_id = cd.id
         WHERE 
           cspuu.user_id = :user_id

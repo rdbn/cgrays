@@ -1,9 +1,9 @@
-AppBundle\Entity\BalanceUser:
+AppBundle\Entity\CasesBalanceUser:
     exclusion_policy: ALL
     properties:
         currency:
             expose: true
-            groups: [user]
+            groups: [cases_user]
         balance:
             expose: true
-            groups: [user]
+            groups: [cases_user]
