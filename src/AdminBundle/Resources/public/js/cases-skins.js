@@ -1,5 +1,5 @@
 var FilterCases = function () {
-    var url = '/app_dev.php/api/admin/cases/show-list-skins';
+    var url = '/api/admin/cases/show-list-skins';
 
     var showSkins = function (element, elementLoader, data) {
         var
@@ -159,7 +159,7 @@ $(document).ready(function () {
 
             html += 'Удалить</button></span></div></div>';
 
-            $('#add-skins-rarity-' + element.attr('data-rarity-id')).html(html);
+            $('#add-skins-rarity-' + element.attr('data-rarity-id')).append(html);
         }
 
         elementSort.val(JSON.stringify(sort));
