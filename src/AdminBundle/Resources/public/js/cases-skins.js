@@ -138,7 +138,11 @@ $(document).ready(function () {
             skins[skinsId] = 0;
 
             if (sort[rarityId] !== undefined) {
-                sort[rarityId]['skins'] = skins;
+                if (sort[rarityId]['skins'] !== undefined) {
+                    sort[rarityId]['skins'][skinsId] = 0;
+                } else {
+                    sort[rarityId]['skins'] = skins;
+                }
             } else {
                 sort[rarityId] = {rarity: 0, skins: skins};
             }
