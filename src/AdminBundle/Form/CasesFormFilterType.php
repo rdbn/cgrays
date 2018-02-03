@@ -23,6 +23,7 @@ class CasesFormFilterType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $builder->setMethod('GET');
         $builder
             ->add('name', TextType::class, [
                 'label' => 'Название скина',
@@ -69,7 +70,8 @@ class CasesFormFilterType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => Skins::class
+            'data_class' => Skins::class,
+            'csrf_protection' => false,
         ]);
     }
 }

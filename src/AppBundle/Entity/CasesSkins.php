@@ -9,6 +9,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="AppBundle\Repository\CasesSkinsRepository")
@@ -36,14 +37,15 @@ class CasesSkins
     protected $cases;
 
     /**
-     * @ORM\Column(type="smallint")
+     * @Assert\Range(min="0", max="100")
+     * @ORM\Column(name="procent_rarity", type="smallint")
      */
-    protected $count;
+    protected $procentRarity;
 
     /**
-     * @ORM\Column(name="count_drop", type="smallint", options={"default": 0})
+     * @ORM\Column(name="procent_skins", type="smallint", options={"default": 0})
      */
-    protected $countDrop;
+    protected $procentSkins;
 
     /**
      * @ORM\Column(name="created_at", type="datetime", type="datetime")
@@ -52,13 +54,14 @@ class CasesSkins
 
     public function __construct()
     {
-        $this->countDrop = 0;
+        $this->procentRarity = 0;
+        $this->procentSkins = 0;
         $this->createdAt = new \DateTime();
     }
 
     public function __toString()
     {
-        return $this->countDrop;
+        return $this->procentRarity;
     }
 
 
@@ -73,51 +76,51 @@ class CasesSkins
     }
 
     /**
-     * Set count
+     * Set procentRarity
      *
-     * @param string $count
+     * @param string $procentRarity
      *
      * @return CasesSkins
      */
-    public function setCount($count)
+    public function setProcentRarity($procentRarity)
     {
-        $this->count = $count;
+        $this->procentRarity = $procentRarity;
 
         return $this;
     }
 
     /**
-     * Get count
+     * Get procentRarity
      *
      * @return string
      */
-    public function getCount()
+    public function getProcentRarity()
     {
-        return $this->count;
+        return $this->procentRarity;
     }
 
     /**
-     * Set countDrop
+     * Set procentSkins
      *
-     * @param string $countDrop
+     * @param string $procentSkins
      *
      * @return CasesSkins
      */
-    public function setCountDrop($countDrop)
+    public function setProcentSkins($procentSkins)
     {
-        $this->countDrop = $countDrop;
+        $this->procentSkins = $procentSkins;
 
         return $this;
     }
 
     /**
-     * Get countDrop
+     * Get procentSkins
      *
      * @return string
      */
-    public function getCountDrop()
+    public function getProcentSkins()
     {
-        return $this->countDrop;
+        return $this->procentSkins;
     }
 
     /**

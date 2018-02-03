@@ -103,8 +103,8 @@ class SkinsRepository extends EntityRepository
 
         if (isset($dataFilters['name'])) {
             $qb
-                ->andWhere('s.name = :name')
-                ->setParameter('name', $dataFilters['name']);
+                ->andWhere($qb->expr()->like('s.name', ':name'))
+                ->setParameter('name', "%{$dataFilters['name']}%");
         }
 
         if (isset($dataFilters['typeSkins'])) {

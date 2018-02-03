@@ -63,10 +63,12 @@ class CasesPersistSubscriber implements EventSubscriber
         $casesSkins = $cases->getCasesSkins();
         foreach ($casesSkins as $casesSkin) {
             /* @var CasesSkins $casesSkin */
-            $id = $casesSkin->getSkins()->getId();
-            if (isset($sort[$id])) {
-                $casesSkin->setCount($sort[$id]);
-                unset($sort[$id]);
+            $skinId = $casesSkin->getSkins()->getId();
+            $rarityId = $casesSkin->getSkins()->getRarity()->getId();
+            if (isset($sort[$rarityId])) {
+                $casesSkin->setProcentRarity($sort[$rarityId]['rarity']);
+                $casesSkin->setProcentSkins($sort[$rarityId]['skins'][$skinId]);
+                unset($sort[$rarityId]);
             } else {
                 $om->remove($casesSkin);
             }
@@ -86,15 +88,31 @@ class CasesPersistSubscriber implements EventSubscriber
      */
     private function addCasesSkins(ObjectManager $om, Cases $cases, $sort)
     {
+        $skinsIds = [];
+        foreach ($sort as $item) {
+            if (isset($item['skins'])) {
+                foreach (array_keys($item['skins']) as $key) {
+                    $skinsIds[] = $key;
+                }
+            }
+        }
+
+        if (!count($skinsIds)) {
+            return;
+        }
+
         $skins = $om->getRepository(Skins::class)
-            ->findSkinsByIds(implode(",", array_keys($sort)));
+            ->findSkinsByIds(implode(",", $skinsIds));
 
         foreach ($skins as $skin) {
             /* @var Skins $skin */
+            $rarityId = $skin->getRarity()->getId();
+
             $casesSkins = new CasesSkins();
             $casesSkins->setSkins($skin);
             $casesSkins->setCases($cases);
-            $casesSkins->setCount($sort[$skin->getId()]);
+            $casesSkins->setProcentRarity($sort[$rarityId]['rarity']);
+            $casesSkins->setProcentSkins($sort[$rarityId]['skins'][$skin->getId()]);
 
             $om->persist($casesSkins);
         }

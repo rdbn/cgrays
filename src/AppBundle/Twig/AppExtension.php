@@ -8,6 +8,7 @@ class AppExtension extends \Twig_Extension
     {
         return array(
             new \Twig_SimpleFilter('strlen', array($this, 'strlenFilter')),
+            new \Twig_SimpleFilter('json_decode', array($this, 'jsonDecode')),
         );
     }
 
@@ -18,5 +19,10 @@ class AppExtension extends \Twig_Extension
         }
 
         return $string;
+    }
+
+    public function jsonDecode($string)
+    {
+        return json_decode($string, 1);
     }
 }

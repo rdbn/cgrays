@@ -10,7 +10,7 @@
         {{ form_errors(form) }}
         <div class="box box-primary">
             <div class="box-header">
-                <h4 class="box-title">
+                <h4 id="chapter-cases" class="box-title" data-cases-id="{{ object.id }}">
                     Кейсы
                 </h4>
             </div>
@@ -48,7 +48,6 @@
                             {% else %}
                                 {{ form_widget(form.file, {'attr': {'required': 'required'}}) }}
                             {% endif %}
-
                         </div>
                     </div>
                     {% if object.image %}
@@ -56,6 +55,61 @@
                             <img src="{{ asset(object.image) }}" class="img-thumbnail" />
                         </div>
                     {% endif %}
+                    {# todo: Таблица с процентами #}
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Раритетность</th>
+                            <th>Процент выпадение предмета 0 - 100</th>
+                            <th>Скины c процентом выпадение предмета 0 - 100 (Необязательный параметр)</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for rarity in formFilter.rarity.vars.choices %}
+                            {% set rarityId = rarity.data.id %}
+                            <tr>
+                                <td>{{ rarity.label }}</td>
+                                <td>
+                                    <div class="form-group">
+                                        {% set sort = form.sort.vars.value|json_decode %}
+                                        <input
+                                                id="rarity-procent-{{ rarity.data.id }}"
+                                                class="form-control rarity-procent-value"
+                                                value="{% if sort[rarityId] is defined %}{{ sort[rarityId].rarity }}{% endif %}"
+                                                placeholder="Процент 0%"
+                                                data-rarity-id="{{ rarity.data.id }}" />
+                                    </div>
+                                </td>
+                                <td id="add-skins-rarity-{{ rarity.data.id }}" class="skins-check-cases">
+                                    {% for skins in listCasesSkins.cases_skins %}
+                                        {% if skins.rarity_id == rarityId %}
+                                            <div id="skins-{{ skins.skins_id }}" class="form-group">
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">{{ skins.name }}</span>
+                                                    <input
+                                                            class="form-control skins-procent"
+                                                            value="{{ skins.procent_skins }}"
+                                                            placeholder="Процент %"
+                                                            data-skins-id="{{ skins.skins_id }}"
+                                                            data-rarity-id="{{ rarityId }}" />
+                                                    <span class="input-group-btn">
+                                                        <button
+                                                                class="btn btn-danger remove-skins-rarity"
+                                                                type="button"
+                                                                data-skins-id="{{ skins.skins_id }}"
+                                                                data-rarity-id="{{ rarityId }}">
+                                                            Удалить
+                                                        </button>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
                     <h3>Фильтр по скинам кейса:</h3>
                     <div class="form-group">
                         {{ form_label(formFilter.name) }}
@@ -123,21 +177,17 @@
                         </div>
                     </div>
                     <div id="cases-list" class="row top20">
-                        {% for casesSkins in listCasesSkins %}
-                        <div class="col-lg-2">
-                            <div class="thumbnail skins {% if casesSkins.is_skins_case %}check-skins{% endif %}">
+                        {% for casesSkins in listCasesSkins.list_skins %}
+                        <div id="skins-check-{{ casesSkins.skins_id }}" class="col-lg-2">
+                            <div
+                                    class="thumbnail skins {% if casesSkins.is_skins_case %}check-skins{% endif %}"
+                                    data-skins-id="{{ casesSkins.skins_id }}"
+                                    data-rarity-id="{{ casesSkins.rarity_id }}"
+                                    data-skins-name="{{ casesSkins.name }}"
+                            >
                                 <img src="{{ asset(casesSkins.icon_url) }}" alt="{{ casesSkins.name }}">
                                 <div class="caption">
                                     <h5>{{ casesSkins.name }}</h5>
-                                    <p>
-                                        <input
-                                                class="form-control skins-count"
-                                                data-skins-id="{{ casesSkins.skins_id }}"
-                                                name="rate_drop_item"
-                                                type="text"
-                                                placeholder="Коэфицент"
-                                                value="{{ casesSkins.count }}" />
-                                    </p>
                                 </div>
                             </div>
                         </div>

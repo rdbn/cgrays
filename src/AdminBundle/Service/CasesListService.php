@@ -46,7 +46,13 @@ class CasesListService
     public function getList($casesId = null, $offset = 0, $limit = 18, array $filter = [])
     {
         if ($casesId) {
-            $listCases = $this->getListCases($casesId);
+            $casesSkins = $this->em->getRepository(CasesSkins::class)
+                ->findCasesSkinsByCasesId($casesId);
+
+            $listCases = [];
+            foreach ($casesSkins as $casesSkin) {
+                $listCases[$casesSkin['skins_id']] = $casesSkin;
+            }
         }
         $skins = $this->em->getRepository(Skins::class)
             ->findAllSkinsByFilter($filter, $offset, $limit);
@@ -60,19 +66,19 @@ class CasesListService
                 'skins_id' => $skinsId,
                 'name' => $skin->getName(),
                 'icon_url' => $skin->getIconUrl(),
-                'count' => 0,
-                'count_drop' => 0,
+                'rarity_id' => $skin->getRarity()->getId(),
                 'is_skins_case' => 0,
             ];
 
             if (isset($listCases)) {
-                $listSkins[$index]['count'] = isset($listCases[$skinsId]) ? $listCases[$skinsId]['count']: 0;
-                $listSkins[$index]['count_drop'] = isset($listCases[$skinsId]) ? $listCases[$skinsId]['count_drop']: 0;
                 $listSkins[$index]['is_skins_case'] = isset($listCases[$skinsId]) ? 1 : 0;
             }
         }
 
-        return $listSkins;
+        return [
+            'list_skins' => $listSkins,
+            'cases_skins' => isset($casesSkins) ? $casesSkins : [],
+        ];
     }
 
     /**
@@ -90,22 +96,5 @@ class CasesListService
         }
 
         return 0;
-    }
-
-    /**
-     * @param $casesId
-     * @return array
-     */
-    private function getListCases($casesId)
-    {
-        $casesSkins = $this->em->getRepository(CasesSkins::class)
-            ->findCasesSkinsByCasesId($casesId);
-
-        $listCases = [];
-        foreach ($casesSkins as $casesSkin) {
-            $listCases[$casesSkin['skins_id']] = $casesSkin;
-        }
-
-        return $listCases;
     }
 }

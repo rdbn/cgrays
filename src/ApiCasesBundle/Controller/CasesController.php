@@ -79,11 +79,6 @@ class CasesController extends FOSRestController
                 'weapon_name' => $casesSkin->getSkins()->getWeapon()->getLocalizedTagName(),
                 'rarity' => $casesSkin->getSkins()->getRarity()->getLocalizedTagName(),
             ];
-
-            $skins['skins'][$key]['is_empty'] = true;
-            if ($casesSkin->getCount() > $casesSkin->getCountDrop()) {
-                $skins['skins'][$key]['is_empty'] = false;
-            }
         }
 
         $view = $this->view($skins, 200);

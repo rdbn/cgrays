@@ -21,7 +21,7 @@ class CasesSkinsRepository extends EntityRepository
         $dbal = $this->getEntityManager()->getConnection();
         $stmt = $dbal->prepare('
         SELECT
-          cs.id, cs.skins_id, cs.count, cs.count_drop, s.name, s.icon_url
+          cs.id, cs.skins_id, cs.procent_rarity, cs.procent_skins, s.name, s.icon_url, s.rarity_id
         FROM cases_skins cs
           LEFT JOIN skins s ON s.id = cs.skins_id
         WHERE
@@ -61,7 +61,8 @@ class CasesSkinsRepository extends EntityRepository
           s.name, 
           s.icon_url, 
           cs.id as cases_skins_id, 
-          cs.count_drop, 
+          cs.procent_rarity, 
+          cs.procent_skins, 
           cs.count, 
           cd.id as cases_domain_id,
           w.localized_tag_name as weapon,
@@ -74,7 +75,8 @@ class CasesSkinsRepository extends EntityRepository
           LEFT JOIN weapon w ON w.id = s.weapon_id
           LEFT JOIN rarity r ON r.id = s.rarity_id
         WHERE
-           cd.uuid = :uuid AND cs.cases_id = :cases_id AND cs.count > cs.count_drop;
+           cd.uuid = :uuid AND cs.cases_id = :cases_id
+        GROUP BY s.id, cd.id, cs.id, w.localized_tag_name, r.localized_tag_name, c.price;
         ');
         $stmt->bindParam('cases_id', $casesId, \PDO::PARAM_INT);
         $stmt->bindParam('uuid', $domainId, \PDO::PARAM_STR);

@@ -12,12 +12,13 @@ class AdminCasesController extends FOSRestController
 {
     /**
      * @param Request $request
+     * @param $casesId
      *
-     * @Rest\Get("/admin/cases/show-list-skins")
+     * @Rest\Get("/admin/cases/show-list-skins/{casesId}", requirements={"casesId": "\d+"})
      * @Rest\View()
      * @return Response
      */
-    public function getShowListSkinsAction(Request $request)
+    public function getShowListSkinsAction(Request $request, $casesId = null)
     {
         $form = $this->createForm(CasesFormFilterType::class);
         $form->handleRequest($request);
@@ -29,7 +30,7 @@ class AdminCasesController extends FOSRestController
 
         $listCasesSkins = $this->get('admin.service.cases_list')
             ->getList(
-                $request->query->getInt('casesId', null),
+                $casesId,
                 $request->query->getInt('offset', 0),
                 $request->query->getInt('limit', 18),
                 $filters

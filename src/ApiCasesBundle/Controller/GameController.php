@@ -41,7 +41,7 @@ class GameController extends FOSRestController
 //            return $this->handleView($view);
 //        }
 
-        try {
+//        try {
             $case = $this->get('api_cases.service.case_open')
                 ->handler($domainId, $casesId, $this->getUser()->getId(), $currency->getId());
 
@@ -50,10 +50,10 @@ class GameController extends FOSRestController
             }
 
             $view = $this->view($case, 200);
-        } catch (\Exception $e) {
-            $this->get('logger')->error($e->getMessage());
-            $view = $this->view('Bad request', 400);
-        }
+//        } catch (\Exception $e) {
+//            $this->get('logger')->error($e->getMessage());
+//            $view = $this->view('Bad request', 400);
+//        }
 
         return $this->handleView($view);
     }

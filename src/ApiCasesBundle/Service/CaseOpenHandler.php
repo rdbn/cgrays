@@ -97,12 +97,6 @@ class CaseOpenHandler
                     $userId, $currencyId, $skins['cases_domain_id']
                 );
 
-            $this->dbal->update(
-                'cases_skins',
-                ['count_drop' => $skins['count_drop'] + 1],
-                ['id' => $skins['cases_skins_id']]
-            );
-
             $balance = (int) $casesBalanceUser['balance'] - (int) $skins['cases_price'];
             $this->dbal->update(
                 'cases_balance_user',
@@ -131,7 +125,7 @@ class CaseOpenHandler
             'skins_id' => $skins['id'],
             'cases_domain_id' => $skins['cases_domain_id'],
         ]);
-        unset($skins['id'], $skins['cases_skins_id'], $skins['count_drop'], $skins['count']);
+        unset($skins['id'], $skins['cases_skins_id'], $skins['procent_rarity'], $skins['procent_skins']);
 
         return [
             'weapon_name' => $skins['weapon'],
