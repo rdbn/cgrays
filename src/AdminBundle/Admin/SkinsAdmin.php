@@ -61,6 +61,7 @@ class SkinsAdmin extends AbstractAdmin
     {
         $filter
             ->add('name')
+            ->add('rarity')
             ->add('quality')
             ->add('weapon')
             ->add('typeSkins')
