@@ -1,5 +1,5 @@
 var FilterCases = function () {
-    var url = '/api/admin/cases/show-list-skins';
+    var url = '/app_dev.php/api/admin/cases/show-list-skins';
 
     var showSkins = function (element, elementLoader, data) {
         var
@@ -15,7 +15,7 @@ var FilterCases = function () {
         elementCasesList.html('');
 
         $.ajax({
-            url: url + '/' + casesId,
+            url: url + (casesId ? '/' + casesId : ''),
             method: "GET",
             data: data,
             statusCode: {
