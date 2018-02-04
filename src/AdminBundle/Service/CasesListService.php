@@ -64,7 +64,7 @@ class CasesListService
             $listSkins[$index] = [
                 'id' => $casesId,
                 'skins_id' => $skinsId,
-                'name' => $skin->getName(),
+                'name' => mb_strimwidth($skin->getName(), 0, 25, '...', 'utf-8'),
                 'icon_url' => $skin->getIconUrl(),
                 'rarity_id' => $skin->getRarity()->getId(),
                 'is_skins_case' => 0,
