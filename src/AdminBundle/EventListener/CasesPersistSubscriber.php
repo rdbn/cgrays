@@ -39,9 +39,13 @@ class CasesPersistSubscriber implements EventSubscriber
             return;
         }
 
-        $sort = $this->getNormalizeArray($cases->getSort());
-
         $om = $args->getObjectManager();
+        $sort = $this->getNormalizeArray($cases);
+        if (empty($sort['rarity_ids']) || empty($sort['skins_ids'])) {
+            $om->flush();
+            return;
+        }
+
         $this->addCasesSkins($om, $cases, $sort);
         $om->flush();
     }
@@ -57,9 +61,14 @@ class CasesPersistSubscriber implements EventSubscriber
             return;
         }
 
-        $sort = $this->getNormalizeArray($cases->getSort());
-
         $om = $args->getObjectManager();
+        $sort = $this->getNormalizeArray($cases);
+        if (empty($sort['rarity_ids']) || empty($sort['skins_ids'])) {
+            $om->flush();
+
+            return;
+        }
+
         $casesSkins = $cases->getCasesSkins();
         foreach ($casesSkins as $casesSkin) {
             /* @var CasesSkins $casesSkin */
@@ -83,20 +92,37 @@ class CasesPersistSubscriber implements EventSubscriber
     }
 
     /**
-     * @param $sort
+     * @param Cases $cases
      * @return array
      */
-    private function getNormalizeArray($sort)
+    private function getNormalizeArray(Cases $cases)
     {
         $skinsIds = [];
         $rarityIds = [];
-        $sort = json_decode($sort, 1);
+        $sort = json_decode($cases->getSort(), 1);
+        if (!count($sort)) {
+            return [
+                'skins_ids' => [],
+                'rarity_ids' => [],
+            ];
+        }
+
         foreach ($sort as $rarityId => $item) {
             $rarityIds[$rarityId] = $item['rarity'];
 
-            foreach ($item['skins'] as $skinId => $skinProcent) {
-                $skinsIds[$skinId] = $skinProcent;
+            if (isset($item['skins'])) {
+                foreach ($item['skins'] as $skinId => $skinProcent) {
+                    $skinsIds[$skinId] = $skinProcent;
+                }
+            } else {
+                unset($sort[$rarityId]);
             }
+        }
+
+        if (!count($sort)) {
+            $cases->setSort('');
+        } else {
+            $cases->setSort(json_encode($sort));
         }
 
         return [
