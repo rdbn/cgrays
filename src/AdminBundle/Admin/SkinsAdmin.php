@@ -11,12 +11,14 @@ namespace AdminBundle\Admin;
 use AppBundle\Entity\Skins;
 use AppBundle\Entity\SkinsPrice;
 use AppBundle\Entity\User;
+use Ivory\CKEditorBundle\Form\Type\CKEditorType;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\DoctrineORMAdminBundle\Datagrid\ProxyQuery;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 
 class SkinsAdmin extends AbstractAdmin
 {
@@ -34,19 +36,22 @@ class SkinsAdmin extends AbstractAdmin
 
     protected function configureFormFields(FormMapper $form)
     {
+        /* @var Skins $skins */
+        $skins = $this->getSubject();
+
         $form
-            ->add('users', 'sonata_type_model_autocomplete', [
-                'property' => 'username'
-            ])
-            ->add('skins', 'sonata_type_model_autocomplete', [
-                'property' => 'name'
-            ])
-            ->add('classId')
-            ->add('assetId')
-            ->add('instanceId')
-            ->add('price')
-            ->add('isSell')
-            ->add('isRemove');
+            ->add('name')
+            ->add('description', CKEditorType::class)
+            ->add('steamPrice')
+            ->add('typeSkins')
+            ->add('decor')
+            ->add('itemSet')
+            ->add('weapon')
+            ->add('rarity')
+            ->add('quality')
+            ->add('file', FileType::class, [
+                'help' => "<img src='/{$skins->getIconUrlLarge()}' alt='{$skins->getName()}' />"
+            ]);
     }
 
     /**
@@ -78,10 +83,33 @@ class SkinsAdmin extends AbstractAdmin
             ->add('decor')
             ->add('icon_url', 'string', [
                 'template' => 'CRUD/list__icon_url.html.twig'
-            ])
-            ->add('createdAt', 'date', [
-                'format' => 'Y-m-d H:i:s',
             ]);
+    }
+
+    /**
+     * @param Skins $object
+     */
+    public function prePersist($object)
+    {
+        $this->manageFileUpload($object);
+    }
+
+    /**
+     * @param Skins $object
+     */
+    public function preUpdate($object)
+    {
+        $this->manageFileUpload($object);
+    }
+
+    /**
+     * @param Skins $object
+     */
+    private function manageFileUpload($object)
+    {
+        if ($object->getFile()) {
+            $object->upload();
+        }
     }
 
     /**

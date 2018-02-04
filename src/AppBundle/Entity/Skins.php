@@ -12,6 +12,7 @@ use AppBundle\AppBundle;
 use AppBundle\Services\UploadImageService;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * @ORM\Entity(repositoryClass="AppBundle\Repository\SkinsRepository")
@@ -102,6 +103,11 @@ class Skins
      */
     protected $casesSkinsDropUser;
 
+    /**
+     * Unmapped property to handle file uploads
+     */
+    private $file;
+
     public function __construct()
     {
         $this->steamPrice = 0;
@@ -113,6 +119,51 @@ class Skins
     public function __toString()
     {
         return $this->name;
+    }
+
+    /**
+     * Sets file.
+     *
+     * @param UploadedFile $file
+     */
+    public function setFile(UploadedFile $file = null)
+    {
+        $this->file = $file;
+    }
+
+    /**
+     * Get file.
+     *
+     * @return UploadedFile
+     */
+    public function getFile()
+    {
+        return $this->file;
+    }
+
+    /**
+     * Manages the copying of the file to the relevant place on the server
+     */
+    public function upload()
+    {
+        if (null === $this->getFile()) {
+            return;
+        }
+
+        if ($this->getIconUrlLarge()) {
+            $filename = __DIR__ . "/../../../web{$this->getIconUrlLarge()}";
+            if (file_exists($filename)) {
+                unlink($filename);
+            }
+        }
+
+        $uploadDir = UploadImageService::UPLOAD_IMAGE_PATH;
+        $nameImage = $uploadDir.md5(uniqid(time(), true)).'.png';
+        $this->getFile()->move($uploadDir, $nameImage);
+
+        $this->setIconUrl($nameImage);
+        $this->setIconUrlLarge($nameImage);
+        $this->setFile(null);
     }
 
     /**
