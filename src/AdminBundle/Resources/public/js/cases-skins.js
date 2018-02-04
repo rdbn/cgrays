@@ -1,12 +1,16 @@
 var FilterCases = function () {
-    var url = '/api/admin/cases/show-list-skins';
+    var url = '/app_dev.php/api/admin/cases/show-list-skins';
 
     var showSkins = function (element, elementLoader, data) {
         var
+            sort = {},
             elementCasesList = $('#cases-list'),
             casesId = $('#chapter-cases').attr('data-cases-id'),
-            sortVal = $('#cases_form_sort'),
+            sortVal = $('#cases_form_sort');
+
+        if (sortVal.val().length > 0) {
             sort = JSON.parse(sortVal.val());
+        }
 
         elementCasesList.html('');
 
@@ -23,8 +27,12 @@ var FilterCases = function () {
 
                         if (item['is_skins_case']) {
                             isSkinsCase = 'check-skins';
-                        } else if (sort[item['rarity_id']]['skins'][item['skins_id']] !== undefined) {
-                            isSkinsCase = 'check-skins';
+                        } else if (sort[item['rarity_id']] !== undefined) {
+                            if (sort[item['rarity_id']]['skins'] !== undefined) {
+                                if (sort[item['rarity_id']]['skins'][item['skins_id']] !== undefined) {
+                                    isSkinsCase = 'check-skins';
+                                }
+                            }
                         }
 
                         html += '<div id="skins-check-'+item['skins_id']+'" class="col-lg-2">';
