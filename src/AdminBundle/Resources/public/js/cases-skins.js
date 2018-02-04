@@ -23,7 +23,7 @@ var FilterCases = function () {
 
                         if (item['is_skins_case']) {
                             isSkinsCase = 'check-skins';
-                        } else if (sort[item['rarity_id']][item['skins_id']] !== undefined) {
+                        } else if (sort[item['rarity_id']]['skins'][item['skins_id']] !== undefined) {
                             isSkinsCase = 'check-skins';
                         }
 
