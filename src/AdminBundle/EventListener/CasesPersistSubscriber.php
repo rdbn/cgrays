@@ -110,7 +110,7 @@ class CasesPersistSubscriber implements EventSubscriber
         foreach ($sort as $rarityId => $item) {
             $rarityIds[$rarityId] = $item['rarity'];
 
-            if (isset($item['skins'])) {
+            if (isset($item['skins']) && !empty($item['skins']) && $item['rarity'] > 0) {
                 foreach ($item['skins'] as $skinId => $skinProcent) {
                     $skinsIds[$skinId] = $skinProcent;
                 }
