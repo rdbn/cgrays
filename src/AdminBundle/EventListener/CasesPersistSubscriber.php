@@ -39,7 +39,7 @@ class CasesPersistSubscriber implements EventSubscriber
             return;
         }
 
-        $sort = json_decode($cases->getSort(), 1);
+        $sort = $this->getNormalizeArray($cases->getSort());
 
         $om = $args->getObjectManager();
         $this->addCasesSkins($om, $cases, $sort);
@@ -57,7 +57,7 @@ class CasesPersistSubscriber implements EventSubscriber
             return;
         }
 
-        $sort = json_decode($cases->getSort(), 1);
+        $sort = $this->getNormalizeArray($cases->getSort());
 
         $om = $args->getObjectManager();
         $casesSkins = $cases->getCasesSkins();
@@ -65,20 +65,44 @@ class CasesPersistSubscriber implements EventSubscriber
             /* @var CasesSkins $casesSkin */
             $skinId = $casesSkin->getSkins()->getId();
             $rarityId = $casesSkin->getSkins()->getRarity()->getId();
-            if (isset($sort[$rarityId])) {
-                $casesSkin->setProcentRarity($sort[$rarityId]['rarity']);
-                $casesSkin->setProcentSkins($sort[$rarityId]['skins'][$skinId]);
-                unset($sort[$rarityId]);
+
+            if (isset($sort['skins_ids'][$skinId])) {
+                $casesSkin->setProcentRarity($sort['rarity_ids'][$rarityId]);
+                $casesSkin->setProcentSkins($sort['skins_ids'][$skinId]);
+                unset($sort['skins_ids'][$skinId]);
             } else {
                 $om->remove($casesSkin);
             }
         }
 
-        if (count($sort) > 0) {
+        if (count($sort['skins_ids']) > 0) {
             $this->addCasesSkins($om, $cases, $sort);
         }
 
         $om->flush();
+    }
+
+    /**
+     * @param $sort
+     * @return array
+     */
+    private function getNormalizeArray($sort)
+    {
+        $skinsIds = [];
+        $rarityIds = [];
+        $sort = json_decode($sort, 1);
+        foreach ($sort as $rarityId => $item) {
+            $rarityIds[$rarityId] = $item['rarity'];
+
+            foreach ($item['skins'] as $skinId => $skinProcent) {
+                $skinsIds[$skinId] = $skinProcent;
+            }
+        }
+
+        return [
+            'skins_ids' => $skinsIds,
+            'rarity_ids' => $rarityIds,
+        ];
     }
 
     /**
@@ -88,19 +112,7 @@ class CasesPersistSubscriber implements EventSubscriber
      */
     private function addCasesSkins(ObjectManager $om, Cases $cases, $sort)
     {
-        $skinsIds = [];
-        foreach ($sort as $item) {
-            if (isset($item['skins'])) {
-                foreach (array_keys($item['skins']) as $key) {
-                    $skinsIds[] = $key;
-                }
-            }
-        }
-
-        if (!count($skinsIds)) {
-            return;
-        }
-
+        $skinsIds = array_keys($sort['skins_ids']);
         $skins = $om->getRepository(Skins::class)
             ->findSkinsByIds(implode(",", $skinsIds));
 
@@ -111,8 +123,8 @@ class CasesPersistSubscriber implements EventSubscriber
             $casesSkins = new CasesSkins();
             $casesSkins->setSkins($skin);
             $casesSkins->setCases($cases);
-            $casesSkins->setProcentRarity($sort[$rarityId]['rarity']);
-            $casesSkins->setProcentSkins($sort[$rarityId]['skins'][$skin->getId()]);
+            $casesSkins->setProcentRarity($sort['rarity_ids'][$rarityId]);
+            $casesSkins->setProcentSkins($sort['skins_ids'][$skin->getId()]);
 
             $om->persist($casesSkins);
         }

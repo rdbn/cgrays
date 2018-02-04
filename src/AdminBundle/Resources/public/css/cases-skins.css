@@ -5,3 +5,7 @@
 .top20 {
     margin-top: 20px;
 }
+
+#cases-list .skins img {
+    height: 150px;
+}
