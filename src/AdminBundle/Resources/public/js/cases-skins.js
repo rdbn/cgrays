@@ -1,5 +1,5 @@
 var FilterCases = function () {
-    var url = '/app_dev.php/api/admin/cases/show-list-skins';
+    var url = '/api/admin/cases/show-list-skins';
 
     var showSkins = function (element, elementLoader, data) {
         var
