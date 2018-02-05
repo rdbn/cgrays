@@ -19,27 +19,19 @@ class PaymentController extends FOSRestController
      */
     public function postPaymentAction(Request $request)
     {
-        $this->get('logger')->error(json_encode($request->request->all()));
+        $paymentInformation = $request->request->all();
+        $domainId = $request->headers->get('x-domain-id');
 
+        try {
+            $this->get('api_cases.service.payment_handler')
+                ->handle($domainId, $paymentInformation['label'], $paymentInformation['amount']);
+        } catch (\Exception $e) {
+            $this->get('logger')->error(json_encode($paymentInformation));
+            $this->get('logger')->error($e->getMessage());
 
-//        $form = $this->createForm(PaymentTypeForm::class);
-//        $form->handleRequest($request);
-//
-//        $isPayment = $this->get('app.service.payment.pay_in_out')
-//            ->handler($form, $this->getUser(), 'in');
-//
-//        if ($isPayment && $skinsPriceId) {
-//            return $this->redirectToRoute('app.skins_trade.fast_trade', ['skinsPriceId' => $skinsPriceId]);
-//        }
-//
-//        if ($isPayment) {
-//            return $this->redirectToRoute('app.skins.main');
-//        }
-
-//        return $this->render(':default:payment.html.twig', [
-//            'skinsPriceId' => $skinsPriceId,
-//            'form' => $form->createView(),
-//        ]);
+            $view = $this->view("Bad request", 200);
+            return $this->handleView($view);
+        }
 
         $view = $this->view("success", 200);
         return $this->handleView($view);

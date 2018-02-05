@@ -42,3 +42,10 @@ services:
         arguments: ['@validator']
         tags:
             - { name: kernel.event_listener, event: kernel.request }
+
+    api_cases.service.payment_handler:
+        class: ApiCasesBundle\Service\PaymentHandler
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@doctrine.dbal.default_connection'
+            - '@logger'
