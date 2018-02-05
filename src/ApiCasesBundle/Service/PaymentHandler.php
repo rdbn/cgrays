@@ -9,6 +9,7 @@
 namespace ApiCasesBundle\Service;
 
 use AppBundle\Entity\CasesBalanceUser;
+use AppBundle\Entity\CasesDomain;
 use AppBundle\Entity\Currency;
 use AppBundle\Entity\User;
 use Doctrine\DBAL\Connection;
@@ -50,11 +51,19 @@ class PaymentHandler
      * @param $domainId
      * @param $steamId
      * @param $amount
+     * @param $paymentInformation
      * @throws \Doctrine\DBAL\ConnectionException
      * @throws \Exception
      */
-    public function handle($domainId, $steamId, $amount)
+    public function handle($domainId, $steamId, $amount, $paymentInformation)
     {
+        $domainId = $this->em->getRepository(CasesDomain::class)
+            ->findOneBy(['uuid' => $domainId]);
+
+        if (!$domainId) {
+            throw new \Exception("Not found domain by domain id {$domainId}.");
+        }
+
         $user = $this->em->getRepository(User::class)
             ->findOneBy(['steamId' => $steamId]);
 
@@ -69,13 +78,21 @@ class PaymentHandler
             throw new \Exception("Not found currency by RUB.");
         }
 
+        $date = new \DateTime();
+
         $this->dbal->beginTransaction();
         try {
             $casesBalanceUser = $this->em->getRepository(CasesBalanceUser::class)
-                ->findUserBalanceForUpdateByUserIdCurrencyIdDomain($user->getId(), 1, $domainId);
+                ->findUserBalanceForUpdateByUserIdCurrencyIdDomain($user->getId(), 1, $domainId->getId());
 
             $balance = $casesBalanceUser['balance'] + $amount;
             $this->dbal->update('cases_balance_user', ['balance' => $balance], ['id' => $casesBalanceUser['id']]);
+            $this->dbal->insert('payment', [
+                'user_id' => $user->getId(),
+                'currency_id' => $currency->getId(),
+                'payment_information' => json_encode($paymentInformation),
+                'created_at' => $date->format('Y-m-d H:i:s'),
+            ]);
 
             $this->dbal->commit();
         } catch (DBALException $e) {
