@@ -50,12 +50,11 @@ class PaymentHandler
     /**
      * @param $domainId
      * @param $steamId
-     * @param $amount
      * @param $paymentInformation
      * @throws \Doctrine\DBAL\ConnectionException
      * @throws \Exception
      */
-    public function handle($domainId, $steamId, $amount, $paymentInformation)
+    public function handle($domainId, $steamId, $paymentInformation)
     {
         $domainId = $this->em->getRepository(CasesDomain::class)
             ->findOneBy(['uuid' => $domainId]);
@@ -85,7 +84,7 @@ class PaymentHandler
             $casesBalanceUser = $this->em->getRepository(CasesBalanceUser::class)
                 ->findUserBalanceForUpdateByUserIdCurrencyIdDomain($user->getId(), 1, $domainId->getId());
 
-            $balance = $casesBalanceUser['balance'] + $amount;
+            $balance = $casesBalanceUser['balance'] + $paymentInformation['withdraw_amount'];
             $this->dbal->update('cases_balance_user', ['balance' => $balance], ['id' => $casesBalanceUser['id']]);
             $this->dbal->insert('payment', [
                 'user_id' => $user->getId(),

@@ -24,7 +24,7 @@ class PaymentController extends FOSRestController
 
         try {
             $this->get('api_cases.service.payment_handler')
-                ->handle($domainId, $paymentInformation['label'], $paymentInformation['amount'], $paymentInformation);
+                ->handle($domainId, $paymentInformation['label'], $paymentInformation);
 
             $view = $this->view("success", 200);
         } catch (\Exception $e) {
