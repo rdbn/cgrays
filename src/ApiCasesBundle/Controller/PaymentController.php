@@ -19,9 +19,7 @@ class PaymentController extends FOSRestController
      */
     public function postPaymentAction(Request $request)
     {
-        $this->get('logger')->error(implode(",", $request->query->all()));
-        $this->get('logger')->error(implode(",", $request->request->all()));
-        $this->get('logger')->error(implode(",", $request->headers->all()));
+        $this->get('logger')->error(json_encode($request->request->all()));
 
 
 //        $form = $this->createForm(PaymentTypeForm::class);
