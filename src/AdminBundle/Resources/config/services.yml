@@ -5,6 +5,12 @@ services:
         tags:
             - { name: sonata.admin, manager_type: orm, group: Финансы, label: Валюты, show_mosaic_button: false }
 
+    admin.admin.payment:
+        class: AdminBundle\Admin\PaymentAdmin
+        arguments: [~, AppBundle\Entity\Payment, ~]
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: Финансы, label: Информация о платежах, show_mosaic_button: false }
+
     admin.admin.news:
         class: AdminBundle\Admin\NewsAdmin
         arguments: [~, AppBundle\Entity\News, ~]
