@@ -15,6 +15,7 @@ use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Route\RouteCollection;
+use Sonata\AdminBundle\Show\ShowMapper;
 use Sonata\DoctrineORMAdminBundle\Datagrid\ProxyQuery;
 
 class PaymentAdmin extends AbstractAdmin
@@ -32,13 +33,27 @@ class PaymentAdmin extends AbstractAdmin
     ];
 
     /**
+     * @param ShowMapper $showMapper
+     */
+    protected function configureShowFields(ShowMapper $showMapper)
+    {
+        $showMapper
+            ->add('id')
+            ->add('user.steamId')
+            ->add('user.username')
+            ->add('currency.code')
+            ->add('paymentInformation')
+            ->add('createdAt');
+    }
+
+    /**
      * @param DatagridMapper $filter
      */
     protected function configureDatagridFilters(DatagridMapper $filter)
     {
         $filter
             ->add('user', 'doctrine_orm_model_autocomplete', [], null, [
-                'property' => 'steamId'
+                'property' => 'username'
             ])
             ->add('createdAt');
     }
@@ -49,9 +64,15 @@ class PaymentAdmin extends AbstractAdmin
     protected function configureListFields(ListMapper $list)
     {
         $list
-            ->addIdentifier('id')
+            ->add('id')
             ->add('user.steamId')
-            ->add('currency.code');
+            ->add('user.username')
+            ->add('currency.code')
+            ->add('_action', null, [
+                'actions' => [
+                    'show' => [],
+                ],
+            ]);
     }
 
     /**
