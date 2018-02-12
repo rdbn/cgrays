@@ -5,6 +5,7 @@ namespace ApiCasesBundle\Controller;
 use AppBundle\Entity\Cases;
 use AppBundle\Entity\CasesSkins;
 use AppBundle\Entity\CasesCategory;
+use AppBundle\Services\Helper\MbStrimWidthHelper;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\FOSRestController;
 use Symfony\Component\HttpFoundation\Request;
@@ -74,10 +75,11 @@ class CasesController extends FOSRestController
             /* @var CasesSkins $casesSkin */
             $skins['skins'][$key] = [
                 'id' => $casesSkin->getSkins()->getId(),
-                'skin_name' => mb_strimwidth($casesSkin->getSkins()->getName(), 0, 15, '...', 'utf-8'),
+                'skin_name' => MbStrimWidthHelper::strimWidth($casesSkin->getSkins()->getName()),
                 'steam_image' => "/{$casesSkin->getSkins()->getIconUrl()}",
                 'weapon_name' => $casesSkin->getSkins()->getWeapon()->getLocalizedTagName(),
                 'rarity' => $casesSkin->getSkins()->getRarity()->getLocalizedTagName(),
+                'rarity_id' => $casesSkin->getSkins()->getRarity()->getId(),
             ];
         }
 

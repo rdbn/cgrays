@@ -134,4 +134,18 @@ class UserRepository extends EntityRepository
             return 0;
         }
     }
+
+    /**
+     * @param $userIds
+     * @return array
+     * @throws DBALException
+     */
+    public function findUsersByUserIds($userIds)
+    {
+        $dbal = $this->getEntityManager()->getConnection();
+        $stmt = $dbal->prepare("SELECT u.id as user_id FROM users u WHERE u.id IN ({$userIds})");
+        $stmt->execute();
+
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
 }

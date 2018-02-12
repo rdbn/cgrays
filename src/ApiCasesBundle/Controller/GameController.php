@@ -8,6 +8,7 @@
 
 namespace ApiCasesBundle\Controller;
 
+use AppBundle\Entity\CasesSkinsPickUpUser;
 use AppBundle\Entity\Currency;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\FOSRestController;
@@ -45,10 +46,6 @@ class GameController extends FOSRestController
             $case = $this->get('api_cases.service.case_open')
                 ->handler($domainId, $casesId, $this->getUser()->getId(), $currency->getId());
 
-            if (!count($case)) {
-                throw new \Exception('Case is empty');
-            }
-
             $view = $this->view($case, 200);
 //        } catch (\Exception $e) {
 //            $this->get('logger')->error($e->getMessage());
@@ -83,9 +80,12 @@ class GameController extends FOSRestController
         }
 
         try {
-            $resultGame = json_decode($gameService->getGame($userId), 1);
             $userBalance = $this->get('api_cases.service.cases_user_sell_skins')
-                ->handler($resultGame, (int) $this->getUser()->getId(), $domainId, $currency->getId());
+                ->handler(
+                    json_decode($gameService->getGame($userId), 1),
+                    (int) $this->getUser()->getId(),
+                    $domainId, $currency->getId()
+                );
 
             $gameService->clearGame($userId);
             $view = $this->view(['balance' => $userBalance], 200);
@@ -100,10 +100,13 @@ class GameController extends FOSRestController
     /**
      * @Rest\Post("/game/pick-up/skins")
      * @Rest\View()
+     * @param Request $request
      * @return Response
      */
-    public function postCasesUserPickUpSkinsAction()
+    public function postCasesUserPickUpSkinsAction(Request $request)
     {
+        $domainId = $request->headers->get('x-domain-id');
+
         $userId = $this->getUser()->getId();
         $gameService = $this->get('api_cases.service.games');
         if (!$gameService->checkGameUserId($userId)) {
@@ -112,9 +115,8 @@ class GameController extends FOSRestController
         }
 
         try {
-            $resultGame = json_decode($gameService->getGame($userId), 1);
             $this->get('api_cases.service.cases_user_pick_up_skins')
-                ->handler($resultGame, $userId);
+                ->handler(json_decode($gameService->getGame($userId), 1), $userId, $domainId);
 
             $gameService->clearGame($userId);
             $view = $this->view('success', 200);

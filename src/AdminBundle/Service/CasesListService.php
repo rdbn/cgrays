@@ -10,6 +10,7 @@ namespace AdminBundle\Service;
 
 use AppBundle\Entity\CasesSkins;
 use AppBundle\Entity\Skins;
+use AppBundle\Services\Helper\MbStrimWidthHelper;
 use Doctrine\ORM\EntityManager;
 use Psr\Log\LoggerInterface;
 
@@ -64,7 +65,7 @@ class CasesListService
             $listSkins[$index] = [
                 'id' => $casesId,
                 'skins_id' => $skinsId,
-                'name' => mb_strimwidth($skin->getName(), 0, 25, '...', 'utf-8'),
+                'name' => MbStrimWidthHelper::strimWidth($skin->getName()),
                 'icon_url' => $skin->getIconUrl(),
                 'rarity_id' => $skin->getRarity()->getId(),
                 'is_skins_case' => 0,

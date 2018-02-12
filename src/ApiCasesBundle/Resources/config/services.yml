@@ -13,12 +13,14 @@ services:
         arguments:
             - '@doctrine.orm.entity_manager'
             - '@doctrine.dbal.default_connection'
+            - '@old_sound_rabbit_mq.live_drop_producer'
 
     api_cases.service.cases_user_pick_up_skins:
         class: ApiCasesBundle\Service\CasesUserPickUpSkinsHandler
         arguments:
             - '@doctrine.orm.entity_manager'
             - '@doctrine.dbal.default_connection'
+            - '@old_sound_rabbit_mq.live_drop_producer'
 
     api_cases.service.cases_contract:
         class: ApiCasesBundle\Service\CasesContractHandler

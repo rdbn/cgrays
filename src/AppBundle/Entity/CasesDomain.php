@@ -55,6 +55,19 @@ class CasesDomain
      */
     protected $casesStaticPage;
 
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\CasesSkinsPickUpUser", mappedBy="casesDomain")
+     */
+    protected $casesSkinsPickUpUser;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\CasesSkinsDropUser", mappedBy="casesDomain")
+     */
+    protected $casesSkinsDropUser;
+
+    /**
+     * CasesDomain constructor.
+     */
     public function __construct()
     {
         $this->uuid = GenerateUUID::getUUID();

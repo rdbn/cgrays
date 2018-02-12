@@ -33,6 +33,12 @@ class CasesSkinsDropUser
     protected $skins;
 
     /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CasesDomain", inversedBy="casesSkinsDropUser")
+     * @ORM\JoinColumn(name="cases_domain_id", referencedColumnName="id")
+     */
+    protected $casesDomain;
+
+    /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="casesSkinsDropUser")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
@@ -43,6 +49,9 @@ class CasesSkinsDropUser
      */
     protected $createdAt;
 
+    /**
+     * CasesSkinsDropUser constructor.
+     */
     public function __construct()
     {
         $this->createdAt = new \DateTime();
@@ -104,6 +113,30 @@ class CasesSkinsDropUser
     public function getSkins()
     {
         return $this->skins;
+    }
+
+    /**
+     * Set casesDomain
+     *
+     * @param \AppBundle\Entity\CasesDomain $casesDomain
+     *
+     * @return CasesSkinsDropUser
+     */
+    public function setCasesDomain(\AppBundle\Entity\CasesDomain $casesDomain = null)
+    {
+        $this->casesDomain = $casesDomain;
+
+        return $this;
+    }
+
+    /**
+     * Get casesDomain
+     *
+     * @return \AppBundle\Entity\CasesDomain
+     */
+    public function getCasesDomain()
+    {
+        return $this->casesDomain;
     }
 
     /**

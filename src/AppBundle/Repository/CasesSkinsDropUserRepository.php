@@ -26,6 +26,7 @@ class CasesSkinsDropUserRepository extends EntityRepository
               s.name as skin_name,
               w.localized_tag_name as weapon_name,
               s.icon_url as steam_image,
+              s.rarity_id,
               u.username,
               u.avatar,
               csdu.created_at
@@ -33,9 +34,13 @@ class CasesSkinsDropUserRepository extends EntityRepository
               LEFT JOIN users u ON csdu.user_id = u.id
               LEFT JOIN skins s ON csdu.skins_id = s.id
               LEFT JOIN weapon w ON s.weapon_id = w.id
+              LEFT JOIN cases_domain cd ON csdu.cases_domain_id = cd.id
+            WHERE
+              cd.uuid = :uuid
             ORDER BY csdu.id DESC
             LIMIT 6 OFFSET 0
             ");
+            $stmt->bindParam('uuid', $domainId, \PDO::PARAM_STR);
             $stmt->execute();
 
             return $stmt->fetchAll(\PDO::FETCH_ASSOC);
@@ -52,7 +57,12 @@ class CasesSkinsDropUserRepository extends EntityRepository
     {
         $dbal = $this->getEntityManager()->getConnection();
         try {
-            $stmt = $dbal->prepare("SELECT count(csdu.id) as count_drop_skins FROM cases_skins_drop_user csdu");
+            $stmt = $dbal->prepare("
+            SELECT count(csdu.id) as count_drop_skins FROM cases_skins_drop_user csdu
+              LEFT JOIN cases_domain cd ON csdu.cases_domain_id = cd.id
+            WHERE cd.uuid = :uuid
+            ");
+            $stmt->bindParam('uuid', $domainId, \PDO::PARAM_STR);
             $stmt->execute();
 
             return $stmt->fetchColumn();

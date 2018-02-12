@@ -29,6 +29,32 @@ class CasesSkinsPickUpUserRepository extends EntityRepository
     }
 
     /**
+     * @param $domainId
+     * @param $userId
+     * @return \Doctrine\DBAL\Query\QueryBuilder
+     */
+    public function queryPaginationByDomainIdAndUserId($domainId, $userId)
+    {
+        $dbal = $this->getEntityManager()->getConnection();
+        $qb = $dbal->createQueryBuilder();
+        $qb
+            ->addSelect('s.name as skin_name')
+            ->addSelect('s.icon_url as steam_image')
+            ->addSelect('s.steam_price as price')
+            ->addSelect('s.rarity_id')
+            ->addSelect('w.localized_tag_name as weapon_name')
+            ->from('cases_skins_pick_up_user', 'cspuu')
+            ->leftJoin('cspuu', 'skins', 's', 'cspuu.skins_id = s.id')
+            ->leftJoin('cspuu', 'weapon', 'w', 's.weapon_id = w.id')
+            ->leftJoin('cspuu', 'cases_domain', 'cd', 'cspuu.cases_domain_id = cd.id')
+            ->andWhere($qb->expr()->eq('cspuu.user_id', $userId))
+            ->andWhere($qb->expr()->eq('cd.uuid', "'{$domainId}'"))
+            ->orderBy('cspuu.created_at', 'DESC');
+
+        return $qb;
+    }
+
+    /**
      * @param $userId
      * @param $domainId
      * @return array

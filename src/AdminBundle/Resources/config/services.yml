@@ -62,6 +62,12 @@ services:
         tags:
             - { name: sonata.admin, manager_type: orm, group: Кейсы, label: Пол. информация, show_mosaic_button: false }
 
+    admin.admin.statistic:
+        class: AdminBundle\Admin\StatisticCasesAdmin
+        arguments: [~, AppBundle\Entity\StatisticCases, AdminBundle:StatisticCasesCRUD]
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: Кейсы, label: Cтатистика, show_mosaic_button: false }
+
     admin.admin.rarity:
         class: AdminBundle\Admin\RarityAdmin
         arguments: [~, AppBundle\Entity\Rarity, ~]

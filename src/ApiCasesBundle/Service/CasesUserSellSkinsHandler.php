@@ -11,9 +11,11 @@ namespace ApiCasesBundle\Service;
 use AppBundle\Entity\CasesBalanceUser;
 use AppBundle\Entity\CasesDomain;
 use AppBundle\Entity\Skins;
+use AppBundle\Services\Helper\MbStrimWidthHelper;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManager;
+use OldSound\RabbitMqBundle\RabbitMq\ProducerInterface;
 
 class CasesUserSellSkinsHandler
 {
@@ -28,14 +30,21 @@ class CasesUserSellSkinsHandler
     private $dbal;
 
     /**
+     * @var ProducerInterface
+     */
+    private $producer;
+
+    /**
      * CasesUserSellSkinsHandler constructor.
      * @param EntityManager $em
      * @param Connection $dbal
+     * @param ProducerInterface $producer
      */
-    public function __construct(EntityManager $em, Connection $dbal)
+    public function __construct(EntityManager $em, Connection $dbal, ProducerInterface $producer)
     {
         $this->em = $em;
         $this->dbal = $dbal;
+        $this->producer = $producer;
     }
 
     /**
@@ -69,6 +78,10 @@ class CasesUserSellSkinsHandler
 
             $balance = (int) $skins['steam_price'] + (int) $userBalance['balance'];
             $this->dbal->update('cases_balance_user', ['balance' => $balance], ['id' => $userBalance['id']]);
+
+            $resultGame['skins_name'] = MbStrimWidthHelper::strimWidth($resultGame['skins_name']);
+            unset($resultGame['skins_id'], $resultGame['cases_domain_id']);
+            $this->producer->publish(json_encode($resultGame));
 
             $this->dbal->commit();
         } catch (DBALException $e) {

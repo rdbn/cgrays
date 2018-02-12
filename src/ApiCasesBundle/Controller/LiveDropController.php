@@ -7,6 +7,7 @@ use AppBundle\Entity\CasesSkins;
 use AppBundle\Entity\CasesCategory;
 use AppBundle\Entity\CasesSkinsDropUser;
 use AppBundle\Entity\User;
+use AppBundle\Services\Helper\MbStrimWidthHelper;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\FOSRestController;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,7 +29,7 @@ class LiveDropController extends FOSRestController
             ->findLastSkinsDrop($domainId);
 
         $listSkins = array_map(function ($item) {
-            $item['skin_name'] = mb_strimwidth($item['skin_name'],  0, 15, '...', 'utf-8');
+            $item['skin_name'] = MbStrimWidthHelper::strimWidth($item['skin_name']);
             return $item;
         }, $listSkins);
 

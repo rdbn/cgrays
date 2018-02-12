@@ -1,0 +1,98 @@
+{% extends base_template %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('bundles/admin/css/statistic-cases.css') }}">
+{% endblock %}
+
+{% block list_table %}
+    <section class="content-header">
+        <div class="sticky-wrapper">
+            <nav class="navbar navbar-default">
+                <div class="container-fluid">
+                    <table class="table">
+                    {{ form_start(form, {'attr': {'class': 'form-inline'}}) }}
+                        <tr>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(form.date_from, {'attr': {'class': 'form-control'}}) }}
+                                    {{ form_widget(form.date_to, {'attr': {'class': 'form-control'}}) }}
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(form.group, {'attr': {'class': 'form-control'}}) }}
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                {{ form_widget(form.user, {'attr': {'class': 'form-control'}}) }}
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(form.cases, {'attr': {'class': 'form-control'}}) }}
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(form.cases_category, {'attr': {'class': 'form-control'}}) }}
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(form.cases_domain, {'attr': {'class': 'form-control'}}) }}
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    {{ form_widget(form.skins, {'attr': {'class': 'form-control'}}) }}
+                                </div>
+                            </td>
+                            <td>
+                                <button type="submit" class="btn btn-primary">
+                                    <span class="glyphicon glyphicon-search"></span>
+                                </button>
+                            </td>
+                        </tr>
+                    {{ form_end(form) }}
+                    </table>
+                </div>
+            </nav>
+        </div>
+    </section>
+    <section class="content">
+        <div class="row">
+            <div class="col-xs-12 col-md-12">
+                <div class="box box-primary">
+                    <div class="box-body table-responsive no-padding">
+                        <table class="table table-bordered table-striped sonata-ba-list">
+                            <tr>
+                                <th>Ident</th>
+                                <th>Кол-во переходов</th>
+                                <th>Кол-во открытий</th>
+                                <th>Кол-во взятых себе</th>
+                                <th>Кол-во сумма за проданные</th>
+                            </tr>
+                            <tr>
+                            {% for statistic in statistics %}
+                                <td>{{ statistic.ident }}</td>
+                                <td>{{ statistic.hit_cases }}</td>
+                                <td>{{ statistic.open_cases }}</td>
+                                <td>{{ statistic.pick_up_skins }}</td>
+                                <td>{{ statistic.sell_skins }}</td>
+                            {% endfor %}
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}

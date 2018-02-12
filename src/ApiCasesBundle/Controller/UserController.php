@@ -4,6 +4,7 @@ namespace ApiCasesBundle\Controller;
 
 use AppBundle\Entity\CasesSkinsPickUpUser;
 use AppBundle\Entity\User;
+use AppBundle\Services\Helper\MbStrimWidthHelper;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\FOSRestController;
 use Symfony\Component\HttpFoundation\Request;
@@ -39,13 +40,20 @@ class UserController extends FOSRestController
         $domainId = $request->headers->get('x-domain-id');
 
         $userId = $this->getUser()->getId();
-        $skins = $this->getDoctrine()->getRepository(CasesSkinsPickUpUser::class)
-            ->findSkinsByUserIdAndDomainId($userId, $domainId);
+        $casesSkinsRepository = $this->getDoctrine()->getRepository(CasesSkinsPickUpUser::class);
 
-        $skins = array_map(function ($item) {
-            $item['skin_name'] = mb_strimwidth($item['skin_name'], 0, 15, '...', 'utf-8');
-            return $item;
-        }, $skins);
+        $paginator = $this->get('knp_paginator');
+        $paginations = $paginator->paginate(
+            $casesSkinsRepository->queryPaginationByDomainIdAndUserId($domainId, $userId),
+            $request->query->getInt('page', 1),
+            $request->query->getInt('limit', 18)
+        );
+
+        $skins = [];
+        foreach ($paginations as $pagination) {
+            $pagination['skin_name'] = MbStrimWidthHelper::strimWidth($pagination['skin_name']);
+            $skins[] = $pagination;
+        }
 
         $view = $this->view($skins, 200);
         return $this->handleView($view);

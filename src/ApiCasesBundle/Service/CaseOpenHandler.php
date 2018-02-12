@@ -84,11 +84,10 @@ class CaseOpenHandler
             return [];
         }
 
-        $date = new \DateTime();
+        $skins = $skins[mt_rand(0, (count($skins) - 1))];
 
         $this->dbal->beginTransaction();
         try {
-            $skins = $skins[mt_rand(0, (count($skins) - 1))];
             $this->em->getRepository(CasesSkins::class)
                 ->findCasesSkinsByCasesIdForUpdate($skins['cases_skins_id']);
 
@@ -104,11 +103,13 @@ class CaseOpenHandler
                 ['id' => $casesBalanceUser['id']]
             );
 
+            $date = new \DateTime();
             $this->dbal->insert(
                 'cases_skins_drop_user',
                 [
                     'skins_id' => $skins['id'],
                     'user_id' => $userId,
+                    'cases_domain_id' => $skins['cases_domain_id'],
                     'created_at' => $date->format('Y-m-d H:i:s'),
                 ]
             );
@@ -124,14 +125,20 @@ class CaseOpenHandler
         $this->gamesService->flushRedisGame($userId, [
             'skins_id' => $skins['id'],
             'cases_domain_id' => $skins['cases_domain_id'],
+            'weapon_name' => $skins['weapon'],
+            'skins_name' => $skins['name'],
+            'rarity' => $skins['rarity'],
+            'steam_image' => $skins['icon_url'],
+            'price' => $skins['cases_price'],
+            'balance' => $balance,
         ]);
-        unset($skins['id'], $skins['cases_skins_id'], $skins['procent_rarity'], $skins['procent_skins']);
 
         return [
             'weapon_name' => $skins['weapon'],
             'skin_name' => $skins['name'],
             'rarity' => $skins['rarity'],
             'steam_image' => "/{$skins['icon_url']}",
+            'price' => $skins['cases_price'],
             'balance' => $balance,
         ];
     }
