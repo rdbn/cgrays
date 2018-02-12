@@ -12,6 +12,6 @@ class MbStrimWidthHelper
 {
     public static function strimWidth($str)
     {
-        return mb_strimwidth($str, 0, 20, '...', 'utf-8');
+        return mb_strimwidth($str, 0, 15, '...', 'utf-8');
     }
 }
