@@ -6,7 +6,7 @@
  * Time: 21:43
  */
 
-namespace ProcessingBundle\Statistic;
+namespace ProcessingBundle\Metrics;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;

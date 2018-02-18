@@ -40,6 +40,11 @@ class CaseOpenHandler
     private $gamesService;
 
     /**
+     * @var MetricsEventSender
+     */
+    private $eventSender;
+
+    /**
      * @var LoggerInterface
      */
     private $logger;
@@ -50,6 +55,7 @@ class CaseOpenHandler
      * @param Connection $dbal
      * @param TokenStorageInterface $tokenStorage
      * @param GamesService $gamesService
+     * @param MetricsEventSender $eventSender
      * @param LoggerInterface $logger
      */
     public function __construct(
@@ -57,6 +63,7 @@ class CaseOpenHandler
         Connection $dbal,
         TokenStorageInterface $tokenStorage,
         GamesService $gamesService,
+        MetricsEventSender $eventSender,
         LoggerInterface $logger
     )
     {
@@ -64,6 +71,7 @@ class CaseOpenHandler
         $this->dbal = $dbal;
         $this->user = $tokenStorage->getToken()->getUser();
         $this->gamesService = $gamesService;
+        $this->eventSender = $eventSender;
         $this->logger = $logger;
     }
 
@@ -96,7 +104,11 @@ class CaseOpenHandler
                     $userId, $currencyId, $skins['cases_domain_id']
                 );
 
-            $balance = (int) $casesBalanceUser['balance'] - (int) $skins['cases_price'];
+            $balance = (float) $casesBalanceUser['balance'] - (float) $skins['cases_price'];
+            if ($balance < 0) {
+                throw new \Exception('User money is empty!!');
+            }
+
             $this->dbal->update(
                 'cases_balance_user',
                 ['balance' => $balance],
@@ -124,7 +136,9 @@ class CaseOpenHandler
 
         $this->gamesService->flushRedisGame($userId, [
             'skins_id' => $skins['id'],
+            'cases_id' => $casesId,
             'cases_domain_id' => $skins['cases_domain_id'],
+            'cases_category_id' => $skins['cases_category_id'],
             'weapon_name' => $skins['weapon'],
             'skins_name' => $skins['name'],
             'rarity' => $skins['rarity'],
@@ -133,12 +147,20 @@ class CaseOpenHandler
             'balance' => $balance,
         ]);
 
+        $this->eventSender->sender([
+            'user_id' => $userId,
+            'cases_id' => $casesId,
+            'cases_domain_id' => $skins['cases_domain_id'],
+            'cases_category_id' => $skins['cases_category_id'],
+            'event_type' => 'open',
+        ]);
+
         return [
             'weapon_name' => $skins['weapon'],
             'skin_name' => $skins['name'],
             'rarity' => $skins['rarity'],
             'steam_image' => "/{$skins['icon_url']}",
-            'price' => $skins['cases_price'],
+            'price' => number_format($skins['steam_price'], 2),
             'balance' => $balance,
         ];
     }

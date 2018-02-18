@@ -33,6 +33,10 @@ old_sound_rabbit_mq:
             connection:       default
             exchange_options: {name: 'live_drop', type: fanout}
 
+        metrics_cases:
+            connection:       default
+            exchange_options: {name: 'metrics_cases', type: fanout}
+
     consumers:
         is_online_user:
             connection:       default
@@ -52,6 +56,12 @@ old_sound_rabbit_mq:
             exchange_options: {name: 'parser_skins', type: direct}
             callback:         processing.parser.skins
 
+        metrics_cases:
+            connection:       default
+            queue_options:    {name: 'metrics_cases'}
+            exchange_options: {name: 'metrics_cases', type: fanout}
+            callback:         processing.metrics.cases
+
 services:
     processing.online_user.is_online:
         class: ProcessingBundle\OnlineUser\IsOnlineConsumer
@@ -64,3 +74,7 @@ services:
     processing.parser.skins:
         class: ProcessingBundle\Parser\SkinsConsumer
         arguments: ['@processing.parser.skins_handler', '@processing.parser.error_handler', '@logger']
+
+    processing.metrics.cases:
+        class: ProcessingBundle\Metrics\CasesConsumer
+        arguments: ['@processing.metrics.persister', '@logger']

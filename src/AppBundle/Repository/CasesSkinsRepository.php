@@ -60,6 +60,7 @@ class CasesSkinsRepository extends EntityRepository
           s.id, 
           s.name, 
           s.icon_url, 
+          s.steam_price, 
           cs.id as cases_skins_id, 
           cs.procent_rarity, 
           cs.procent_skins, 
@@ -68,7 +69,8 @@ class CasesSkinsRepository extends EntityRepository
           w.localized_tag_name as weapon,
           r.id as rarity_id,
           r.localized_tag_name as rarity,
-          c.price as cases_price
+          c.price as cases_price,
+          c.cases_category_id
         FROM cases_skins cs
           LEFT JOIN cases c ON cs.cases_id = c.id
           LEFT JOIN cases_domain cd ON c.cases_domain_id = cd.id
@@ -77,7 +79,7 @@ class CasesSkinsRepository extends EntityRepository
           LEFT JOIN rarity r ON r.id = s.rarity_id
         WHERE
            cd.uuid = :uuid AND cs.cases_id = :cases_id
-        GROUP BY s.id, cd.id, cs.id, w.localized_tag_name, r.localized_tag_name, c.price, r.id;
+        GROUP BY s.id, cd.id, cs.id, w.localized_tag_name, r.localized_tag_name, c.price, r.id, c.cases_category_id;
         ');
         $stmt->bindParam('cases_id', $casesId, \PDO::PARAM_INT);
         $stmt->bindParam('uuid', $domainId, \PDO::PARAM_STR);

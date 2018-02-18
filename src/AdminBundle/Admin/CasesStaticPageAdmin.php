@@ -12,6 +12,7 @@ use AppBundle\Entity\CasesDomain;
 use AppBundle\Entity\CasesStaticPage;
 use Ivory\CKEditorBundle\Form\Type\CKEditorType;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
+use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -50,6 +51,14 @@ class CasesStaticPageAdmin extends AbstractAdmin
                     'uiColor' => '#ffffff',
                 ),
             ]);
+    }
+
+    /**
+     * @param DatagridMapper $filter
+     */
+    protected function configureDatagridFilters(DatagridMapper $filter)
+    {
+        $filter->add('typePage');
     }
 
     /**

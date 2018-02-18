@@ -74,7 +74,7 @@ class CasesContractHandler
 
             $this->dbal->update(
                 'cases_balance_user',
-                ['balance' => (int)$casesUserBalance['balance'] + (int) $sum],
+                ['balance' => (float)$casesUserBalance['balance'] + (float) $sum],
                 ['id' => $casesUserBalance['id']]
             );
 

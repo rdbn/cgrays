@@ -12,6 +12,7 @@ use AppBundle\Entity\Cases;
 use AppBundle\Entity\CasesDomain;
 use AppBundle\Entity\CasesSkins;
 use AppBundle\Entity\CasesCategory;
+use AppBundle\Entity\Rarity;
 use AppBundle\Entity\Skins;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
@@ -27,26 +28,35 @@ class LoadCasesData extends AbstractFixture implements OrderedFixtureInterface
         $casesDomains = $manager->getRepository(CasesDomain::class)
             ->findAll();
 
-        foreach ($casesCategories as $key => $casesCategory) {
-            $skins = $manager->getRepository(Skins::class)
-                ->findBy([], [], 5, 0);
+        $rarities = $manager->getRepository(Rarity::class)
+            ->findAll();
 
-            for ($s = 0; $s < 5; $s++) {
-                $cases = new Cases();
-                $cases->setName('Test' . uniqid());
-                $cases->setCasesCategory($casesCategory);
-                $cases->setCasesDomain($casesDomains[$key]);
-                $cases->setPrice(rand(5, 20));
-                $cases->setImage('image/300.png');
+        foreach ($casesDomains as $casesDomain) {
+            foreach ($casesCategories as $key => $casesCategory) {
+                $skins = $manager->getRepository(Skins::class)
+                    ->findBy([], [], 15, 0);
 
-                $sort = [];
-                foreach ($skins as $skin) {
-                    $count = rand(10, 15);
-                    $sort[$skin->getId()] = $count;
+                for ($s = 0; $s < 15; $s++) {
+                    $cases = new Cases();
+                    $cases->setName('Test' . uniqid());
+                    $cases->setCasesCategory($casesCategory);
+                    $cases->setCasesDomain($casesDomain);
+                    $cases->setPrice(rand(5, 20));
+                    $cases->setImage('image/300.png');
+
+                    // {"1":{"rarity":"21","skins":{"6":0}}}
+                    $sort = [];
+                    foreach ($rarities as $rarity) {
+                        $sort[$rarity->getId()]['rarity'] = 21;
+
+                        foreach ($skins as $skin) {
+                            $sort[$rarity->getId()]['skins'][$skin->getId()] = rand(10, 15);
+                        }
+                    }
+                    $cases->setSort(json_encode($sort));
+
+                    $manager->persist($cases);
                 }
-                $cases->setSort(json_encode($sort));
-
-                $manager->persist($cases);
             }
         }
 

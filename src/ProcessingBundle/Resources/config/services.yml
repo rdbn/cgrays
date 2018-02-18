@@ -23,3 +23,7 @@ services:
             - '@old_sound_rabbit_mq.parser_skins_producer'
             - '@steam.api_market'
             - '@logger'
+
+    processing.metrics.persister:
+        class: ProcessingBundle\Metrics\Persister
+        arguments: ["@doctrine.dbal.default_connection", "@logger"]

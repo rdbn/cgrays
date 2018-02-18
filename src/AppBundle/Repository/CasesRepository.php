@@ -38,17 +38,23 @@ class CasesRepository extends EntityRepository
      * @param $domainId
      * @param $casesId
      * @return array
+     * @throws \Doctrine\DBAL\DBALException
      */
     public function findCasesSkinsByDomainIdAndCasesId($domainId, $casesId)
     {
-        $qb = $this->createQueryBuilder('c');
-        $qb
-            ->leftJoin('c.casesDomain', 'cd')
-            ->andWhere('c.id = :cases_id')
-            ->andWhere('cd.uuid = :uuid')
-            ->setParameter('cases_id', $casesId)
-            ->setParameter('uuid', $domainId);
+        $dbal = $this->getEntityManager()->getConnection();
+        $stmt = $dbal->prepare('
+        SELECT 
+          c.id, c.name, c.price, c.image, c.created_at, c.cases_domain_id, c.cases_category_id
+        FROM cases c
+          LEFT JOIN cases_domain cd ON cd.id = c.cases_domain_id
+        WHERE
+          c.id = :id AND cd.uuid = :uuid
+        ');
+        $stmt->bindParam('id', $casesId, \PDO::PARAM_INT);
+        $stmt->bindParam('uuid', $domainId, \PDO::PARAM_STR);
+        $stmt->execute();
 
-        return $qb->getQuery()->getOneOrNullResult();
+        return $stmt->fetch();
     }
 }

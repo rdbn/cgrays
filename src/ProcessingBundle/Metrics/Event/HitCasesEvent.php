@@ -6,15 +6,15 @@
  * Time: 10:34
  */
 
-namespace ProcessingBundle\Statistic;
+namespace ProcessingBundle\Metrics\Event;
 
-class PickUpSkinsEvent
+class HitCasesEvent
 {
     const ODKU_SQL = "
-    INSERT INTO statistic_cases (date_at, user_id, cases_id, cases_domain_id, cases_category_id, pick_up_skins) VALUES (
+    INSERT INTO statistic_cases (date_at, user_id, cases_id, cases_domain_id, cases_category_id, hit_cases) VALUES (
       %s
     ) ON CONFLICT (date_at, user_id, cases_id, cases_domain_id, cases_category_id) DO UPDATE SET
-      pick_up_skins = statistic_cases.pick_up_skins + 1;
+      hit_cases = statistic_cases.hit_cases + 1;
     ";
 
     /**
@@ -23,7 +23,7 @@ class PickUpSkinsEvent
      */
     public static function handle(array $data)
     {
-        $data['pick_up_skins'] = 1;
+        $data['hit_cases'] = 1;
 
         return sprintf(self::ODKU_SQL, implode(",", $data));
     }

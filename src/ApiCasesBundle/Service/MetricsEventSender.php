@@ -11,7 +11,7 @@ namespace ApiCasesBundle\Service;
 use OldSound\RabbitMqBundle\RabbitMq\ProducerInterface;
 use Psr\Log\LoggerInterface;
 
-class StatisticEventSender
+class MetricsEventSender
 {
     /**
      * @var ProducerInterface
@@ -35,10 +35,13 @@ class StatisticEventSender
     }
 
     /**
-     * @param array $statistic
+     * @param array $metrics
      */
-    public function handle(array $statistic)
+    public function sender(array $metrics)
     {
-        $this->producer->publish(json_encode($statistic));
+        $date = date('Y-m-d');
+        array_unshift($metrics, "'{$date}'");
+
+        $this->producer->publish(json_encode($metrics));
     }
 }

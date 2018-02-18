@@ -6,6 +6,7 @@ use AppBundle\Entity\Cases;
 use AppBundle\Entity\CasesSkins;
 use AppBundle\Entity\CasesCategory;
 use AppBundle\Services\Helper\MbStrimWidthHelper;
+use Doctrine\DBAL\DBALException;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\FOSRestController;
 use Symfony\Component\HttpFoundation\Request;
@@ -54,36 +55,47 @@ class CasesController extends FOSRestController
     public function getCaseAction(Request $request, $casesId)
     {
         $domainId = $request->headers->get('x-domain-id');
-        /* @var Cases $case */
-        $case = $this->getDoctrine()->getRepository(Cases::class)
-            ->findCasesSkinsByDomainIdAndCasesId($domainId, $casesId);
+        $em = $this->getDoctrine()->getManager();
+        try {
+            $case = $em->getRepository(Cases::class)
+                ->findCasesSkinsByDomainIdAndCasesId($domainId, $casesId);
+        } catch (DBALException $e) {
+            $this->get('logger')->error($e->getMessage());
+            $case = false;
+        }
 
         if (!$case) {
             $view = $this->view("Not found", 404);
             return $this->handleView($view);
         }
 
-        $skins = [
-            'id' => $case->getId(),
-            'name' => $case->getName(),
-            'price' => $case->getPrice(),
-            'image' => $case->getImage(),
-            'created_at' => $case->getCreatedAt(),
-        ];
+        $case['skins'] = $em->getRepository(CasesSkins::class)
+            ->findSkinsByCasesId($domainId, $casesId);
 
-        foreach ($case->getCasesSkins() as $key => $casesSkin) {
-            /* @var CasesSkins $casesSkin */
-            $skins['skins'][$key] = [
-                'id' => $casesSkin->getSkins()->getId(),
-                'skin_name' => MbStrimWidthHelper::strimWidth($casesSkin->getSkins()->getName()),
-                'steam_image' => "/{$casesSkin->getSkins()->getIconUrl()}",
-                'weapon_name' => $casesSkin->getSkins()->getWeapon()->getLocalizedTagName(),
-                'rarity' => $casesSkin->getSkins()->getRarity()->getLocalizedTagName(),
-                'rarity_id' => $casesSkin->getSkins()->getRarity()->getId(),
+        $case['skins'] = array_map(function ($item) {
+            return [
+                'id' => $item['id'],
+                'skin_name' => MbStrimWidthHelper::strimWidth($item['name']),
+                'steam_image' => "/{$item['icon_url']}",
+                'weapon_name' => $item['weapon'],
+                'rarity' => $item['rarity'],
+                'rarity_id' => $item['rarity_id'],
             ];
+        }, $case['skins']);
+
+        $user = $this->getUser();
+        if ($user) {
+            $this->get('api_cases.service.metrics_event_sender')->sender([
+                'user_id' => $user->getId(),
+                'cases_id' => $casesId,
+                'cases_domain_id' => $case['cases_domain_id'],
+                'cases_category_id' => $case['cases_category_id'],
+                'event_type' => 'hits',
+            ]);
         }
 
-        $view = $this->view($skins, 200);
+        unset($case['cases_domain_id'], $case['cases_category_id']);
+        $view = $this->view($case, 200);
         return $this->handleView($view);
     }
 }

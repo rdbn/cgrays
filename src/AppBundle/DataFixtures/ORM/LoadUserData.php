@@ -57,6 +57,22 @@ class LoadUserData extends AbstractFixture implements OrderedFixtureInterface, F
 
     public function load(ObjectManager $manager)
     {
+        $userEntity = new User();
+        $userEntity->setSteamId('76561198227914060');
+        $userEntity->setUsername('rdbnko');
+        $userEntity->setIsSell(true);
+
+        $encoder = $this->container->get('security.password_encoder');
+        $password = $encoder->encodePassword($userEntity, 'rdbnko');
+        $userEntity->setPassword($password);
+
+        $role = $manager->getRepository(Role::class)
+            ->findOneBy(["role" => 'ROLE_USER']);
+
+        $userEntity->addRole($role);
+
+        $manager->persist($userEntity);
+
         foreach ($this->users as $user) {
             $userEntity = new User();
             $userEntity->setSteamId(rand(10000, 20000));

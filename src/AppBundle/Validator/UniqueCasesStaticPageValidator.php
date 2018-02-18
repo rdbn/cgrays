@@ -11,6 +11,7 @@ namespace AppBundle\Validator;
 use AppBundle\Entity\CasesDomain;
 use AppBundle\Entity\CasesStaticPage;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
@@ -39,8 +40,19 @@ class UniqueCasesStaticPageValidator extends ConstraintValidator
         $typePage = $value->getTypePage();
         $uuid = $value->getCasesDomain()->getUuid();
 
-        $casesDomain = $this->em->getRepository(CasesStaticPage::class)
-            ->findStaticPageByDomainIdAndPageName($typePage, $uuid);
+        try {
+            $casesDomain = $this->em->getRepository(CasesStaticPage::class)
+                ->findStaticPageByDomainIdAndPageName($uuid, $typePage);
+        } catch (NonUniqueResultException $e) {
+            $this->context->buildViolation($constraint->message)
+                ->addViolation();
+
+            return;
+        }
+
+        if ($value->getId() == $casesDomain['id']) {
+            return;
+        }
 
         if (!$casesDomain) {
             $this->context->buildViolation($constraint->message)

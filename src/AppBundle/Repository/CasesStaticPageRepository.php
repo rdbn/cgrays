@@ -16,12 +16,14 @@ class CasesStaticPageRepository extends EntityRepository
      * @param $domainId
      * @param $typePage
      * @return array
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function findStaticPageByDomainIdAndPageName($domainId, $typePage)
     {
         $qb = $this->createQueryBuilder('csp');
         $qb
             ->select('csp.typePage')
+            ->addSelect('csp.id')
             ->addSelect('csp.text')
             ->leftJoin('csp.casesDomain', 'cd')
             ->where('cd.uuid = :domain_id')
@@ -29,6 +31,6 @@ class CasesStaticPageRepository extends EntityRepository
             ->setParameter('domain_id', $domainId)
             ->setParameter('type_page', $typePage);
 
-        return $qb->getQuery()->getArrayResult();
+        return $qb->getQuery()->getOneOrNullResult();
     }
 }

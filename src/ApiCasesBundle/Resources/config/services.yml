@@ -6,6 +6,7 @@ services:
             - '@doctrine.dbal.default_connection'
             - '@security.token_storage'
             - '@api_cases.service.games'
+            - '@api_cases.service.metrics_event_sender'
             - '@logger'
 
     api_cases.service.cases_user_sell_skins:
@@ -14,6 +15,7 @@ services:
             - '@doctrine.orm.entity_manager'
             - '@doctrine.dbal.default_connection'
             - '@old_sound_rabbit_mq.live_drop_producer'
+            - '@api_cases.service.metrics_event_sender'
 
     api_cases.service.cases_user_pick_up_skins:
         class: ApiCasesBundle\Service\CasesUserPickUpSkinsHandler
@@ -21,6 +23,7 @@ services:
             - '@doctrine.orm.entity_manager'
             - '@doctrine.dbal.default_connection'
             - '@old_sound_rabbit_mq.live_drop_producer'
+            - '@api_cases.service.metrics_event_sender'
 
     api_cases.service.cases_contract:
         class: ApiCasesBundle\Service\CasesContractHandler
@@ -50,4 +53,10 @@ services:
         arguments:
             - '@doctrine.orm.entity_manager'
             - '@doctrine.dbal.default_connection'
+            - '@logger'
+
+    api_cases.service.metrics_event_sender:
+        class: ApiCasesBundle\Service\MetricsEventSender
+        arguments:
+            - '@old_sound_rabbit_mq.metrics_cases_producer'
             - '@logger'

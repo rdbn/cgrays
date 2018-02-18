@@ -2,9 +2,11 @@
 
 namespace ApiCasesBundle\Controller;
 
+use AppBundle\Entity\CasesSkinsDropUser;
 use AppBundle\Entity\CasesSkinsPickUpUser;
 use AppBundle\Entity\User;
 use AppBundle\Services\Helper\MbStrimWidthHelper;
+use Doctrine\DBAL\DBALException;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\FOSRestController;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,10 +24,19 @@ class UserController extends FOSRestController
     {
         $domainId = $request->headers->get('x-domain-id');
 
-        $user = $this->getDoctrine()->getRepository(User::class)
+        $em = $this->getDoctrine()->getManager();
+        $user = $em->getRepository(User::class)
             ->findUserInformationByUserIdAndDomainId($this->getUser()->getId(), $domainId);
 
-        $view = $this->view($user, 200);
+        try {
+            $countDropSkins = $em->getRepository(CasesSkinsDropUser::class)
+                ->getCountOpenCasesByDomainIdAndUserId($domainId, $this->getUser()->getId());
+        } catch (DBALException $e) {
+            $this->get('logger')->error($e->getMessage());
+            $countDropSkins = 0;
+        }
+
+        $view = $this->view(['profile' => $user, 'count_drop_skins' => $countDropSkins], 200);
         return $this->handleView($view);
     }
 

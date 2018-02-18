@@ -84,7 +84,7 @@ class PaymentHandler
             $casesBalanceUser = $this->em->getRepository(CasesBalanceUser::class)
                 ->findUserBalanceForUpdateByUserIdCurrencyIdDomain($user->getId(), 1, $domainId->getId());
 
-            $balance = $casesBalanceUser['balance'] + $paymentInformation['withdraw_amount'];
+            $balance = (float) $casesBalanceUser['balance'] + (float) $paymentInformation['withdraw_amount'];
             $this->dbal->update('cases_balance_user', ['balance' => $balance], ['id' => $casesBalanceUser['id']]);
             $this->dbal->insert('payment', [
                 'user_id' => $user->getId(),

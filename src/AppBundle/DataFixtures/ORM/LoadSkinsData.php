@@ -28,33 +28,32 @@ class LoadSkinsData extends AbstractFixture implements OrderedFixtureInterface
         $users = $manager->getRepository(User::class)
             ->findAll();
 
-        for ($i = 0; $i < 30; $i++) {
-            $id = $i + 1;
-            $typeProduct = $manager->getRepository(TypeSkins::class)
-                ->findOneBy(["id" => $id]);
+        $typeProduct = $manager->getRepository(TypeSkins::class)
+            ->findAll();
 
-            $quality = $manager->getRepository(Quality::class)
-                ->findOneBy(["id" => $id]);
+        $quality = $manager->getRepository(Quality::class)
+            ->findAll();
 
-            $rarity = $manager->getRepository(Rarity::class)
-                ->findOneBy(["id" => $id]);
+        $rarity = $manager->getRepository(Rarity::class)
+            ->findAll();
 
-            $itemSet = $manager->getRepository(ItemSet::class)
-                ->findOneBy(["id" => $id]);
+        $itemSet = $manager->getRepository(ItemSet::class)
+            ->findAll();
 
-            $weapon = $manager->getRepository(Weapon::class)
-                ->findOneBy(["id" => $id]);
+        $weapon = $manager->getRepository(Weapon::class)
+            ->findAll();
 
-            $decor = $manager->getRepository(Decor::class)
-                ->findOneBy(["id" => $id]);
+        $decor = $manager->getRepository(Decor::class)
+            ->findAll();
 
+        for ($i = 0; $i < 13; $i++) {
             $skins = new Skins();
-            $skins->setTypeSkins($typeProduct);
-            $skins->setQuality($quality);
-            $skins->setRarity($rarity);
-            $skins->setItemSet($itemSet);
-            $skins->setWeapon($weapon);
-            $skins->setDecor($decor);
+            $skins->setTypeSkins($typeProduct[$i]);
+            $skins->setQuality($quality[$i]);
+            $skins->setRarity($rarity[$i]);
+            $skins->setItemSet($itemSet[$i]);
+            $skins->setWeapon($weapon[$i]);
+            $skins->setDecor($decor[$i]);
             $skins->setName("Product " . uniqid());
             $skins->setIconUrl("image/300.png");
             $skins->setIconUrlLarge("image/300.png");

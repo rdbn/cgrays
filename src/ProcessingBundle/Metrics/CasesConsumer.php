@@ -6,13 +6,17 @@
  * Time: 10:33
  */
 
-namespace ProcessingBundle\Statistic;
+namespace ProcessingBundle\Metrics;
 
 use OldSound\RabbitMqBundle\RabbitMq\ConsumerInterface;
 use PhpAmqpLib\Message\AMQPMessage;
+use ProcessingBundle\Metrics\Event\HitCasesEvent;
+use ProcessingBundle\Metrics\Event\OpenCasesEvent;
+use ProcessingBundle\Metrics\Event\PickUpSkinsEvent;
+use ProcessingBundle\Metrics\Event\SellSkinsEvent;
 use Psr\Log\LoggerInterface;
 
-class StatisticConsumer implements ConsumerInterface
+class CasesConsumer implements ConsumerInterface
 {
     /**
      * @var Persister
@@ -48,30 +52,24 @@ class StatisticConsumer implements ConsumerInterface
         }
 
         try {
-            switch ($parameters['event_type']) {
-                case "hit_cases":
-                    $insertSQL = HitCasesEvent::handle($parameters);
+            $eventType = $parameters['event_type'];
+            unset($parameters['event_type']);
+            switch ($eventType) {
+                case "hits":
+                    $this->persister->persister(HitCasesEvent::handle($parameters));
                     break;
-                case "cases_open":
-                    $insertSQL = OpenCasesEvent::handle($parameters);
+                case "open":
+                    $this->persister->persister(OpenCasesEvent::handle($parameters));
                     break;
                 case "pick_up_skins":
-                    $insertSQL = PickUpSkinsEvent::handle($parameters);
+                    $this->persister->persister(PickUpSkinsEvent::handle($parameters));
                     break;
                 case "sell_skins":
-                    $insertSQL = SellSkinsEvent::handle($parameters);
+                    $this->persister->persister(SellSkinsEvent::handle($parameters));
                     break;
                 default:
-                    throw new \Exception('Not found event.');
+                    throw new \Exception("Not found event {$parameters['event_type']}");
             }
-        } catch (\Exception $e) {
-            $this->logger->error($msg->getBody());
-            $this->logger->error($e->getMessage());
-            return self::MSG_REJECT;
-        }
-
-        try {
-            $this->persister->persister($insertSQL);
         } catch (\Exception $e) {
             $this->logger->error($msg->getBody());
             $this->logger->error($e->getMessage());

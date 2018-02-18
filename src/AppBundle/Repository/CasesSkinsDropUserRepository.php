@@ -70,4 +70,25 @@ class CasesSkinsDropUserRepository extends EntityRepository
             return 0;
         }
     }
+
+    /**
+     * @param $domainId
+     * @param $userId
+     * @return bool|string
+     * @throws \Doctrine\DBAL\DBALException
+     */
+    public function getCountOpenCasesByDomainIdAndUserId($domainId, $userId)
+    {
+        $dbal = $this->getEntityManager()->getConnection();
+        $stmt = $dbal->prepare('
+        SELECT count(csdu.id) as count_drop_skins FROM cases_skins_drop_user csdu
+          LEFT JOIN cases_domain cd ON csdu.cases_domain_id = cd.id
+        WHERE cd.uuid = :uuid AND csdu.user_id = :user_id
+        ');
+        $stmt->bindParam('uuid', $domainId, \PDO::PARAM_STR);
+        $stmt->bindParam('user_id', $userId, \PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetchColumn();
+    }
 }
