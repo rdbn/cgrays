@@ -148,7 +148,11 @@ class SteamListener implements ListenerInterface
 
             $token = $this->JWTManager->create($token->getUser());
 
-            $response = new RedirectResponse("{$casesDomain->getDomain()}/login_check?token={$token}");
+            $response = new RedirectResponse(
+                "{$casesDomain->getDomain()}/login_check?token={$token}",
+                301,
+                ['x-origin-domain-name' => parse_url($casesDomain->getDomain())['host']]
+            );
             $event->setResponse($response);
         }
 
