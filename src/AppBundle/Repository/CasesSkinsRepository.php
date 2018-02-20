@@ -102,6 +102,7 @@ class CasesSkinsRepository extends EntityRepository
         SELECT
           DISTINCT s.id as skins_id,
           s.name as skins_name,
+          s.rarity_id,
           s.icon_url as steam_image,
           cs.created_at,
           w.localized_tag_name as weapon_name
@@ -135,6 +136,7 @@ class CasesSkinsRepository extends EntityRepository
           LEFT JOIN cases c ON cs.cases_id = c.id
           LEFT JOIN cases_domain cd ON c.cases_domain_id = cd.id
         WHERE cd.uuid = :uuid
+        GROUP BY cs.skins_id
         ');
         $stmt->bindParam('uuid', $domainId, \PDO::PARAM_STR);
         $stmt->execute();

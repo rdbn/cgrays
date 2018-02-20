@@ -53,6 +53,8 @@ class LiveDropCommand extends ContainerAwareCommand
             ->findCasesSkinsByDomainId($uuid, $countUsers, rand(0, ($countCasesSkinsDomain - $countUsers)));
 
         $logger->info('Start.');
+        $logger->info("Count user: {$countUsers}");
+        $logger->info("Count skins: {$countCasesSkinsDomain}");
         foreach ($skinsSendLiveDrop as $index => $item) {
             $date = new \DateTime();
             try {
