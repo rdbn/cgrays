@@ -38,7 +38,7 @@ class CasesController extends FOSRestController
             ->findAllCasesDomain($domainId);
 
         $listCases['cases'] = array_map(function ($item) {
-            $item['name'] = mb_strimwidth($item['name'], 0, 17, '...', 'utf-8');
+            $item['name'] = mb_strimwidth($item['name'], 0, 16, '...', 'utf-8');
             return $item;
         }, $cases);
 
