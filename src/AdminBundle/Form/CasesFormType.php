@@ -39,6 +39,9 @@ class CasesFormType extends AbstractType
             ->add('price', TextType::class, [
                 'label' => 'Цена',
             ])
+            ->add('promotionPrice', TextType::class, [
+                'label' => 'Цена по скидки',
+            ])
             ->add('file', FileType::class, [
                 'label' => 'Картинка для кейса',
                 'required' => false,

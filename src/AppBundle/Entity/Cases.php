@@ -49,6 +49,11 @@ class Cases
     protected $price;
 
     /**
+     * @ORM\Column(name="promotion_price", type="decimal", precision=7, scale=2)
+     */
+    protected $promotionPrice;
+
+    /**
      * @ORM\Column(type="string", length=255)
      */
     protected $image;
@@ -179,6 +184,30 @@ class Cases
     public function getPrice()
     {
         return $this->price;
+    }
+
+    /**
+     * Set promotionPrice
+     *
+     * @param string $promotionPrice
+     *
+     * @return Cases
+     */
+    public function setPromotionPrice($promotionPrice)
+    {
+        $this->promotionPrice = $promotionPrice;
+
+        return $this;
+    }
+
+    /**
+     * Get promotionPrice
+     *
+     * @return string
+     */
+    public function getPromotionPrice()
+    {
+        return $this->promotionPrice;
     }
 
     /**

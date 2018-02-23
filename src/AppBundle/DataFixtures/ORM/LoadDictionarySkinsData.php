@@ -80,6 +80,7 @@ class LoadDictionarySkinsData extends AbstractFixture implements OrderedFixtureI
 
             $casesCategory = new CasesCategory();
             $casesCategory->setName('Test' . uniqid());
+            $casesCategory->setSortNumber($i + 1);
 
             $manager->persist($casesCategory);
         }

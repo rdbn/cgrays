@@ -47,6 +47,7 @@ class CasesAdmin extends AbstractAdmin
         $list
             ->addIdentifier('name')
             ->add('price')
+            ->add('promotionPrice')
             ->add('coefficient')
             ->add('image', 'string', [
                 'template' => 'CRUD/list__image.html.twig'

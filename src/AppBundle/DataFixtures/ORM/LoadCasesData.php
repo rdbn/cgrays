@@ -42,6 +42,7 @@ class LoadCasesData extends AbstractFixture implements OrderedFixtureInterface
                     $cases->setCasesCategory($casesCategory);
                     $cases->setCasesDomain($casesDomain);
                     $cases->setPrice(rand(5, 20));
+                    $cases->setPromotionPrice(rand(5, 20));
                     $cases->setImage('image/300.png');
 
                     // {"1":{"rarity":"21","skins":{"6":0}}}

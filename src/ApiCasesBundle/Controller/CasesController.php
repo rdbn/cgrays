@@ -39,6 +39,9 @@ class CasesController extends FOSRestController
 
         $listCases['cases'] = array_map(function ($item) {
             $item['name'] = mb_strimwidth($item['name'], 0, 16, '...', 'utf-8');
+            $item['price'] = round($item['price'], 0);
+            $item['promotion_price'] = round($item['promotion_price'], 0);
+
             return $item;
         }, $cases);
 
