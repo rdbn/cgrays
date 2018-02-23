@@ -52,6 +52,7 @@ class CasesCRUDController extends Controller
     public function editAction($id = null)
     {
         $request = $this->getRequest();
+//        var_dump($request->request->all());die();
         $id = $request->get($this->admin->getIdParameter());
         $this->admin->setFormTabs(['default' => ['groups' => []]]);
 

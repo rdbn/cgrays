@@ -33,6 +33,11 @@ class CasesCategory
     protected $name;
 
     /**
+     * @ORM\Column(name="sort_number", type="smallint")
+     */
+    protected $sortNumber;
+
+    /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Cases", mappedBy="casesCategory")
      */
     protected $cases;
@@ -79,6 +84,30 @@ class CasesCategory
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Set sortNumber
+     *
+     * @param string $sortNumber
+     *
+     * @return CasesCategory
+     */
+    public function setSortNumber($sortNumber)
+    {
+        $this->sortNumber = $sortNumber;
+
+        return $this;
+    }
+
+    /**
+     * Get sortNumber
+     *
+     * @return string
+     */
+    public function getSortNumber()
+    {
+        return $this->sortNumber;
     }
 
     /**

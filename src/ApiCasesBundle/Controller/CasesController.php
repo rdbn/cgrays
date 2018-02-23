@@ -37,7 +37,10 @@ class CasesController extends FOSRestController
         $listCases['category'] = $em->getRepository(CasesCategory::class)
             ->findAllCasesDomain($domainId);
 
-        $listCases['cases'] = $cases;
+        $listCases['cases'] = array_map(function ($item) {
+            $item['name'] = mb_strimwidth($item['name'], 0, 17, '...', 'utf-8');
+            return $item;
+        }, $cases);
 
         $view = $this->view($listCases, 200);
         return $this->handleView($view);

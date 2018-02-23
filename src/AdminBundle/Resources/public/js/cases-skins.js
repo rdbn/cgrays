@@ -111,22 +111,9 @@ $(document).ready(function () {
 
     $('#cases-list').on('click', '.skins', function (e) {
         var
-            sort = {},
             element = $(this),
-            elementSort = $('#cases_form_sort'),
-            sortVal = elementSort.val(),
             skinsId = element.attr('data-skins-id'),
             rarityId = element.attr('data-rarity-id');
-
-        if (sortVal.length > 0) {
-            sort = JSON.parse(sortVal);
-        }
-
-        if (sort.length > 0) {
-            if (sort[rarityId].rarity === undefined) {
-                sort = {};
-            }
-        }
 
         if (element.hasClass('check-skins')) {
             if (e.target.nodeName === 'INPUT') {
@@ -135,26 +122,7 @@ $(document).ready(function () {
 
             element.removeClass('check-skins');
             $('#skins-' + skinsId).remove();
-            delete sort[rarityId]['skins'][skinsId];
-
-            if (sort[rarityId]['skins'].length == 0) {
-                delete sort[rarityId];
-            }
         } else {
-            element.addClass('check-skins');
-            var skins = {};
-            skins[skinsId] = 0;
-
-            if (sort[rarityId] !== undefined) {
-                if (sort[rarityId]['skins'] !== undefined) {
-                    sort[rarityId]['skins'][skinsId] = 0;
-                } else {
-                    sort[rarityId]['skins'] = skins;
-                }
-            } else {
-                sort[rarityId] = {rarity: 0, skins: skins};
-            }
-
             var html = '<div id="skins-'+skinsId+'" class="form-group">';
             html += '<div class="input-group"><span class="input-group-addon">'+element.attr('data-skins-name')+'</span>';
             html += '<input ' +
@@ -173,152 +141,13 @@ $(document).ready(function () {
 
             $('#add-skins-rarity-' + element.attr('data-rarity-id')).append(html);
         }
-
-        elementSort.val(JSON.stringify(sort));
     });
 
     var elemSkinsCheckCases = $('.skins-check-cases');
     elemSkinsCheckCases.on('click', '.remove-skins-rarity', function () {
-        var
-            skinsId = $(this).attr('data-skins-id'),
-            rarityId = $(this).attr('data-rarity-id'),
-            elementSort = $('#cases_form_sort'),
-            sort = JSON.parse(elementSort.val());
-
-        console.log(skinsId, rarityId);
-        delete sort[rarityId]['skins'][skinsId];
-        if (sort[rarityId]['skins'].length == 0) {
-            delete sort[rarityId];
-        }
-
-        elementSort.val(JSON.stringify(sort));
+        var skinsId = $(this).attr('data-skins-id');
 
         $('#skins-' + skinsId).remove();
         $('#skins-check-' + skinsId + ' .skins').removeClass('check-skins');
-    });
-
-    elemSkinsCheckCases.on('keyup', '.skins-procent', function () {
-        var
-            sort = {},
-            skins = {},
-            element = $(this),
-            elementSort = $('#cases_form_sort'),
-            skinsId = element.attr('data-skins-id'),
-            rarityId = element.attr('data-rarity-id'),
-            sortVal = elementSort.val();
-
-        if (sortVal.length > 0) {
-            sort = JSON.parse(elementSort.val())
-        }
-
-        if (sort[rarityId] !== undefined) {
-            if (sort[rarityId].skins === undefined && sort[rarityId].rarity === undefined) {
-                delete sort[rarityId];
-            }
-        }
-
-        if (sort[rarityId] !== undefined) {
-            if (sort[rarityId]['skins'] !== undefined) {
-                sort[rarityId]['skins'][skinsId] = element.val();
-            } else {
-                skins[skinsId] = element.val();
-                sort[rarityId].skins = skins;
-            }
-        } else {
-            skins[skinsId] = element.val();
-            sort[rarityId] = {skins: skins};
-        }
-
-        elementSort.val(JSON.stringify(sort));
-    });
-
-    elemSkinsCheckCases.on('keydown', '.skins-procent', function () {
-        var
-            sort = {},
-            skins = {},
-            element = $(this),
-            elementSort = $('#cases_form_sort'),
-            skinsId = element.attr('data-skins-id'),
-            rarityId = element.attr('data-rarity-id'),
-            sortVal = elementSort.val();
-
-        if (sortVal.length > 0) {
-            sort = JSON.parse(elementSort.val())
-        }
-
-        if (sort[rarityId] !== undefined) {
-            if (sort[rarityId].skins === undefined && sort[rarityId].rarity === undefined) {
-                delete sort[rarityId];
-            }
-        }
-
-        if (sort[rarityId] !== undefined) {
-            if (sort[rarityId]['skins'] !== undefined) {
-                sort[rarityId]['skins'][skinsId] = element.val();
-            } else {
-                skins[skinsId] = element.val();
-                sort[rarityId].skins = skins;
-            }
-        } else {
-            skins[skinsId] = element.val();
-            sort[rarityId] = {skins: skins};
-        }
-
-        elementSort.val(JSON.stringify(sort));
-    });
-
-    var elemRarityProcentValue = $('.rarity-procent-value');
-    elemRarityProcentValue.keyup(function () {
-        var
-            sort = {},
-            element = $(this),
-            rarityId = element.attr('data-rarity-id'),
-            elementSort = $('#cases_form_sort'),
-            sortVal = elementSort.val();
-
-        if (sortVal.length > 0) {
-            sort = JSON.parse(elementSort.val())
-        }
-
-        if (sort[rarityId] !== undefined) {
-            if (sort[rarityId].skins === undefined && sort[rarityId].rarity === undefined) {
-                delete sort[rarityId];
-            }
-        }
-
-        if (sort[rarityId] !== undefined) {
-            sort[rarityId].rarity = element.val();
-        } else {
-            sort[rarityId] = {rarity: element.val()};
-        }
-
-        elementSort.val(JSON.stringify(sort));
-    });
-
-    elemRarityProcentValue.keydown(function () {
-        var
-            sort = {},
-            element = $(this),
-            elementSort = $('#cases_form_sort'),
-            rarityId = element.attr('data-rarity-id'),
-            sortVal = elementSort.val();
-
-        if (sortVal.length > 0) {
-            sort = JSON.parse(elementSort.val())
-        }
-
-        if (sort[rarityId] !== undefined) {
-            if (sort[rarityId].skins === undefined && sort[rarityId].rarity === undefined) {
-                delete sort[rarityId];
-            }
-        }
-
-        if (sort[rarityId] !== undefined) {
-            sort[rarityId].rarity = element.val();
-        } else {
-            sort[rarityId] = {rarity: element.val()};
-        }
-
-        elementSort.val(JSON.stringify(sort));
     });
 });

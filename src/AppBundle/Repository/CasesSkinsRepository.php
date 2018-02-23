@@ -21,7 +21,7 @@ class CasesSkinsRepository extends EntityRepository
         $dbal = $this->getEntityManager()->getConnection();
         $stmt = $dbal->prepare('
         SELECT
-          cs.id, cs.skins_id, cs.procent_rarity, cs.procent_skins, s.name, s.icon_url, s.rarity_id
+          cs.id, cs.skins_id, cs.procent_rarity, cs.procent_skins, s.name, s.icon_url, s.rarity_id, s.steam_price
         FROM cases_skins cs
           LEFT JOIN skins s ON s.id = cs.skins_id
         WHERE

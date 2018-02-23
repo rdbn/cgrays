@@ -33,7 +33,9 @@ class CasesCategoryAdmin extends AbstractAdmin
      */
     protected function configureFormFields(FormMapper $form)
     {
-        $form->add('name');
+        $form
+            ->add('name')
+            ->add('sortNumber');
     }
 
     /**
@@ -51,6 +53,7 @@ class CasesCategoryAdmin extends AbstractAdmin
     {
         $list
             ->addIdentifier('name')
+            ->add('sortNumber')
             ->add('_action', null, [
                 'actions' => [
                     'edit' => [],

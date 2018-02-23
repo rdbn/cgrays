@@ -20,11 +20,11 @@ class CasesCategoryRepository extends EntityRepository
     {
         $dbal =  $this->getEntityManager()->getConnection();
         $stmt = $dbal->prepare('
-        SELECT DISTINCT cc.id, cc.name FROM cases_category cc
+        SELECT DISTINCT cc.id, cc.name, cc.sort_number FROM cases_category cc
           LEFT JOIN cases c ON c.cases_category_id = cc.id
           LEFT JOIN cases_domain cd ON cd.id = c.cases_domain_id
         WHERE cd.uuid = :domain_id
-        ORDER BY cc.id
+        ORDER BY cc.sort_number
         ');
         $stmt->bindParam('domain_id', $domainId, \PDO::PARAM_STR);
         $stmt->execute();

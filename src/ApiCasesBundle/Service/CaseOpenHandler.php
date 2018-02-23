@@ -142,6 +142,7 @@ class CaseOpenHandler
             'weapon_name' => $skins['weapon'],
             'skins_name' => $skins['name'],
             'rarity' => $skins['rarity'],
+            'rarity_id' => $skins['rarity_id'],
             'steam_image' => $skins['icon_url'],
             'price' => $skins['cases_price'],
             'balance' => $balance,

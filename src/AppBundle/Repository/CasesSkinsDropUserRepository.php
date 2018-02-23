@@ -38,7 +38,7 @@ class CasesSkinsDropUserRepository extends EntityRepository
             WHERE
               cd.uuid = :uuid
             ORDER BY csdu.id DESC
-            LIMIT 12 OFFSET 0
+            LIMIT 16 OFFSET 0
             ");
             $stmt->bindParam('uuid', $domainId, \PDO::PARAM_STR);
             $stmt->execute();

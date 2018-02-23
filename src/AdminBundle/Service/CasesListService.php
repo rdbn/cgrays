@@ -68,6 +68,7 @@ class CasesListService
                 'name' => MbStrimWidthHelper::strimWidth($skin->getName()),
                 'icon_url' => $skin->getIconUrl(),
                 'rarity_id' => $skin->getRarity()->getId(),
+                'price' => $skin->getSteamPrice(),
                 'is_skins_case' => 0,
             ];
 
