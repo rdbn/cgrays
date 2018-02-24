@@ -11,6 +11,7 @@ namespace ApiCasesBundle\Service;
 use AppBundle\Entity\CasesBalanceUser;
 use AppBundle\Entity\CasesSkins;
 use AppBundle\Entity\User;
+use AppBundle\Services\Helper\MbStrimWidthHelper;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManager;
@@ -140,10 +141,10 @@ class CaseOpenHandler
             'cases_domain_id' => $skins['cases_domain_id'],
             'cases_category_id' => $skins['cases_category_id'],
             'weapon_name' => $skins['weapon'],
-            'skins_name' => $skins['name'],
+            'skin_name' => $skins['name'],
             'rarity' => $skins['rarity'],
             'rarity_id' => $skins['rarity_id'],
-            'steam_image' => $skins['icon_url'],
+            'steam_image' => "/{$skins['icon_url']}",
             'price' => $skins['cases_price'],
             'balance' => $balance,
         ]);
@@ -158,8 +159,9 @@ class CaseOpenHandler
 
         return [
             'weapon_name' => $skins['weapon'],
-            'skin_name' => $skins['name'],
+            'skin_name' => MbStrimWidthHelper::strimWidth($skins['name']),
             'rarity' => $skins['rarity'],
+            'rarity_id' => $skins['rarity_id'],
             'steam_image' => "/{$skins['icon_url']}",
             'price' => number_format($skins['steam_price'], 2),
             'balance' => $balance,

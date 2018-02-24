@@ -14,7 +14,6 @@ services:
         arguments:
             - '@doctrine.orm.entity_manager'
             - '@doctrine.dbal.default_connection'
-            - '@old_sound_rabbit_mq.live_drop_producer'
             - '@api_cases.service.metrics_event_sender'
 
     api_cases.service.cases_user_pick_up_skins:
@@ -22,7 +21,6 @@ services:
         arguments:
             - '@doctrine.orm.entity_manager'
             - '@doctrine.dbal.default_connection'
-            - '@old_sound_rabbit_mq.live_drop_producer'
             - '@api_cases.service.metrics_event_sender'
 
     api_cases.service.cases_contract:

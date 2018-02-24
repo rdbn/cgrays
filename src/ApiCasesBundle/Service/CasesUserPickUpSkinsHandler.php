@@ -28,11 +28,6 @@ class CasesUserPickUpSkinsHandler
     private $dbal;
 
     /**
-     * @var ProducerInterface
-     */
-    private $producer;
-
-    /**
      * @var MetricsEventSender
      */
     private $eventSender;
@@ -41,14 +36,12 @@ class CasesUserPickUpSkinsHandler
      * CasesUserPickUpSkinsHandler constructor.
      * @param EntityManager $em
      * @param Connection $dbal
-     * @param ProducerInterface $producer
      * @param MetricsEventSender $eventSender
      */
-    public function __construct(EntityManager $em, Connection $dbal, ProducerInterface $producer, MetricsEventSender $eventSender)
+    public function __construct(EntityManager $em, Connection $dbal, MetricsEventSender $eventSender)
     {
         $this->em = $em;
         $this->dbal = $dbal;
-        $this->producer = $producer;
         $this->eventSender = $eventSender;
     }
 
@@ -75,8 +68,6 @@ class CasesUserPickUpSkinsHandler
                 'created_at' => date('Y-m-d H:i:s'),
             ]);
 
-            $resultGame['skins_name'] = MbStrimWidthHelper::strimWidth($resultGame['skins_name']);
-
             $this->eventSender->sender([
                 'user_id' => $userId,
                 'cases_id' => $resultGame['cases_id'],
@@ -84,8 +75,6 @@ class CasesUserPickUpSkinsHandler
                 'cases_category_id' => $resultGame['cases_category_id'],
                 'event_type' => 'pick_up_skins',
             ]);
-            unset($resultGame['skins_id'], $resultGame['cases_domain_id'], $resultGame['cases_category_id'], $resultGame['cases_id']);
-            $this->producer->publish(json_encode($resultGame));
         } catch (DBALException $e) {
             throw new \Exception($e->getMessage());
         }

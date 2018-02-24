@@ -112,6 +112,7 @@ $(document).ready(function () {
     $('#cases-list').on('click', '.skins', function (e) {
         var
             element = $(this),
+            img = element.find('img').attr('src'),
             skinsId = element.attr('data-skins-id'),
             rarityId = element.attr('data-rarity-id');
 
@@ -123,21 +124,27 @@ $(document).ready(function () {
             element.removeClass('check-skins');
             $('#skins-' + skinsId).remove();
         } else {
-            var html = '<div id="skins-'+skinsId+'" class="form-group">';
-            html += '<div class="input-group"><span class="input-group-addon">'+element.attr('data-skins-name')+'</span>';
-            html += '<input ' +
-                'class="form-control skins-procent" value="" placeholder="Процент %" ' +
-                'data-skins-id="'+skinsId+'" ' +
-                'data-rarity-id="'+rarityId+'" />';
+            element.addClass('check-skins');
 
-            html += '<span class="input-group-btn">';
+            var html = '<div id="skins-'+skinsId+'" class="form-inline">';
+            html += '<img src="'+img+'" class="img-responsive img-preview" />';
+            html += '<div class="form-group">' +
+                '<a href="/admin/skins/'+skinsId+'/edit" target="_blank" class="control-label">'+element.attr('data-skins-name')+'</a>' +
+                '<input id="cases_skins_'+skinsId+'"' +
+                'class="form-control skins-procent" value="" placeholder="Процент %" ' +
+                'name="cases_skins_skins['+skinsId+'][procent]" /></div>';
+
+            html += '<div class="form-group"><input ' +
+                'class="form-control skins-price" ' +
+                'name="cases_skins_skins['+skinsId+'][price]" value="" placeholder="Цена скина" /></div>'
+
             html += '<button ' +
                 'class="btn btn-danger remove-skins-rarity" ' +
                 'type="button" ' +
                 'data-skins-id="'+skinsId+'" ' +
                 'data-rarity-id="'+rarityId+'">';
 
-            html += 'Удалить</button></span></div></div>';
+            html += 'Удалить</button></div>';
 
             $('#add-skins-rarity-' + element.attr('data-rarity-id')).append(html);
         }

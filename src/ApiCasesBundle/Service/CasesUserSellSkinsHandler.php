@@ -30,11 +30,6 @@ class CasesUserSellSkinsHandler
     private $dbal;
 
     /**
-     * @var ProducerInterface
-     */
-    private $producer;
-
-    /**
      * @var MetricsEventSender
      */
     private $eventSender;
@@ -43,14 +38,12 @@ class CasesUserSellSkinsHandler
      * CasesUserSellSkinsHandler constructor.
      * @param EntityManager $em
      * @param Connection $dbal
-     * @param ProducerInterface $producer
      * @param MetricsEventSender $eventSender
      */
-    public function __construct(EntityManager $em, Connection $dbal, ProducerInterface $producer, MetricsEventSender $eventSender)
+    public function __construct(EntityManager $em, Connection $dbal, MetricsEventSender $eventSender)
     {
         $this->em = $em;
         $this->dbal = $dbal;
-        $this->producer = $producer;
         $this->eventSender = $eventSender;
     }
 
@@ -86,7 +79,6 @@ class CasesUserSellSkinsHandler
             $balance = (float) $skins['steam_price'] + (float) $userBalance['balance'];
             $this->dbal->update('cases_balance_user', ['balance' => $balance], ['id' => $userBalance['id']]);
 
-            $resultGame['skins_name'] = MbStrimWidthHelper::strimWidth($resultGame['skins_name']);
             $this->eventSender->sender([
                 'user_id' => $userId,
                 'cases_id' => $resultGame['cases_id'],
@@ -95,9 +87,6 @@ class CasesUserSellSkinsHandler
                 'price' => (float) $skins['steam_price'],
                 'event_type' => 'sell_skins',
             ]);
-
-            unset($resultGame['skins_id'], $resultGame['cases_domain_id']);
-            $this->producer->publish(json_encode($resultGame));
 
             $this->dbal->commit();
         } catch (DBALException $e) {

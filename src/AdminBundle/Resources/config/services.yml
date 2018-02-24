@@ -119,8 +119,3 @@ services:
     admin.service.cases_list:
         class: AdminBundle\Service\CasesListService
         arguments: ['@doctrine.orm.default_entity_manager', "@logger"]
-
-    admin.listener.cases:
-        class: AdminBundle\EventListener\CasesPersistSubscriber
-        tags:
-            - { name: doctrine.event_subscriber, connection: default }

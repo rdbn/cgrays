@@ -11,6 +11,8 @@ namespace AdminBundle\Controller;
 use AdminBundle\Form\CasesFormFilterType;
 use AdminBundle\Form\CasesFormType;
 use AppBundle\Entity\Cases;
+use AppBundle\Entity\CasesSkins;
+use AppBundle\Entity\Skins;
 use Sonata\AdminBundle\Controller\CRUDController as Controller;
 
 class CasesCRUDController extends Controller
@@ -29,7 +31,46 @@ class CasesCRUDController extends Controller
         if ($form->isValid()) {
             $cases->upload();
 
+            $rarities = $request->request->get('cases_skins_rarity');
+            $newListSkins = $request->request->get('cases_skins_skins');
+
             $em = $this->getDoctrine()->getManager();
+            $casesSkins = $cases->getCasesSkins();
+            foreach ($casesSkins as $casesSkin) {
+                /* @var CasesSkins $casesSkin */
+                $skinsId = $casesSkin->getSkins()->getId();
+                $rarityId = $casesSkin->getSkins()->getRarity()->getId();
+
+                if (isset($newListSkins[$casesSkin->getSkins()->getId()])) {
+                    $casesSkin->setProcentRarity($rarities[$rarityId]);
+                    $casesSkin->setProcentSkins($newListSkins[$skinsId]['procent']);
+                    unset($newListSkins[$skinsId]);
+                } else {
+                    $em->remove($casesSkin);
+                }
+            }
+
+            if (count($newListSkins) > 0) {
+                $skinsIds = array_keys($newListSkins);
+                $skinEntities = $em->getRepository(Skins::class)
+                    ->findSkinsByIds(implode(",", $skinsIds));
+
+                foreach ($skinEntities as $skin) {
+                    /* @var Skins $skin */
+                    $rarityId = $skin->getRarity()->getId();
+                    $procentRarity = $rarities[$rarityId] == "" ? 0: $rarities[$rarityId];
+                    $procentSkins = $newListSkins[$skin->getId()]['procent'] == "" ? 0 : $newListSkins[$skin->getId()]['procent'];
+
+                    $casesSkins = new CasesSkins();
+                    $casesSkins->setSkins($skin);
+                    $casesSkins->setCases($cases);
+                    $casesSkins->setProcentRarity($procentRarity);
+                    $casesSkins->setProcentSkins($procentSkins);
+
+                    $em->persist($casesSkins);
+                }
+            }
+
             $em->persist($cases);
             $em->flush();
 
@@ -62,6 +103,9 @@ class CasesCRUDController extends Controller
             throw $this->createNotFoundException(sprintf('unable to find the object with id : %s', $id));
         }
 
+        $listCasesSkins = $this->get('admin.service.cases_list');
+        $listSkins = $listCasesSkins->getList($id);
+
         $form = $this->createForm(CasesFormType::class, $cases, [
             'action' => $this->generateUrl('sonata_cases_edit', ['id' => $id]),
         ]);
@@ -70,7 +114,46 @@ class CasesCRUDController extends Controller
         if ($form->isValid()) {
             $cases->upload();
 
+            $rarities = $request->request->get('cases_skins_rarity');
+            $newListSkins = $request->request->get('cases_skins_skins');
+
             $em = $this->getDoctrine()->getManager();
+            $casesSkins = $cases->getCasesSkins();
+            foreach ($casesSkins as $casesSkin) {
+                /* @var CasesSkins $casesSkin */
+                $skinsId = $casesSkin->getSkins()->getId();
+                $rarityId = $casesSkin->getSkins()->getRarity()->getId();
+
+                if (isset($newListSkins[$casesSkin->getSkins()->getId()])) {
+                    $casesSkin->setProcentRarity($rarities[$rarityId]);
+                    $casesSkin->setProcentSkins($newListSkins[$skinsId]['procent']);
+                    unset($newListSkins[$skinsId]);
+                } else {
+                    $em->remove($casesSkin);
+                }
+            }
+
+            if (count($newListSkins) > 0) {
+                $skinsIds = array_keys($newListSkins);
+                $skinEntities = $em->getRepository(Skins::class)
+                    ->findSkinsByIds(implode(",", $skinsIds));
+
+                foreach ($skinEntities as $skin) {
+                    /* @var Skins $skin */
+                    $rarityId = $skin->getRarity()->getId();
+                    $procentRarity = $rarities[$rarityId] == "" ? 0: $rarities[$rarityId];
+                    $procentSkins = $newListSkins[$skin->getId()]['procent'] == "" ? 0 : $newListSkins[$skin->getId()]['procent'];
+
+                    $casesSkins = new CasesSkins();
+                    $casesSkins->setSkins($skin);
+                    $casesSkins->setCases($cases);
+                    $casesSkins->setProcentRarity($procentRarity);
+                    $casesSkins->setProcentSkins($procentSkins);
+
+                    $em->persist($casesSkins);
+                }
+            }
+
             $em->persist($cases);
             $em->flush();
 
@@ -78,12 +161,11 @@ class CasesCRUDController extends Controller
         }
 
         $formFilter = $this->createForm(CasesFormFilterType::class);
-        $listCasesSkins = $this->get('admin.service.cases_list');
 
         return $this->render($this->admin->getTemplate('edit'), [
             'action' => 'edit',
             'object' => $cases,
-            'listCasesSkins' => $listCasesSkins->getList($id),
+            'listCasesSkins' => $listSkins,
             'countSkins' => $listCasesSkins->getCountSkins(),
             'form' => $form->createView(),
             'formFilter' => $formFilter->createView(),

@@ -74,7 +74,7 @@
                                         {% set sort = form.sort.vars.value|json_decode %}
                                         <input
                                                 id="rarity-procent-{{ rarity.data.id }}"
-                                                name="cases_skins[{{ rarityId }}][rarity_procent]"
+                                                name="cases_skins_rarity[{{ rarityId }}]"
                                                 class="form-control rarity-procent-value"
                                                 value="{% if sort[rarityId] is defined %}{{ sort[rarityId].rarity }}{% endif %}"
                                                 placeholder="Процент 0%"
@@ -87,24 +87,22 @@
                                             <div id="skins-{{ skins.skins_id }}" class="form-inline">
                                                 <img src="{{ asset(skins.icon_url) }}" class="img-responsive img-preview" />
                                                 <div class="form-group">
-                                                    <label for="rarity_{{ skins.skins_id }}" class="control-label">{{ skins.name }}</label>
+                                                    <a href="{{ path('sonata_skins_edit', {id: skins.skins_id }) }}" target="_blank" class="control-label">
+                                                        {{ skins.name }}
+                                                    </a>
                                                     <input
                                                             id="rarity_{{ skins.skins_id }}"
                                                             class="form-control skins-procent"
-                                                            name="cases_skins[{{ rarityId }}][skins][{{ skins.skins_id }}][procent]"
+                                                            name="cases_skins_skins[{{ skins.skins_id }}][procent]"
                                                             value="{{ skins.procent_skins }}"
-                                                            placeholder="Процент %"
-                                                            data-skins-id="{{ skins.skins_id }}"
-                                                            data-rarity-id="{{ rarityId }}" />
+                                                            placeholder="Процент %" />
                                                 </div>
                                                 <div class="form-group">
                                                     <input
                                                             class="form-control skins-price"
-                                                            name="cases_skins[{{ rarityId }}][skins][{{ skins.skins_id }}][price]"
+                                                            name="cases_skins_skins[{{ skins.skins_id }}][price]"
                                                             value="{{ skins.steam_price }}"
-                                                            placeholder="Цена скина"
-                                                            data-skins-id="{{ skins.skins_id }}"
-                                                            data-rarity-id="{{ rarityId }}" />
+                                                            placeholder="Цена скина" />
                                                 </div>
                                                 <button
                                                         class="btn btn-danger remove-skins-rarity"
