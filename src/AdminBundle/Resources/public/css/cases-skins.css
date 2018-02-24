@@ -12,7 +12,11 @@
 
 .img-preview {
     float: left;
-    height: 50px;
+    height: 30px;
+}
+
+.add-skins {
+    margin-top: 10px;
 }
 
 /* rarity color */

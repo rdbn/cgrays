@@ -84,7 +84,7 @@
                                 <td id="add-skins-rarity-{{ rarity.data.id }}" class="skins-check-cases">
                                     {% for skins in listCasesSkins.cases_skins %}
                                         {% if skins.rarity_id == rarityId %}
-                                            <div id="skins-{{ skins.skins_id }}" class="form-inline">
+                                            <div id="skins-{{ skins.skins_id }}" class="form-inline add-skins">
                                                 <img src="{{ asset(skins.icon_url) }}" class="img-responsive img-preview" />
                                                 <div class="form-group">
                                                     <a href="{{ path('sonata_skins_edit', {id: skins.skins_id }) }}" target="_blank" class="control-label">

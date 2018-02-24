@@ -126,7 +126,7 @@ $(document).ready(function () {
         } else {
             element.addClass('check-skins');
 
-            var html = '<div id="skins-'+skinsId+'" class="form-inline">';
+            var html = '<div id="skins-'+skinsId+'" class="form-inline add-skins">';
             html += '<img src="'+img+'" class="img-responsive img-preview" />';
             html += '<div class="form-group">' +
                 '<a href="/admin/skins/'+skinsId+'/edit" target="_blank" class="control-label">'+element.attr('data-skins-name')+'</a>' +
