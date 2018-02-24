@@ -84,7 +84,7 @@ var FilterCases = function () {
             });
         },
         pagination: function () {
-            $('#send-filter').click(function () {
+            $('.pagination .page-button').click(function () {
                 var
                     elementLoader = $('#load-skins-img'),
                     element = $(this),
