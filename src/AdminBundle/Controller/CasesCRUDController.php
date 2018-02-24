@@ -125,8 +125,11 @@ class CasesCRUDController extends Controller
                 $rarityId = $casesSkin->getSkins()->getRarity()->getId();
 
                 if (isset($newListSkins[$casesSkin->getSkins()->getId()])) {
-                    $casesSkin->setProcentRarity($rarities[$rarityId]);
-                    $casesSkin->setProcentSkins($newListSkins[$skinsId]['procent']);
+                    $procentRarity = $rarities[$rarityId] == "" ? 0: $rarities[$rarityId];
+                    $procentSkins = $newListSkins[$skinsId]['procent'] == "" ? 0 : $newListSkins[$skinsId]['procent'];
+
+                    $casesSkin->setProcentRarity($procentRarity);
+                    $casesSkin->setProcentSkins($procentSkins);
                     unset($newListSkins[$skinsId]);
                 } else {
                     $em->remove($casesSkin);
