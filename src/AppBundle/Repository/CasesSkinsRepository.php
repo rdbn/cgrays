@@ -89,56 +89,48 @@ class CasesSkinsRepository extends EntityRepository
     }
 
     /**
-     * @param $domainId
-     * @param $limit
+     * @param $casesDomainId
      * @param $offset
      * @return array
      * @throws \Doctrine\DBAL\DBALException
      */
-    public function findCasesSkinsByDomainId($domainId, $limit, $offset)
+    public function findCasesSkinsByDomainId($casesDomainId, $offset)
     {
         $dbal = $this->getEntityManager()->getConnection();
         $stmt = $dbal->prepare('
         SELECT
-          DISTINCT s.id as skins_id,
-          s.name as skins_name,
+          DISTINCT cs.skins_id,
+          s.name as skin_name,
           s.rarity_id,
-          s.icon_url as steam_image,
-          cs.created_at,
-          w.localized_tag_name as weapon_name
+          s.icon_url as steam_image
         FROM cases_skins cs
           LEFT JOIN cases c ON c.id = cs.cases_id
-          LEFT JOIN cases_domain cd ON cd.id = c.cases_domain_id
           LEFT JOIN skins s ON s.id = cs.skins_id
-          LEFT JOIN weapon w ON w.id = s.weapon_id
         WHERE
-          cd.uuid = :uuid
-        LIMIT :limit OFFSET :offset
+          c.cases_domain_id = :cases_domain_id
+        LIMIT 1 OFFSET :offset
         ');
-        $stmt->bindParam('uuid', $domainId, \PDO::PARAM_STR);
-        $stmt->bindParam('limit', $limit, \PDO::PARAM_INT);
+        $stmt->bindParam('cases_domain_id', $casesDomainId, \PDO::PARAM_STR);
         $stmt->bindParam('offset', $offset, \PDO::PARAM_INT);
         $stmt->execute();
 
-        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        return $stmt->fetch(\PDO::FETCH_ASSOC);
     }
 
     /**
-     * @param $domainId
+     * @param $casesDomainId
      * @return bool|string
      * @throws \Doctrine\DBAL\DBALException
      */
-    public function getCountCasesSkins($domainId)
+    public function getCountCasesSkins($casesDomainId)
     {
         $dbal = $this->getEntityManager()->getConnection();
         $stmt = $dbal->prepare('
-        SELECT COUNT(cs.id) as count_cases_domain FROM cases_skins cs
+        SELECT COUNT(DISTINCT cs.skins_id) as count_cases_domain FROM cases_skins cs
           LEFT JOIN cases c ON cs.cases_id = c.id
-          LEFT JOIN cases_domain cd ON c.cases_domain_id = cd.id
-        WHERE cd.uuid = :uuid
-        GROUP BY cs.skins_id
+        WHERE c.cases_domain_id = :cases_domain_id;
         ');
-        $stmt->bindParam('uuid', $domainId, \PDO::PARAM_STR);
+        $stmt->bindParam('cases_domain_id', $casesDomainId, \PDO::PARAM_STR);
         $stmt->execute();
 
         return $stmt->fetchColumn();

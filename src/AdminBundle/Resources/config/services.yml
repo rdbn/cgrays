@@ -35,6 +35,12 @@ services:
         tags:
             - { name: sonata.admin, manager_type: orm, group: Пользователи, label: Парва доступа, show_mosaic_button: false }
 
+    admin.admin.bot_live_drop:
+        class: AdminBundle\Admin\BotLiveDropAdmin
+        arguments: [~, AppBundle\Entity\BotLiveDrop, ~]
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: Кейсы, label: Bot live drop, show_mosaic_button: false }
+
     admin.admin.cases:
         class: AdminBundle\Admin\CasesAdmin
         arguments: [~, AppBundle\Entity\Cases, AdminBundle:CasesCRUD]

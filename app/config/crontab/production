@@ -5,3 +5,6 @@
 
 # is online user
 *   *   *   *   *   /usr/bin/flock -n /tmp/is_online_user /usr/bin/php /var/www/cgrays/current/bin/console processing:check_user_is_sell -vvv --env=prod --no-debug >> /tmp/is_online_user.log 2>&1
+
+# bot live drop
+*   *   *   *   *   /usr/bin/flock -n /tmp/live_drop /usr/bin/php /var/www/cgrays/current/bin/console processing:live_drop 5 -vvv --env=prod --no-debug >> /tmp/live_drop.log 2>&1
