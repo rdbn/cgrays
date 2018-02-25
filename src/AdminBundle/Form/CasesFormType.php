@@ -46,7 +46,6 @@ class CasesFormType extends AbstractType
                 'label' => 'Картинка для кейса',
                 'required' => false,
             ])
-            ->add('sort', HiddenType::class)
             ->add("submit", SubmitType::class, [
                 'label' => 'Сохранить',
             ]);

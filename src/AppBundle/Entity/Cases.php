@@ -59,11 +59,6 @@ class Cases
     protected $image;
 
     /**
-     * @ORM\Column(type="text")
-     */
-    protected $sort;
-
-    /**
      * @ORM\Column(name="created_at", type="datetime", type="datetime")
      */
     protected $createdAt;
@@ -232,30 +227,6 @@ class Cases
     public function getImage()
     {
         return $this->image;
-    }
-
-    /**
-     * Set sort
-     *
-     * @param string $sort
-     *
-     * @return Cases
-     */
-    public function setSort($sort)
-    {
-        $this->sort = $sort;
-
-        return $this;
-    }
-
-    /**
-     * Get sort
-     *
-     * @return string
-     */
-    public function getSort()
-    {
-        return $this->sort;
     }
 
     /**

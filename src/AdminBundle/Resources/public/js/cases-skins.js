@@ -3,14 +3,8 @@ var FilterCases = function () {
 
     var showSkins = function (element, elementLoader, data) {
         var
-            sort = {},
             elementCasesList = $('#cases-list'),
-            casesId = $('#chapter-cases').attr('data-cases-id'),
-            sortVal = $('#cases_form_sort');
-
-        if (sortVal.val().length > 0) {
-            sort = JSON.parse(sortVal.val());
-        }
+            casesId = $('#chapter-cases').attr('data-cases-id');
 
         elementCasesList.html('');
 
@@ -27,12 +21,6 @@ var FilterCases = function () {
 
                         if (item['is_skins_case']) {
                             isSkinsCase = 'check-skins';
-                        } else if (sort[item['rarity_id']] !== undefined) {
-                            if (sort[item['rarity_id']]['skins'] !== undefined) {
-                                if (sort[item['rarity_id']]['skins'][item['skins_id']] !== undefined) {
-                                    isSkinsCase = 'check-skins';
-                                }
-                            }
                         }
 
                         html += '<div id="skins-check-'+item['skins_id']+'" class="col-lg-2">';
@@ -55,32 +43,53 @@ var FilterCases = function () {
         })
     };
 
+    var eventFilterValue = function () {
+        var
+            elementLoader = $('#load-skins-img'),
+            element = $(this),
+            filter = {
+                'cases_form_filter[name]': $('#cases_form_filter_name').val(),
+                'cases_form_filter[decor]': $('#cases_form_filter_decor').val(),
+                'cases_form_filter[quality]': $('#cases_form_filter_quality').val(),
+                'cases_form_filter[itemSet]': $('#cases_form_filter_itemSet').val(),
+                'cases_form_filter[rarity]': $('#cases_form_filter_rarity').val(),
+                'cases_form_filter[weapon]': $('#cases_form_filter_weapon').val(),
+                'cases_form_filter[typeSkins]': $('#cases_form_filter_typeSkins').val(),
+                'offset': $(this).attr("data-offset"),
+                'limit': $(this).attr("data-limit")
+            };
+
+        if (!element.hasClass('disabled')) {
+            element.addClass('disabled');
+            elementLoader.removeClass('hidden');
+
+            showSkins(element, elementLoader, filter);
+        }
+    };
+
     return {
         formFilter: function () {
             $('#send-filter').click(function () {
-                var
-                    elementLoader = $('#load-skins-img'),
-                    element = $(this),
-                    filter = {
-                        'cases_form_filter[name]': $('#cases_form_filter_name').val(),
-                        'cases_form_filter[decor]': $('#cases_form_filter_decor').val(),
-                        'cases_form_filter[quality]': $('#cases_form_filter_quality').val(),
-                        'cases_form_filter[itemSet]': $('#cases_form_filter_itemSet').val(),
-                        'cases_form_filter[rarity]': $('#cases_form_filter_rarity').val(),
-                        'cases_form_filter[weapon]': $('#cases_form_filter_weapon').val(),
-                        'cases_form_filter[typeSkins]': $('#cases_form_filter_typeSkins').val(),
-                        'offset': $(this).attr("data-offset"),
-                        'limit': $(this).attr("data-limit")
-                    };
-
-                if (!element.hasClass('disabled')) {
-                    element.addClass('disabled');
-                    elementLoader.removeClass('hidden');
-
-                    showSkins(element, elementLoader, filter);
-                }
+                eventFilterValue();
 
                 return false;
+            });
+
+            var elementInput = $('#cases_form_filter_name');
+            elementInput.keyup(function () {
+                if (event.keyCode === 13) {
+                    eventFilterValue();
+
+                    return false;
+                }
+            });
+
+            elementInput.keydown(function () {
+                if (event.keyCode === 13) {
+                    eventFilterValue();
+
+                    return false;
+                }
             });
         },
         pagination: function () {
@@ -105,9 +114,20 @@ var FilterCases = function () {
 };
 
 $(document).ready(function () {
+    $(window).keydown(function(event){
+        if(event.keyCode === 13) {
+            event.preventDefault();
+            return false;
+        }
+    });
+
     var filterCases = new FilterCases();
     filterCases.pagination();
     filterCases.formFilter();
+
+    // $('#cases-create-form').submit(function () {
+    //     return false;
+    // });
 
     $('#cases-list').on('click', '.skins', function (e) {
         var
