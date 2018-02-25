@@ -31,6 +31,8 @@ class LiveDropController extends FOSRestController
         $listSkins = array_map(function ($item) {
             $item['skin_name'] = MbStrimWidthHelper::strimWidth($item['skin_name']);
             $item['steam_image'] = "/{$item['steam_image']}";
+            $item['cases_image'] = "/{$item['cases_image']}";
+
             return $item;
         }, $listSkins);
 

@@ -33,36 +33,9 @@ class UserRepository extends EntityRepository
     }
 
     /**
-     * @param int $userId
-     * @return mixed
-     */
-    public function findUserForUpdateById($userId)
-    {
-        $dbal = $this->getEntityManager()->getConnection();
-        $stmt = $dbal->prepare('SELECT * FROM users WHERE id = :id FOR UPDATE');
-        $stmt->bindParam('id', $userId, \PDO::PARAM_INT);
-        $stmt->execute();
-
-        return $stmt->fetch();
-    }
-
-    /**
-     * @param string $username
-     * @return mixed
-     */
-    public function findUserForUpdateByUsername($username)
-    {
-        $dbal = $this->getEntityManager()->getConnection();
-        $stmt = $dbal->prepare('SELECT * FROM users WHERE username = :username FOR UPDATE');
-        $stmt->bindParam('username', $username, \PDO::PARAM_INT);
-        $stmt->execute();
-
-        return $stmt->fetch();
-    }
-
-    /**
      * @param int $secondDuration
      * @return array
+     * @throws DBALException
      */
     public function findUserIsNotOnline($secondDuration)
     {
@@ -136,16 +109,22 @@ class UserRepository extends EntityRepository
     }
 
     /**
-     * @param $userIds
+     * @param $userId
      * @return array
      * @throws DBALException
      */
-    public function findUsersByUserIds($userIds)
+    public function findUsersByUserId($userId)
     {
         $dbal = $this->getEntityManager()->getConnection();
-        $stmt = $dbal->prepare("SELECT u.id as user_id FROM users u WHERE u.id IN ({$userIds})");
+        $stmt = $dbal->prepare("
+        SELECT u.username, u.avatar, u.steam_id, count(csdu.id) as count_drop_skins FROM users u
+          LEFT JOIN cases_skins_drop_user csdu ON csdu.user_id = u.id
+        WHERE u.id = :user_id
+        GROUP BY u.id;
+        ");
+        $stmt->bindParam('user_id', $userId, \PDO::PARAM_INT);
         $stmt->execute();
 
-        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        return $stmt->fetch(\PDO::FETCH_ASSOC);
     }
 }

@@ -27,10 +27,13 @@ class CasesSkinsDropUserRepository extends EntityRepository
               w.localized_tag_name as weapon_name,
               s.icon_url as steam_image,
               s.rarity_id,
+              u.id as user_id,
               u.username,
               u.avatar,
+              c.image as cases_image,
               csdu.created_at
             FROM cases_skins_drop_user csdu
+              LEFT JOIN cases c ON csdu.cases_id = c.id
               LEFT JOIN users u ON csdu.user_id = u.id
               LEFT JOIN skins s ON csdu.skins_id = s.id
               LEFT JOIN weapon w ON s.weapon_id = w.id

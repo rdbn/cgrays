@@ -71,6 +71,40 @@ class UserController extends FOSRestController
     }
 
     /**
+     * @param Request $request
+     * @param $userId
+     * @return Response
+     * @Rest\Get("/user/{userId}", requirements={"userId": "\d+"})
+     * @Rest\View()
+     */
+    public function getUserIdAction(Request $request, $userId)
+    {
+        $domainId = $request->headers->get('x-domain-id');
+
+        try {
+            $em = $this->getDoctrine()->getManager();
+            $user = $em->getRepository(User::class)
+                ->findUsersByUserId($userId);
+
+            $casesUserSkins = $em->getRepository(CasesSkinsPickUpUser::class)
+                ->findSkinsByUserIdAndDomainId($userId, $domainId);
+
+            $casesUserSkins = array_map(function ($item) {
+                $item['skin_name'] = MbStrimWidthHelper::strimWidth($item['skin_name']);
+                $item['steam_image'] = "/{$item['steam_image']}";
+
+                return $item;
+            }, $casesUserSkins);
+
+            $view = $this->view(['user' => $user, 'user_skins' => $casesUserSkins], 200);
+            return $this->handleView($view);
+        } catch (DBALException $e) {
+            $view = $this->view('Bad request', 400);
+            return $this->handleView($view);
+        }
+    }
+
+    /**
      * @Rest\Get("/user/tops")
      * @Rest\View(serializerGroups={"cases_user"})
      * @return Response
