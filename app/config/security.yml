@@ -65,6 +65,7 @@ security:
         - { path: ^/api/cases/connect/steam, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api/cases/payment, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api/cases/live-drop, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/cases/user, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/user, roles: ROLE_USER }
         - { path: ^/payment, roles: ROLE_USER }
         - { path: ^/basket, roles: ROLE_USER }
