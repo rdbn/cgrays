@@ -125,10 +125,6 @@ $(document).ready(function () {
     filterCases.pagination();
     filterCases.formFilter();
 
-    // $('#cases-create-form').submit(function () {
-    //     return false;
-    // });
-
     $('#cases-list').on('click', '.skins', function (e) {
         var
             element = $(this),
