@@ -11,6 +11,7 @@ namespace AdminBundle\Service;
 use AppBundle\Entity\CasesSkins;
 use AppBundle\Entity\Skins;
 use AppBundle\Services\Helper\MbStrimWidthHelper;
+use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManager;
 use Psr\Log\LoggerInterface;
 
@@ -46,41 +47,41 @@ class CasesListService
      */
     public function getList($casesId = null, $offset = 0, $limit = 18, array $filter = [])
     {
+        $listCases = [];
         if ($casesId) {
             $casesSkins = $this->em->getRepository(CasesSkins::class)
                 ->findCasesSkinsByCasesId($casesId);
 
-            $listCases = [];
             foreach ($casesSkins as $casesSkin) {
                 $listCases[$casesSkin['skins_id']] = $casesSkin;
             }
         }
-        $skins = $this->em->getRepository(Skins::class)
-            ->findAllSkinsByFilter($filter, $offset, $limit);
 
-        $listSkins = [];
-        foreach ($skins as $index => $skin) {
-            /* @var Skins $skin */
-            $skinsId = $skin->getId();
-            $listSkins[$index] = [
-                'id' => $casesId,
-                'skins_id' => $skinsId,
-                'name' => MbStrimWidthHelper::strimWidth($skin->getName()),
-                'icon_url' => $skin->getIconUrl(),
-                'rarity_id' => $skin->getRarity()->getId(),
-                'price' => $skin->getSteamPrice(),
-                'is_skins_case' => 0,
+        try {
+            $skins = $this->em->getRepository(Skins::class)
+                ->findAllSkinsByFilter($filter, $offset, $limit);
+
+            $skins = array_map(function ($item, $index) use ($listCases) {
+                $item['name'] = MbStrimWidthHelper::strimWidth($item['name']);
+                $item['is_skins_case'] = 0;
+
+                if (isset($listCases)) {
+                    $item['is_skins_case'] = isset($listCases[$item['skins_id']]) ? 1 : 0;
+                }
+
+                return $item;
+            }, $skins, array_keys($skins));
+
+            return [
+                'list_skins' => $skins,
+                'cases_skins' => isset($casesSkins) ? $casesSkins : [],
             ];
-
-            if (isset($listCases)) {
-                $listSkins[$index]['is_skins_case'] = isset($listCases[$skinsId]) ? 1 : 0;
-            }
+        } catch (DBALException $e) {
+            return [
+                'list_skins' => [],
+                'cases_skins' => [],
+            ];
         }
-
-        return [
-            'list_skins' => $listSkins,
-            'cases_skins' => isset($casesSkins) ? $casesSkins : [],
-        ];
     }
 
     /**
