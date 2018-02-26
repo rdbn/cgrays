@@ -67,7 +67,10 @@ class BotLiveDropCommand extends ContainerAwareCommand
                     'skins_id' => $skinsSendLiveDrop['skins_id'],
                     'created_at' => date('Y-m-d H:i:s'),
                 ]);
+                $skinsSendLiveDrop['username'] = $botLiveDrop['username'];
                 $skinsSendLiveDrop['skin_name'] = MbStrimWidthHelper::strimWidth($skinsSendLiveDrop['skin_name']);
+                $skinsSendLiveDrop['steam_image'] = "/{$skinsSendLiveDrop['steam_image']}";
+                $skinsSendLiveDrop['cases_image'] = "/{$skinsSendLiveDrop['cases_image']}";
                 $liveDropProducer->publish(json_encode($skinsSendLiveDrop));
 
                 $skinsSendLiveDrop['user_id'] = $botLiveDrop['user_id'];

@@ -21,7 +21,9 @@ class BotLiveDropRepository extends EntityRepository
     {
         $dbal = $this->getEntityManager()->getConnection();
         $stmt = $dbal->prepare("
-        SELECT bld.* FROM bot_live_drop bld WHERE bld.hour_from <= :hour_current AND bld.hour_to >= :hour_current
+        SELECT bld.*, u.username FROM bot_live_drop bld 
+          LEFT JOIN users u ON bld.user_id = u.id 
+        WHERE bld.hour_from <= :hour_current AND bld.hour_to >= :hour_current
         ");
         $stmt->bindParam('hour_current', $hourCurrent, \PDO::PARAM_INT);
         $stmt->execute();

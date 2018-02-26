@@ -102,7 +102,8 @@ class CasesSkinsRepository extends EntityRepository
           DISTINCT cs.skins_id,
           s.name as skin_name,
           s.rarity_id,
-          s.icon_url as steam_image
+          s.icon_url as steam_image,
+          c.image as cases_image
         FROM cases_skins cs
           LEFT JOIN cases c ON c.id = cs.cases_id
           LEFT JOIN skins s ON s.id = cs.skins_id
