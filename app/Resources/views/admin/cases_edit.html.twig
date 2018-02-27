@@ -41,6 +41,12 @@
                         </div>
                     </div>
                     <div class="form-group">
+                        {{ form_label(form.promotionPrice) }}
+                        <div class="sonata-ba-field sonata-ba-field-standard-natural">
+                            {{ form_widget(form.promotionPrice, {'attr': {'class': 'form-control'}}) }}
+                        </div>
+                    </div>
+                    <div class="form-group">
                         {{ form_label(form.file) }}
                         <div class="sonata-ba-field sonata-ba-field-standard-natural">
                             {% if object.image %}

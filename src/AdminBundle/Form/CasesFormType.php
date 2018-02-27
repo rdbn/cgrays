@@ -8,7 +8,6 @@ use AppBundle\Entity\CasesDomain;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -38,6 +37,9 @@ class CasesFormType extends AbstractType
             ])
             ->add('price', TextType::class, [
                 'label' => 'Цена',
+            ])
+            ->add('promotionPrice', TextType::class, [
+                'label' => 'Цена по скидки',
             ])
             ->add('promotionPrice', TextType::class, [
                 'label' => 'Цена по скидки',
