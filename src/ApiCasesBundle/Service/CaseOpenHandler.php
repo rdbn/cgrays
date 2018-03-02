@@ -123,6 +123,7 @@ class CaseOpenHandler
                     'skins_id' => $skins['id'],
                     'user_id' => $userId,
                     'cases_domain_id' => $skins['cases_domain_id'],
+                    'cases_id' => $casesId,
                     'created_at' => $date->format('Y-m-d H:i:s'),
                 ]
             );
