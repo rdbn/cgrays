@@ -23,6 +23,7 @@ class CasesSkinsDropUserRepository extends EntityRepository
         try {
             $stmt = $dbal->prepare("
             SELECT
+              csdu.id as skins_drop_id,
               s.name as skin_name,
               w.localized_tag_name as weapon_name,
               s.icon_url as steam_image,
