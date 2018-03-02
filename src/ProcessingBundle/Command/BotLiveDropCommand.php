@@ -65,8 +65,11 @@ class BotLiveDropCommand extends ContainerAwareCommand
                 $dbal->insert('cases_skins_drop_user', [
                     'user_id' => $botLiveDrop['user_id'],
                     'skins_id' => $skinsSendLiveDrop['skins_id'],
+                    'cases_domain_id' => $skinsSendLiveDrop['cases_domain_id'],
+                    'cases_id' => $skinsSendLiveDrop['cases_id'],
                     'created_at' => date('Y-m-d H:i:s'),
                 ]);
+                unset($skinsSendLiveDrop['cases_domain_id'], $skinsSendLiveDrop['cases_id']);
                 $skinsSendLiveDrop['username'] = $botLiveDrop['username'];
                 $skinsSendLiveDrop['skin_name'] = MbStrimWidthHelper::strimWidth($skinsSendLiveDrop['skin_name']);
                 $skinsSendLiveDrop['steam_image'] = "/{$skinsSendLiveDrop['steam_image']}";
