@@ -93,7 +93,6 @@ class CasesCRUDController extends Controller
     public function editAction($id = null)
     {
         $request = $this->getRequest();
-//        var_dump($request->request->all());die();
         $id = $request->get($this->admin->getIdParameter());
         $this->admin->setFormTabs(['default' => ['groups' => []]]);
 
@@ -105,6 +104,7 @@ class CasesCRUDController extends Controller
 
         $listCasesSkins = $this->get('admin.service.cases_list');
         $listSkins = $listCasesSkins->getList($id);
+        $listRarity = $listCasesSkins->getListRarity($id);
 
         $form = $this->createForm(CasesFormType::class, $cases, [
             'action' => $this->generateUrl('sonata_cases_edit', ['id' => $id]),
@@ -168,6 +168,7 @@ class CasesCRUDController extends Controller
         return $this->render($this->admin->getTemplate('edit'), [
             'action' => 'edit',
             'object' => $cases,
+            'listRarity' => $listRarity,
             'listCasesSkins' => $listSkins,
             'countSkins' => $listCasesSkins->getCountSkins(),
             'form' => $form->createView(),

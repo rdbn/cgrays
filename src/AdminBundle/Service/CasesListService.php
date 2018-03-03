@@ -9,6 +9,7 @@
 namespace AdminBundle\Service;
 
 use AppBundle\Entity\CasesSkins;
+use AppBundle\Entity\Rarity;
 use AppBundle\Entity\Skins;
 use AppBundle\Services\Helper\MbStrimWidthHelper;
 use Doctrine\DBAL\DBALException;
@@ -61,7 +62,7 @@ class CasesListService
             $skins = $this->em->getRepository(Skins::class)
                 ->findAllSkinsByFilter($filter, $offset, $limit);
 
-            $skins = array_map(function ($item, $index) use ($listCases) {
+            $skins = array_map(function ($item) use ($listCases) {
                 $item['name'] = MbStrimWidthHelper::strimWidth($item['name']);
                 $item['is_skins_case'] = 0;
 
@@ -70,7 +71,7 @@ class CasesListService
                 }
 
                 return $item;
-            }, $skins, array_keys($skins));
+            }, $skins);
 
             return [
                 'list_skins' => $skins,
@@ -81,6 +82,21 @@ class CasesListService
                 'list_skins' => [],
                 'cases_skins' => [],
             ];
+        }
+    }
+
+    /**
+     * @param $casesId
+     * @return array
+     */
+    public function getListRarity($casesId)
+    {
+        try {
+            return $this->em->getRepository(Rarity::class)
+                ->findRarityByCasesId($casesId);
+        } catch (DBALException $e) {
+            $this->logger->error($e->getMessage());
+            return [];
         }
     }
 

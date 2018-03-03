@@ -37,7 +37,6 @@ class BotLiveDropCommand extends ContainerAwareCommand
         $liveDropProducer = $container->get('old_sound_rabbit_mq.live_drop_producer');
         $logger = $container->get('logger');
 
-
         try {
             $botLiveDrops = $em->getRepository(BotLiveDrop::class)
                 ->findBotUser(date('H'));

@@ -71,22 +71,22 @@
                         </tr>
                         </thead>
                         <tbody>
-                        {% for rarity in formFilter.rarity.vars.choices %}
-                            {% set rarityId = rarity.data.id %}
+                        {% for rarity in listRarity %}
+                            {% set rarityId = rarity.id %}
                             <tr class="rarity-bg-{{ rarityId }}">
-                                <td class="rarity-{{ rarityId }}">{{ rarity.label }}</td>
+                                <td class="rarity-{{ rarityId }}">{{ rarity.localized_tag_name }}</td>
                                 <td>
                                     <div class="form-group">
                                         <input
-                                                id="rarity-procent-{{ rarity.data.id }}"
+                                                id="rarity-procent-{{ rarityId }}"
                                                 name="cases_skins_rarity[{{ rarityId }}]"
                                                 class="form-control rarity-procent-value"
-                                                value="{% if sort[rarityId] is defined %}{{ sort[rarityId].rarity }}{% endif %}"
+                                                value="{{ rarity.procent_rarity }}"
                                                 placeholder="Процент 0%"
-                                                data-rarity-id="{{ rarity.data.id }}" />
+                                                data-rarity-id="{{ rarityId }}" />
                                     </div>
                                 </td>
-                                <td id="add-skins-rarity-{{ rarity.data.id }}" class="skins-check-cases">
+                                <td id="add-skins-rarity-{{ rarityId }}" class="skins-check-cases">
                                     {% for skins in listCasesSkins.cases_skins %}
                                         {% if skins.rarity_id == rarityId %}
                                             <div id="skins-{{ skins.skins_id }}" class="form-inline add-skins">
