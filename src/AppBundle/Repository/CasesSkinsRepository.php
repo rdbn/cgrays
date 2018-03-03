@@ -70,6 +70,7 @@ class CasesSkinsRepository extends EntityRepository
           r.id as rarity_id,
           r.localized_tag_name as rarity,
           c.price as cases_price,
+          c.image as cases_image,
           c.cases_category_id
         FROM cases_skins cs
           LEFT JOIN cases c ON cs.cases_id = c.id
@@ -79,7 +80,7 @@ class CasesSkinsRepository extends EntityRepository
           LEFT JOIN rarity r ON r.id = s.rarity_id
         WHERE
            cd.uuid = :uuid AND cs.cases_id = :cases_id
-        GROUP BY s.id, cd.id, cs.id, w.localized_tag_name, r.localized_tag_name, c.price, r.id, c.cases_category_id
+        GROUP BY s.id, cd.id, cs.id, w.localized_tag_name, r.localized_tag_name, c.price, r.id, c.cases_category_id, c.image
         ORDER BY rarity_id;
         ');
         $stmt->bindParam('cases_id', $casesId, \PDO::PARAM_INT);
