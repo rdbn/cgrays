@@ -79,7 +79,7 @@ class CasesSkinsRepository extends EntityRepository
           LEFT JOIN weapon w ON w.id = s.weapon_id
           LEFT JOIN rarity r ON r.id = s.rarity_id
         WHERE
-           cd.uuid = :uuid AND cs.cases_id = :cases_id
+           cd.uuid = :uuid AND cs.cases_id = :cases_id AND cs.procent_skins = TRUE
         GROUP BY s.id, cd.id, cs.id, w.localized_tag_name, r.localized_tag_name, c.price, r.id, c.cases_category_id, c.image
         ORDER BY rarity_id;
         ');

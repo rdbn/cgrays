@@ -43,7 +43,7 @@ class CasesSkins
     protected $procentRarity;
 
     /**
-     * @ORM\Column(name="procent_skins", type="smallint", options={"default": 0})
+     * @ORM\Column(name="procent_skins", type="boolean", options={"default": TRUE})
      */
     protected $procentSkins;
 
@@ -55,7 +55,7 @@ class CasesSkins
     public function __construct()
     {
         $this->procentRarity = 0;
-        $this->procentSkins = 0;
+        $this->procentSkins = true;
         $this->createdAt = new \DateTime();
     }
 

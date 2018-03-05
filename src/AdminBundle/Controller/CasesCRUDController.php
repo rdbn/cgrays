@@ -35,21 +35,6 @@ class CasesCRUDController extends Controller
             $newListSkins = $request->request->get('cases_skins_skins');
 
             $em = $this->getDoctrine()->getManager();
-            $casesSkins = $cases->getCasesSkins();
-            foreach ($casesSkins as $casesSkin) {
-                /* @var CasesSkins $casesSkin */
-                $skinsId = $casesSkin->getSkins()->getId();
-                $rarityId = $casesSkin->getSkins()->getRarity()->getId();
-
-                if (isset($newListSkins[$casesSkin->getSkins()->getId()])) {
-                    $casesSkin->setProcentRarity($rarities[$rarityId]);
-                    $casesSkin->setProcentSkins($newListSkins[$skinsId]['procent']);
-                    unset($newListSkins[$skinsId]);
-                } else {
-                    $em->remove($casesSkin);
-                }
-            }
-
             if (count($newListSkins) > 0) {
                 $skinsIds = array_keys($newListSkins);
                 $skinEntities = $em->getRepository(Skins::class)
@@ -59,13 +44,13 @@ class CasesCRUDController extends Controller
                     /* @var Skins $skin */
                     $rarityId = $skin->getRarity()->getId();
                     $procentRarity = $rarities[$rarityId] == "" ? 0: $rarities[$rarityId];
-                    $procentSkins = $newListSkins[$skin->getId()]['procent'] == "" ? 0 : $newListSkins[$skin->getId()]['procent'];
+                    $isDrop = isset($newListSkins[$skin->getId()]['is_drop']) ? true : false;
 
                     $casesSkins = new CasesSkins();
                     $casesSkins->setSkins($skin);
                     $casesSkins->setCases($cases);
                     $casesSkins->setProcentRarity($procentRarity);
-                    $casesSkins->setProcentSkins($procentSkins);
+                    $casesSkins->setProcentSkins($isDrop);
 
                     $em->persist($casesSkins);
                 }
@@ -126,10 +111,10 @@ class CasesCRUDController extends Controller
 
                 if (isset($newListSkins[$casesSkin->getSkins()->getId()])) {
                     $procentRarity = $rarities[$rarityId] == "" ? 0: $rarities[$rarityId];
-                    $procentSkins = $newListSkins[$skinsId]['procent'] == "" ? 0 : $newListSkins[$skinsId]['procent'];
+                    $isDrop = isset($newListSkins[$skinsId]['is_drop']) ? true : false;
 
                     $casesSkin->setProcentRarity($procentRarity);
-                    $casesSkin->setProcentSkins($procentSkins);
+                    $casesSkin->setProcentSkins($isDrop);
                     unset($newListSkins[$skinsId]);
                 } else {
                     $em->remove($casesSkin);
@@ -145,13 +130,13 @@ class CasesCRUDController extends Controller
                     /* @var Skins $skin */
                     $rarityId = $skin->getRarity()->getId();
                     $procentRarity = $rarities[$rarityId] == "" ? 0: $rarities[$rarityId];
-                    $procentSkins = $newListSkins[$skin->getId()]['procent'] == "" ? 0 : $newListSkins[$skin->getId()]['procent'];
+                    $isDrop = isset($newListSkins[$skin->getId()]['is_drop']) ? true : false;
 
                     $casesSkins = new CasesSkins();
                     $casesSkins->setSkins($skin);
                     $casesSkins->setCases($cases);
                     $casesSkins->setProcentRarity($procentRarity);
-                    $casesSkins->setProcentSkins($procentSkins);
+                    $casesSkins->setProcentSkins($isDrop);
 
                     $em->persist($casesSkins);
                 }
