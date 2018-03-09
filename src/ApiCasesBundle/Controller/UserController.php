@@ -4,7 +4,9 @@ namespace ApiCasesBundle\Controller;
 
 use AppBundle\Entity\CasesSkinsDropUser;
 use AppBundle\Entity\CasesSkinsPickUpUser;
+use AppBundle\Entity\Currency;
 use AppBundle\Entity\User;
+use AppBundle\Entity\UserPickUpSkinsSteam;
 use AppBundle\Services\Helper\MbStrimWidthHelper;
 use Doctrine\DBAL\DBALException;
 use FOS\RestBundle\Controller\Annotations as Rest;
@@ -63,6 +65,8 @@ class UserController extends FOSRestController
         $skins = [];
         foreach ($paginations as $pagination) {
             $pagination['skin_name'] = MbStrimWidthHelper::strimWidth($pagination['skin_name']);
+            $pagination['price'] = round($pagination['price'], 2);
+
             $skins[] = $pagination;
         }
 
@@ -102,6 +106,121 @@ class UserController extends FOSRestController
             $view = $this->view('Bad request', 400);
             return $this->handleView($view);
         }
+    }
+
+    /**
+     * @param Request $request
+     * @param $casesSkinsPickUpUserId
+     * @return Response
+     * @Rest\Post("/user/skins/steam/pick-up/{casesSkinsPickUpUserId}", requirements={"casesSkinsPickUpUserId": "\d+"})
+     * @Rest\View()
+     */
+    public function postUserPickUpSkinsSteamAction(Request $request, $casesSkinsPickUpUserId)
+    {
+        $domainId = $request->headers->get('x-domain-id');
+
+        $user = $this->getUser();
+        $em = $this->getDoctrine()->getManager();
+        $casesSkinsPickUpUser = $em->getRepository(CasesSkinsPickUpUser::class)
+            ->findOneSkinsByIdAndUserIdAndDomainId($casesSkinsPickUpUserId, $user, $domainId);
+
+        if (!$casesSkinsPickUpUser) {
+            $view = $this->view('Not found skins by user');
+            return $this->handleView($view);
+        }
+
+        try {
+            $userPickUpSkinsSteam = new UserPickUpSkinsSteam();
+            $userPickUpSkinsSteam->setCasesDomain($casesSkinsPickUpUser->getCasesDomain());
+            $userPickUpSkinsSteam->setUser($casesSkinsPickUpUser->getUser());
+            $userPickUpSkinsSteam->setSkins($casesSkinsPickUpUser->getSkins());
+
+            $em->remove($casesSkinsPickUpUser);
+            $em->persist($userPickUpSkinsSteam);
+            $em->flush();
+
+            $view = $this->view('success');
+        } catch (\Exception $e) {
+            $view = $this->view('Bad request');
+        }
+
+        return $this->handleView($view);
+    }
+
+    /**
+     * @param Request $request
+     * @param $casesSkinsPickUpUserId
+     * @return Response
+     * @Rest\Post("/user/skins/steam/sell/{casesSkinsPickUpUserId}", requirements={"casesSkinsPickUpUserId": "\d+"})
+     * @Rest\View()
+     */
+    public function postUserSellSkinsAction(Request $request, $casesSkinsPickUpUserId)
+    {
+        $domainId = $request->headers->get('x-domain-id');
+
+        $user = $this->getUser();
+        $em = $this->getDoctrine()->getManager();
+        $casesSkinsPickUpUser = $em->getRepository(CasesSkinsPickUpUser::class)
+            ->findOneSkinsByIdAndUserIdAndDomainId($casesSkinsPickUpUserId, $user, $domainId);
+
+        if (!$casesSkinsPickUpUser) {
+            $view = $this->view('Not found skins by user');
+            return $this->handleView($view);
+        }
+
+        $currency = $em->getRepository(Currency::class)
+            ->findOneBy(['code' => $request->headers->get('x-currency-code')]);
+
+        if (!$currency) {
+            $view = $this->view('Не верный код валюты.', 400);
+            return $this->handleView($view);
+        }
+
+        try {
+            $balance = $this->get('api_cases.service.user_pick_up_skins_steam')
+                ->handler($casesSkinsPickUpUser->getSkins(), $user->getId(), $domainId, $currency->getId());
+
+            $em->remove($casesSkinsPickUpUser);
+            $em->flush();
+
+            $view = $this->view(['balance' => $balance]);
+        } catch (\Exception $e) {
+            $view = $this->view('Bad request');
+        }
+
+        return $this->handleView($view);
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @Rest\Post("/user/add-href-trade")
+     * @Rest\View(serializerGroups={"cases_user"})
+     * @return Response
+     */
+    public function postAddHrefTradeAction(Request $request)
+    {
+        $domainId = $request->headers->get('x-domain-id');
+        $hrefTrade = $request->request->get('href_trade');
+
+        $userId = $this->getUser()->getId();
+        $em = $this->getDoctrine()->getManager();
+        $user = $em->getRepository(User::class)
+            ->findUserInformationByUserIdAndDomainId($userId, $domainId);
+
+        $user->setHrefTrade($hrefTrade);
+        $em->flush();
+
+        try {
+            $countDropSkins = $em->getRepository(CasesSkinsDropUser::class)
+                ->getCountOpenCasesByDomainIdAndUserId($domainId, $userId);
+        } catch (DBALException $e) {
+            $this->get('logger')->error($e->getMessage());
+            $countDropSkins = 0;
+        }
+
+        $view = $this->view(['profile' => $user, 'count_drop_skins' => $countDropSkins], 200);
+        return $this->handleView($view);
     }
 
     /**

@@ -70,7 +70,7 @@ class UserRepository extends EntityRepository
     /**
      * @param $userId
      * @param $domainId
-     * @return mixed
+     * @return User
      */
     public function findUserInformationByUserIdAndDomainId($userId, $domainId)
     {
@@ -85,9 +85,9 @@ class UserRepository extends EntityRepository
             ->setParameter('domain_id', $domainId);
 
         try {
-            return $qb->getQuery()->getSingleResult();
+            return $qb->getQuery()->getOneOrNullResult();
         } catch (\Exception $e) {
-            return [];
+            return null;
         }
     }
 

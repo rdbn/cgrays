@@ -126,6 +126,11 @@ class User implements UserInterface, EquatableInterface, \Serializable, SteamUse
     protected $casesBalanceUser;
 
     /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\UserPickUpSkinsSteam", mappedBy="user")
+     */
+    protected $userPickUpSkinsUser;
+
+    /**
      * Unmapped property to handle change password
      */
     private $plainPassword;
@@ -347,7 +352,7 @@ class User implements UserInterface, EquatableInterface, \Serializable, SteamUse
     /**
      * Set hrefTrade
      *
-     * @param int $hrefTrade
+     * @param string $hrefTrade
      *
      * @return User
      */
@@ -764,5 +769,73 @@ class User implements UserInterface, EquatableInterface, \Serializable, SteamUse
     public function getBalanceUser()
     {
         return $this->balanceUser;
+    }
+
+    /**
+     * Add casesBalanceUser
+     *
+     * @param \AppBundle\Entity\CasesBalanceUser $casesBalanceUser
+     *
+     * @return User
+     */
+    public function addCasesBalanceUser(\AppBundle\Entity\CasesBalanceUser $casesBalanceUser)
+    {
+        $this->casesBalanceUser[] = $casesBalanceUser;
+
+        return $this;
+    }
+
+    /**
+     * Remove casesBalanceUser
+     *
+     * @param \AppBundle\Entity\CasesBalanceUser $casesBalanceUser
+     */
+    public function removeCasesBalanceUser(\AppBundle\Entity\CasesBalanceUser $casesBalanceUser)
+    {
+        $this->casesBalanceUser->removeElement($casesBalanceUser);
+    }
+
+    /**
+     * Get casesBalanceUser
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getCasesBalanceUser()
+    {
+        return $this->casesBalanceUser;
+    }
+
+    /**
+     * Add userPickUpSkinsUser
+     *
+     * @param \AppBundle\Entity\UserPickUpSkinsSteam $userPickUpSkinsUser
+     *
+     * @return User
+     */
+    public function addUserPickUpSkinsUser(\AppBundle\Entity\UserPickUpSkinsSteam $userPickUpSkinsUser)
+    {
+        $this->userPickUpSkinsUser[] = $userPickUpSkinsUser;
+
+        return $this;
+    }
+
+    /**
+     * Remove userPickUpSkinsUser
+     *
+     * @param \AppBundle\Entity\UserPickUpSkinsSteam $userPickUpSkinsUser
+     */
+    public function removeUserPickUpSkinsUser(\AppBundle\Entity\UserPickUpSkinsSteam $userPickUpSkinsUser)
+    {
+        $this->userPickUpSkinsUser->removeElement($userPickUpSkinsUser);
+    }
+
+    /**
+     * Get userPickUpSkinsUser
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getUserPickUpSkinsUser()
+    {
+        return $this->userPickUpSkinsUser;
     }
 }

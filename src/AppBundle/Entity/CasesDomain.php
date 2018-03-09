@@ -66,6 +66,11 @@ class CasesDomain
     protected $casesSkinsDropUser;
 
     /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\UserPickUpSkinsSteam", mappedBy="casesDomain")
+     */
+    protected $userPickUpSkinsUser;
+
+    /**
      * CasesDomain constructor.
      */
     public function __construct()
@@ -218,5 +223,141 @@ class CasesDomain
     public function getCases()
     {
         return $this->cases;
+    }
+
+    /**
+     * Add casesStaticPage
+     *
+     * @param \AppBundle\Entity\CasesStaticPage $casesStaticPage
+     *
+     * @return CasesDomain
+     */
+    public function addCasesStaticPage(\AppBundle\Entity\CasesStaticPage $casesStaticPage)
+    {
+        $this->casesStaticPage[] = $casesStaticPage;
+
+        return $this;
+    }
+
+    /**
+     * Remove casesStaticPage
+     *
+     * @param \AppBundle\Entity\CasesStaticPage $casesStaticPage
+     */
+    public function removeCasesStaticPage(\AppBundle\Entity\CasesStaticPage $casesStaticPage)
+    {
+        $this->casesStaticPage->removeElement($casesStaticPage);
+    }
+
+    /**
+     * Get casesStaticPage
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getCasesStaticPage()
+    {
+        return $this->casesStaticPage;
+    }
+
+    /**
+     * Add casesSkinsPickUpUser
+     *
+     * @param \AppBundle\Entity\CasesSkinsPickUpUser $casesSkinsPickUpUser
+     *
+     * @return CasesDomain
+     */
+    public function addCasesSkinsPickUpUser(\AppBundle\Entity\CasesSkinsPickUpUser $casesSkinsPickUpUser)
+    {
+        $this->casesSkinsPickUpUser[] = $casesSkinsPickUpUser;
+
+        return $this;
+    }
+
+    /**
+     * Remove casesSkinsPickUpUser
+     *
+     * @param \AppBundle\Entity\CasesSkinsPickUpUser $casesSkinsPickUpUser
+     */
+    public function removeCasesSkinsPickUpUser(\AppBundle\Entity\CasesSkinsPickUpUser $casesSkinsPickUpUser)
+    {
+        $this->casesSkinsPickUpUser->removeElement($casesSkinsPickUpUser);
+    }
+
+    /**
+     * Get casesSkinsPickUpUser
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getCasesSkinsPickUpUser()
+    {
+        return $this->casesSkinsPickUpUser;
+    }
+
+    /**
+     * Add casesSkinsDropUser
+     *
+     * @param \AppBundle\Entity\CasesSkinsDropUser $casesSkinsDropUser
+     *
+     * @return CasesDomain
+     */
+    public function addCasesSkinsDropUser(\AppBundle\Entity\CasesSkinsDropUser $casesSkinsDropUser)
+    {
+        $this->casesSkinsDropUser[] = $casesSkinsDropUser;
+
+        return $this;
+    }
+
+    /**
+     * Remove casesSkinsDropUser
+     *
+     * @param \AppBundle\Entity\CasesSkinsDropUser $casesSkinsDropUser
+     */
+    public function removeCasesSkinsDropUser(\AppBundle\Entity\CasesSkinsDropUser $casesSkinsDropUser)
+    {
+        $this->casesSkinsDropUser->removeElement($casesSkinsDropUser);
+    }
+
+    /**
+     * Get casesSkinsDropUser
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getCasesSkinsDropUser()
+    {
+        return $this->casesSkinsDropUser;
+    }
+
+    /**
+     * Add userPickUpSkinsUser
+     *
+     * @param \AppBundle\Entity\UserPickUpSkinsSteam $userPickUpSkinsUser
+     *
+     * @return CasesDomain
+     */
+    public function addUserPickUpSkinsUser(\AppBundle\Entity\UserPickUpSkinsSteam $userPickUpSkinsUser)
+    {
+        $this->userPickUpSkinsUser[] = $userPickUpSkinsUser;
+
+        return $this;
+    }
+
+    /**
+     * Remove userPickUpSkinsUser
+     *
+     * @param \AppBundle\Entity\UserPickUpSkinsSteam $userPickUpSkinsUser
+     */
+    public function removeUserPickUpSkinsUser(\AppBundle\Entity\UserPickUpSkinsSteam $userPickUpSkinsUser)
+    {
+        $this->userPickUpSkinsUser->removeElement($userPickUpSkinsUser);
+    }
+
+    /**
+     * Get userPickUpSkinsUser
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getUserPickUpSkinsUser()
+    {
+        return $this->userPickUpSkinsUser;
     }
 }

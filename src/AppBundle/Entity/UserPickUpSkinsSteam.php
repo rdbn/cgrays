@@ -2,8 +2,8 @@
 /**
  * Created by PhpStorm.
  * User: rdbn
- * Date: 10.04.17
- * Time: 10:51
+ * Date: 05.03.2018
+ * Time: 11:40
  */
 
 namespace AppBundle\Entity;
@@ -11,10 +11,10 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="AppBundle\Repository\CasesSkinsPickUpUserRepository")
- * @ORM\Table(name="cases_skins_pick_up_user")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\UserPickUpSkinsSteamRepository")
+ * @ORM\Table(name="user_pick_up_skins_steam")
  */
-class CasesSkinsPickUpUser
+class UserPickUpSkinsSteam
 {
     /**
      * @ORM\Column(type="integer")
@@ -24,36 +24,33 @@ class CasesSkinsPickUpUser
     protected $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Skins", inversedBy="casesSkinsDropUser")
-     * @ORM\JoinColumn(name="skins_id", referencedColumnName="id")
-     */
-    protected $skins;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CasesDomain", inversedBy="casesSkinsPickUpUser")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CasesDomain", inversedBy="userPickUpSkinsUser")
      * @ORM\JoinColumn(name="cases_domain_id", referencedColumnName="id")
      */
     protected $casesDomain;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="casesSkinsDropUser")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="userPickUpSkinsUser")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     protected $user;
 
     /**
-     * @ORM\Column(name="is_remove", type="boolean", options={"default": FALSE})
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Skins", inversedBy="userPickUpSkinsUser")
+     * @ORM\JoinColumn(name="skins_id", referencedColumnName="id")
      */
-    protected $isRemove;
+    protected $skins;
 
     /**
-     * @ORM\Column(name="created_at", type="datetime")
+     * @ORM\Column(name="created_at", type="datetime", type="datetime")
      */
     protected $createdAt;
 
+    /**
+     * UserPickUpSkinsSteam constructor.
+     */
     public function __construct()
     {
-        $this->isRemove = false;
         $this->createdAt = new \DateTime();
     }
 
@@ -68,35 +65,11 @@ class CasesSkinsPickUpUser
     }
 
     /**
-     * Set isRemove
-     *
-     * @param boolean $isRemove
-     *
-     * @return CasesSkinsPickUpUser
-     */
-    public function setIsRemove($isRemove)
-    {
-        $this->isRemove = $isRemove;
-
-        return $this;
-    }
-
-    /**
-     * Get isRemove
-     *
-     * @return boolean
-     */
-    public function getIsRemove()
-    {
-        return $this->isRemove;
-    }
-
-    /**
      * Set createdAt
      *
      * @param \DateTime $createdAt
      *
-     * @return CasesSkinsPickUpUser
+     * @return UserPickUpSkinsSteam
      */
     public function setCreatedAt($createdAt)
     {
@@ -116,35 +89,11 @@ class CasesSkinsPickUpUser
     }
 
     /**
-     * Set skins
-     *
-     * @param \AppBundle\Entity\Skins $skins
-     *
-     * @return CasesSkinsPickUpUser
-     */
-    public function setSkins(\AppBundle\Entity\Skins $skins = null)
-    {
-        $this->skins = $skins;
-
-        return $this;
-    }
-
-    /**
-     * Get skins
-     *
-     * @return \AppBundle\Entity\Skins
-     */
-    public function getSkins()
-    {
-        return $this->skins;
-    }
-
-    /**
      * Set casesDomain
      *
      * @param \AppBundle\Entity\CasesDomain $casesDomain
      *
-     * @return CasesSkinsPickUpUser
+     * @return UserPickUpSkinsSteam
      */
     public function setCasesDomain(\AppBundle\Entity\CasesDomain $casesDomain = null)
     {
@@ -168,7 +117,7 @@ class CasesSkinsPickUpUser
      *
      * @param \AppBundle\Entity\User $user
      *
-     * @return CasesSkinsPickUpUser
+     * @return UserPickUpSkinsSteam
      */
     public function setUser(\AppBundle\Entity\User $user = null)
     {
@@ -185,5 +134,29 @@ class CasesSkinsPickUpUser
     public function getUser()
     {
         return $this->user;
+    }
+
+    /**
+     * Set skins
+     *
+     * @param \AppBundle\Entity\Skins $skins
+     *
+     * @return UserPickUpSkinsSteam
+     */
+    public function setSkins(\AppBundle\Entity\Skins $skins = null)
+    {
+        $this->skins = $skins;
+
+        return $this;
+    }
+
+    /**
+     * Get skins
+     *
+     * @return \AppBundle\Entity\Skins
+     */
+    public function getSkins()
+    {
+        return $this->skins;
     }
 }

@@ -8,7 +8,6 @@
 
 namespace ApiCasesBundle\Controller;
 
-use AppBundle\Entity\CasesSkinsPickUpUser;
 use AppBundle\Entity\Currency;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\FOSRestController;

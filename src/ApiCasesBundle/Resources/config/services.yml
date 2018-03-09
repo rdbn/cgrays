@@ -58,3 +58,9 @@ services:
         arguments:
             - '@old_sound_rabbit_mq.metrics_cases_producer'
             - '@logger'
+
+    api_cases.service.user_pick_up_skins_steam:
+        class: ApiCasesBundle\Service\UserSellSkinsHandler
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@doctrine.dbal.default_connection'

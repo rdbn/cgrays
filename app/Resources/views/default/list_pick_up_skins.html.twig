@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport"    content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="">
+
+        <title>List trade</title>
+
+        <link rel="stylesheet" href="{{ asset('bundles/app/css/bootstrap.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('bundles/app/css/font-awesome.min.css') }}">
+
+        <!-- Custom styles for our template -->
+        <link rel="stylesheet" href="{{ asset('bundles/app/css/bootstrap-theme.css') }}">
+        {% block stylesheets %}{% endblock %}
+    </head>
+    <body>
+        <div class="container">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Steam Id</th>
+                        <th>Steam Href Trade</th>
+                        <th>Href trade</th>
+                        <th>Skins name</th>
+                        <th>Steam price</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for item in listPickUpSkins %}
+                    <tr>
+                        <td>{{ item.user.username }}</td>
+                        <td>{{ item.user.steamId }}</td>
+                        <td><a href="{{ item.user.hrefTrade }}" target="_blank">Ссылка для трейда</a></td>
+                        <td><input value="{{ item.user.hrefTrade }}" type="text" /></td>
+                        <td>{{ item.skins.name }}</td>
+                        <td>{{ item.skins.steamPrice|round(2) }}</td>
+                        <td><img src="{{ asset(item.skins.iconUrl) }}" width="75" /></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </body>
+</html>

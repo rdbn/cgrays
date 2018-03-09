@@ -9,6 +9,7 @@
 namespace AppBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
 
 class CasesSkinsPickUpUserRepository extends EntityRepository
 {
@@ -38,6 +39,7 @@ class CasesSkinsPickUpUserRepository extends EntityRepository
         $dbal = $this->getEntityManager()->getConnection();
         $qb = $dbal->createQueryBuilder();
         $qb
+            ->addSelect('cspuu.id')
             ->addSelect('s.name as skin_name')
             ->addSelect('s.icon_url as steam_image')
             ->addSelect('s.steam_price as price')
@@ -82,5 +84,30 @@ class CasesSkinsPickUpUserRepository extends EntityRepository
         $stmt->execute();
 
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * @param $id
+     * @param $user
+     * @param $domainId
+     * @return mixed|null
+     */
+    public function findOneSkinsByIdAndUserIdAndDomainId($id, $user, $domainId)
+    {
+        $qb = $this->createQueryBuilder('cspuu');
+        $qb
+            ->leftJoin('cspuu.casesDomain', 'cd')
+            ->where('cspuu.id = :id')
+            ->andWhere('cspuu.user = :user')
+            ->andWhere('cd.uuid = :domain_id')
+            ->setParameter('id', $id)
+            ->setParameter('user', $user)
+            ->setParameter('domain_id', $domainId);
+
+        try {
+            return $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            return null;
+        }
     }
 }

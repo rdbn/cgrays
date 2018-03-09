@@ -104,6 +104,11 @@ class Skins
     protected $casesSkinsDropUser;
 
     /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\CasesSkinsDropUser", mappedBy="skins")
+     */
+    protected $userPickUpSkinsUser;
+
+    /**
      * Unmapped property to handle file uploads
      */
     private $file;
@@ -540,5 +545,39 @@ class Skins
     public function getCasesSkinsDropUser()
     {
         return $this->casesSkinsDropUser;
+    }
+
+    /**
+     * Add userPickUpSkinsUser
+     *
+     * @param \AppBundle\Entity\CasesSkinsDropUser $userPickUpSkinsUser
+     *
+     * @return Skins
+     */
+    public function addUserPickUpSkinsUser(\AppBundle\Entity\CasesSkinsDropUser $userPickUpSkinsUser)
+    {
+        $this->userPickUpSkinsUser[] = $userPickUpSkinsUser;
+
+        return $this;
+    }
+
+    /**
+     * Remove userPickUpSkinsUser
+     *
+     * @param \AppBundle\Entity\CasesSkinsDropUser $userPickUpSkinsUser
+     */
+    public function removeUserPickUpSkinsUser(\AppBundle\Entity\CasesSkinsDropUser $userPickUpSkinsUser)
+    {
+        $this->userPickUpSkinsUser->removeElement($userPickUpSkinsUser);
+    }
+
+    /**
+     * Get userPickUpSkinsUser
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getUserPickUpSkinsUser()
+    {
+        return $this->userPickUpSkinsUser;
     }
 }

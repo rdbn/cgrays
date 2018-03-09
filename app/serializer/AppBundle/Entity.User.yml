@@ -10,6 +10,9 @@ AppBundle\Entity\User:
         avatar:
             expose: true
             groups: [cases_user]
+        hrefTrade:
+            expose: true
+            groups: [cases_user]
         casesBalanceUser:
             expose: true
             groups: [cases_user]
