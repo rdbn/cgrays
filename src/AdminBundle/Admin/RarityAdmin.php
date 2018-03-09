@@ -28,9 +28,9 @@ class RarityAdmin extends AbstractAdmin
     protected function configureFormFields(FormMapper $form)
     {
         $form
-            ->add('internalName')
             ->add('localizedTagName')
-            ->add('color');
+            ->add('color')
+            ->add('sort');
     }
 
     /**
@@ -48,8 +48,8 @@ class RarityAdmin extends AbstractAdmin
     {
         $list
             ->addIdentifier('id')
-            ->add('internalName')
             ->add('localizedTagName')
+            ->add('sort')
             ->add('color');
     }
 }

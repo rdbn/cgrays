@@ -81,7 +81,7 @@ class CasesSkinsRepository extends EntityRepository
         WHERE
            cd.uuid = :uuid AND cs.cases_id = :cases_id AND cs.procent_skins = TRUE
         GROUP BY s.id, cd.id, cs.id, w.localized_tag_name, r.localized_tag_name, c.price, r.id, c.cases_category_id, c.image
-        ORDER BY rarity_id;
+        ORDER BY r.sort;
         ');
         $stmt->bindParam('cases_id', $casesId, \PDO::PARAM_INT);
         $stmt->bindParam('uuid', $domainId, \PDO::PARAM_STR);

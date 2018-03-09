@@ -36,6 +36,11 @@ class Rarity implements DictionaryInterface
     protected $color;
 
     /**
+     * @ORM\Column(type="smallint", options={"default": 1})
+     */
+    protected $sort;
+
+    /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Skins", mappedBy="rarity")
      */
     protected $skins;
@@ -85,6 +90,30 @@ class Rarity implements DictionaryInterface
     public function getLocalizedTagName()
     {
         return $this->localizedTagName;
+    }
+
+    /**
+     * Set sort
+     *
+     * @param string $sort
+     *
+     * @return Rarity
+     */
+    public function setSort($sort)
+    {
+        $this->sort = $sort;
+
+        return $this;
+    }
+
+    /**
+     * Get sort
+     *
+     * @return string
+     */
+    public function getSort()
+    {
+        return $this->sort;
     }
 
     /**
