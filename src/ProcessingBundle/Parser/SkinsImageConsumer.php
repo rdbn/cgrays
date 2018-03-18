@@ -13,7 +13,7 @@ use OldSound\RabbitMqBundle\RabbitMq\ConsumerInterface;
 use PhpAmqpLib\Message\AMQPMessage;
 use Psr\Log\LoggerInterface;
 
-class SkinsConsumer implements ConsumerInterface
+class SkinsImageConsumer implements ConsumerInterface
 {
     /**
      * @var Connection
@@ -54,7 +54,6 @@ class SkinsConsumer implements ConsumerInterface
             $this->skinsHandler->handler($parameters);
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
-            $this->dbal->insert('a_failed_link_skins', ['msg' => $msg->getBody()]);
         }
 
         return self::MSG_ACK;

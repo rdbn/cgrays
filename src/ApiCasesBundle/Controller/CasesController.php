@@ -84,8 +84,7 @@ class CasesController extends FOSRestController
                 'skin_name' => MbStrimWidthHelper::strimWidth($item['name']),
                 'steam_image' => "/{$item['icon_url']}",
                 'weapon_name' => $item['weapon'],
-                'rarity' => $item['rarity'],
-                'rarity_id' => $item['rarity_id'],
+                'rarity' => $item['rarity_id'],
             ];
         }, $case['skins']);
 

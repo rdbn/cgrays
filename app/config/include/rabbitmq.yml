@@ -21,14 +21,6 @@ old_sound_rabbit_mq:
             connection:       default
             exchange_options: {name: 'trade_product', type: fanout}
 
-        parser_price:
-            connection:       default
-            exchange_options: {name: 'parser_price', type: direct}
-
-        parser_skins:
-            connection:       default
-            exchange_options: {name: 'parser_skins', type: direct}
-
         live_drop:
             connection:       default
             exchange_options: {name: 'live_drop', type: fanout}
@@ -47,13 +39,13 @@ old_sound_rabbit_mq:
         parser_price:
             connection:       default
             queue_options:    {name: 'parser_price'}
-            exchange_options: {name: 'parser_price', type: direct}
+            exchange_options: {name: 'parser_skins', type: fanout}
             callback:         processing.parser.price
 
-        parser_skins:
+        parser_skins_iamge:
             connection:       default
-            queue_options:    {name: 'parser_skins'}
-            exchange_options: {name: 'parser_skins', type: direct}
+            queue_options:    {name: 'parser_skins_iamge'}
+            exchange_options: {name: 'parser_skins', type: fanout}
             callback:         processing.parser.skins
 
         metrics_cases:
@@ -69,11 +61,11 @@ services:
 
     processing.parser.price:
         class: ProcessingBundle\Parser\PriceConsumer
-        arguments: ['@doctrine.dbal.default_connection', '@logger']
+        arguments: ['@processing.parser.price_handler', '@logger']
 
     processing.parser.skins:
         class: ProcessingBundle\Parser\SkinsConsumer
-        arguments: ['@processing.parser.skins_handler', '@processing.parser.error_handler', '@logger']
+        arguments: ['@doctrine.dbal.default_connection', '@processing.parser.skins_handler', '@logger']
 
     processing.metrics.cases:
         class: ProcessingBundle\Metrics\CasesConsumer

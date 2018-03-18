@@ -9,21 +9,20 @@ services:
             - '@logger'
             - '%steam.steam_community_url%'
 
-    processing.parser.error_handler:
-        class: ProcessingBundle\Parser\ErrorHandler
-        arguments:
-            - '@doctrine.dbal.default_connection'
-            - '@logger'
-
     processing.service.parser_market_handler:
         class: ProcessingBundle\Services\ParserMarketHandler
         arguments:
             - '@app.repository.skins'
-            - '@old_sound_rabbit_mq.parser_price_producer'
-            - '@old_sound_rabbit_mq.parser_skins_producer'
             - '@steam.api_market'
             - '@logger'
 
     processing.metrics.persister:
         class: ProcessingBundle\Metrics\Persister
         arguments: ["@doctrine.dbal.default_connection", "@logger"]
+
+    processing.parser.price_handler:
+        class: ProcessingBundle\Parser\PriceHandler
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@doctrine.dbal.default_connection"
+            - "@logger"

@@ -84,7 +84,6 @@ class SkinsHandler
      * @param Client $guzzle
      * @param UploadImageService $uploadImage
      * @param LoggerInterface $logger
-     * @param LoggerInterface $logger
      * @param $steamCommunityImageUrl
      */
     public function __construct(
@@ -106,6 +105,7 @@ class SkinsHandler
 
     /**
      * @param array $skin
+     * @throws \Exception
      */
     public function handler(array $skin)
     {

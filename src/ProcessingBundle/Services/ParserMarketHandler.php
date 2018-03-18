@@ -22,16 +22,6 @@ class ParserMarketHandler
     private $skinsRepository;
 
     /**
-     * @var ProducerInterface
-     */
-    private $priceProducer;
-
-    /**
-     * @var ProducerInterface
-     */
-    private $skinsProducer;
-
-    /**
      * @var Market
      */
     private $market;
@@ -49,22 +39,16 @@ class ParserMarketHandler
     /**
      * ParserPriceHandler constructor.
      * @param SkinsRepository $skinsRepository
-     * @param ProducerInterface $priceProducer
-     * @param ProducerInterface $skinsProducer
      * @param Market $market
      * @param LoggerInterface $logger
      */
     public function __construct(
         SkinsRepository $skinsRepository,
-        ProducerInterface $priceProducer,
-        ProducerInterface $skinsProducer,
         Market $market,
         LoggerInterface $logger
     )
     {
         $this->skinsRepository = $skinsRepository;
-        $this->priceProducer = $priceProducer;
-        $this->skinsProducer = $skinsProducer;
         $this->market = $market;
         $this->logger = $logger;
     }
@@ -81,16 +65,6 @@ class ParserMarketHandler
         );
 
         $skinsFoundDB = $this->getSkinsFoundDB($skins);
-        foreach ($skins as $skin) {
-            if (isset($skinsFoundDB[$skin['name']])) {
-                $this->priceProducer->publish(json_encode([
-                    'id' => $skinsFoundDB[$skin['name']]['id'],
-                    'price' => $skin['price'],
-                ]));
-            } else {
-                $this->skinsProducer->publish(json_encode($skin));
-            }
-        }
 
         $this->count = count($skins);
     }

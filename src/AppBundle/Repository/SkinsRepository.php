@@ -146,4 +146,31 @@ class SkinsRepository extends EntityRepository
 
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
+
+    /**
+     * @param $skinsName
+     * @param $weaponName
+     * @param $rarityName
+     * @return mixed
+     * @throws \Doctrine\DBAL\DBALException
+     */
+    public function findOneSkinsByNameAndWeaponAndRarity($skinsName, $weaponName, $rarityName)
+    {
+        $dbal = $this->getEntityManager()->getConnection();
+        $stmt = $dbal->prepare("
+        SELECT s.id FROM skins s
+          LEFT JOIN weapon w ON s.weapon_id = w.id
+          LEFT JOIN rarity r ON s.rarity_id = r.id
+        WHERE
+          s.name = :skins_name 
+          AND w.localized_tag_name = :weapon_name 
+          AND r.localized_tag_name = :rarity_name
+        ");
+        $stmt->bindParam('skins_name', $skinsName, \PDO::PARAM_STR);
+        $stmt->bindParam('weapon_name', $weaponName, \PDO::PARAM_STR);
+        $stmt->bindParam('rarity_name', $rarityName, \PDO::PARAM_STR);
+        $stmt->execute();
+
+        return $stmt->fetch();
+    }
 }
