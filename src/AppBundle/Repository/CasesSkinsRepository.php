@@ -104,6 +104,7 @@ class CasesSkinsRepository extends EntityRepository
           DISTINCT cs.skins_id,
           s.name as skin_name,
           s.rarity_id,
+          r.localized_tag_name as rarity,
           s.icon_url as steam_image,
           c.id as cases_id,
           c.cases_domain_id,
@@ -111,6 +112,7 @@ class CasesSkinsRepository extends EntityRepository
         FROM cases_skins cs
           LEFT JOIN cases c ON c.id = cs.cases_id
           LEFT JOIN skins s ON s.id = cs.skins_id
+          LEFT JOIN rarity r ON s.rarity_id = r.id
         WHERE
           c.cases_domain_id = :cases_domain_id
         LIMIT 1 OFFSET :offset

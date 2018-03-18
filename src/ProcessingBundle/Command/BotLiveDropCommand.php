@@ -60,6 +60,8 @@ class BotLiveDropCommand extends ContainerAwareCommand
 
             $logger->info('Start.');
             $logger->info("Count skins: {$countCasesSkinsDomain}");
+
+            $dbal->beginTransaction();
             try {
                 $dbal->insert('cases_skins_drop_user', [
                     'user_id' => $botLiveDrop['user_id'],
@@ -68,17 +70,22 @@ class BotLiveDropCommand extends ContainerAwareCommand
                     'cases_id' => $skinsSendLiveDrop['cases_id'],
                     'created_at' => date('Y-m-d H:i:s'),
                 ]);
+                $skinsSendLiveDrop['skins_drop_id'] = $dbal->lastInsertId();
+                
                 unset($skinsSendLiveDrop['cases_domain_id'], $skinsSendLiveDrop['cases_id']);
                 $skinsSendLiveDrop['username'] = $botLiveDrop['username'];
                 $skinsSendLiveDrop['skin_name'] = MbStrimWidthHelper::strimWidth($skinsSendLiveDrop['skin_name']);
                 $skinsSendLiveDrop['steam_image'] = "/{$skinsSendLiveDrop['steam_image']}";
                 $skinsSendLiveDrop['cases_image'] = "/{$skinsSendLiveDrop['cases_image']}";
-                $liveDropProducer->publish(json_encode($skinsSendLiveDrop));
-
                 $skinsSendLiveDrop['user_id'] = $botLiveDrop['user_id'];
+
+                $liveDropProducer->publish(json_encode($skinsSendLiveDrop));
                 $logger->info(json_encode($skinsSendLiveDrop));
+
+                $dbal->commit();
             } catch (DBALException $e) {
                 $logger->error($e->getMessage());
+                $dbal->rollBack();
             }
 
             sleep($durationSleep);
