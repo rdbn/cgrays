@@ -92,12 +92,28 @@ class CasesListService
     public function getListRarity($casesId)
     {
         try {
-            return $this->em->getRepository(Rarity::class)
+            $listRarityCases = $this->em->getRepository(Rarity::class)
                 ->findRarityByCasesId($casesId);
+
+            $listRarityCasesNormalize = [];
+            foreach ($listRarityCases as $rarityCase) {
+                $listRarityCasesNormalize[$rarityCase['id']] = $rarityCase['procent_rarity'];
+            }
         } catch (DBALException $e) {
             $this->logger->error($e->getMessage());
-            return [];
+            $listRarityCasesNormalize = [];
         }
+        
+        $listRarity = $this->em->getRepository(Rarity::class)
+            ->findAllRarity();
+
+        foreach ($listRarity as $index => $item) {
+            if (isset($listRarityCasesNormalize[$item['id']])) {
+                $listRarity[$index]['procent_rarity'] = $listRarityCasesNormalize[$item['id']];
+            }
+        }
+
+        return $listRarity;
     }
 
     /**
