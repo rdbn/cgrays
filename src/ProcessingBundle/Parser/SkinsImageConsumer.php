@@ -16,14 +16,9 @@ use Psr\Log\LoggerInterface;
 class SkinsImageConsumer implements ConsumerInterface
 {
     /**
-     * @var Connection
+     * @var SkinsImageHandler
      */
-    private $dbal;
-
-    /**
-     * @var SkinsHandler
-     */
-    private $skinsHandler;
+    private $imageHandler;
 
     /**
      * @var LoggerInterface
@@ -32,14 +27,12 @@ class SkinsImageConsumer implements ConsumerInterface
 
     /**
      * SkinsConsumer constructor.
-     * @param Connection $dbal
-     * @param SkinsHandler $skinsHandler
+     * @param SkinsImageHandler $imageHandler
      * @param LoggerInterface $logger
      */
-    public function __construct(Connection $dbal, SkinsHandler $skinsHandler, LoggerInterface $logger)
+    public function __construct(SkinsImageHandler $imageHandler, LoggerInterface $logger)
     {
-        $this->dbal = $dbal;
-        $this->skinsHandler = $skinsHandler;
+        $this->imageHandler = $imageHandler;
         $this->logger = $logger;
     }
 
@@ -51,9 +44,12 @@ class SkinsImageConsumer implements ConsumerInterface
     {
         $parameters = json_decode($msg->getBody(), 1);
         try {
-            $this->skinsHandler->handler($parameters);
+            $this->imageHandler->handler($parameters);
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
+            sleep(30);
+
+            return self::MSG_REJECT_REQUEUE;
         }
 
         return self::MSG_ACK;

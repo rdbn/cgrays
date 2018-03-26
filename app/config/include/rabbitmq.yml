@@ -42,11 +42,18 @@ old_sound_rabbit_mq:
             exchange_options: {name: 'parser_skins', type: fanout}
             callback:         processing.parser.price
 
+        parser_skins:
+            connection:       default
+            queue_options:    {name: 'parser_skins'}
+            exchange_options: {name: 'parser_skins', type: fanout}
+            callback:         processing.parser.skins
+
         parser_skins_iamge:
             connection:       default
             queue_options:    {name: 'parser_skins_iamge'}
             exchange_options: {name: 'parser_skins', type: fanout}
             callback:         processing.parser.skins
+
 
         metrics_cases:
             connection:       default
@@ -66,6 +73,10 @@ services:
     processing.parser.skins:
         class: ProcessingBundle\Parser\SkinsConsumer
         arguments: ['@doctrine.dbal.default_connection', '@processing.parser.skins_handler', '@logger']
+
+    processing.parser.skins_image:
+        class: ProcessingBundle\Parser\SkinsImageConsumer
+        arguments: ['@processing.parser.skins_image_handler', '@logger']
 
     processing.metrics.cases:
         class: ProcessingBundle\Metrics\CasesConsumer

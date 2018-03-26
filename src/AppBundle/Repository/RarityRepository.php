@@ -2,6 +2,7 @@
 
 namespace AppBundle\Repository;
 
+use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityRepository;
 
 /**
@@ -31,5 +32,21 @@ class RarityRepository extends EntityRepository
         $stmt->execute();
 
         return $stmt->fetchAll();
+    }
+
+    /**
+     * @return array
+     */
+    public function findAllRarity()
+    {
+        $dbal = $this->getEntityManager()->getConnection();
+        try {
+            $stmt = $dbal->prepare("SELECT r.id, r.localized_tag_name, 0 as procent_rarity FROM rarity r");
+            $stmt->execute();
+
+            return $stmt->fetchAll();
+        } catch (DBALException $e) {
+            return [];
+        }
     }
 }

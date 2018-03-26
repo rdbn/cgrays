@@ -12,6 +12,7 @@ use AdminBundle\Form\CasesFormFilterType;
 use AdminBundle\Form\CasesFormType;
 use AppBundle\Entity\Cases;
 use AppBundle\Entity\CasesSkins;
+use AppBundle\Entity\Rarity;
 use AppBundle\Entity\Skins;
 use Sonata\AdminBundle\Controller\CRUDController as Controller;
 
@@ -20,6 +21,7 @@ class CasesCRUDController extends Controller
     public function createAction()
     {
         $request = $this->getRequest();
+        $em = $this->getDoctrine()->getManager();
         $this->admin->setFormTabs(['default' => ['groups' => []]]);
 
         $cases = new Cases();
@@ -34,7 +36,6 @@ class CasesCRUDController extends Controller
             $rarities = $request->request->get('cases_skins_rarity');
             $newListSkins = $request->request->get('cases_skins_skins');
 
-            $em = $this->getDoctrine()->getManager();
             if (count($newListSkins) > 0) {
                 $skinsIds = array_keys($newListSkins);
                 $skinEntities = $em->getRepository(Skins::class)
@@ -64,12 +65,15 @@ class CasesCRUDController extends Controller
 
         $formFilter = $this->createForm(CasesFormFilterType::class);
         $listCasesSkins = $this->get('admin.service.cases_list');
+        $listRarity = $em->getRepository(Rarity::class)
+            ->findAllRarity();
 
         return $this->render($this->admin->getTemplate('edit'), [
             'action' => 'create',
             'object' => $cases,
             'listCasesSkins' => $listCasesSkins->getList(),
             'countSkins' => $listCasesSkins->getCountSkins(),
+            'listRarity' => $listRarity,
             'form' => $form->createView(),
             'formFilter' => $formFilter->createView(),
         ], null);

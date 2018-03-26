@@ -71,7 +71,7 @@ class BotLiveDropCommand extends ContainerAwareCommand
                     'created_at' => date('Y-m-d H:i:s'),
                 ]);
                 $skinsSendLiveDrop['skins_drop_id'] = $dbal->lastInsertId();
-                
+
                 unset($skinsSendLiveDrop['cases_domain_id'], $skinsSendLiveDrop['cases_id']);
                 $skinsSendLiveDrop['username'] = $botLiveDrop['username'];
                 $skinsSendLiveDrop['skin_name'] = MbStrimWidthHelper::strimWidth($skinsSendLiveDrop['skin_name']);

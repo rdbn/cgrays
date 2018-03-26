@@ -48,6 +48,7 @@ class SkinsRepository extends EntityRepository
     /**
      * @param $namesSkins
      * @return array
+     * @throws \Doctrine\DBAL\DBALException
      */
     public function findSkinsByNames($namesSkins)
     {
@@ -63,6 +64,7 @@ class SkinsRepository extends EntityRepository
     /**
      * @param $skinsId
      * @return array
+     * @throws \Doctrine\DBAL\DBALException
      */
     public function findSkinsForUpdateById(int $skinsId)
     {
@@ -169,6 +171,43 @@ class SkinsRepository extends EntityRepository
         $stmt->bindParam('skins_name', $skinsName, \PDO::PARAM_STR);
         $stmt->bindParam('weapon_name', $weaponName, \PDO::PARAM_STR);
         $stmt->bindParam('rarity_name', $rarityName, \PDO::PARAM_STR);
+        $stmt->execute();
+
+        return $stmt->fetch();
+    }
+
+    /**
+     * @param array $filter
+     * @return mixed
+     * @throws \Doctrine\DBAL\DBALException
+     */
+    public function findOneSkinsByFilter(array $filter)
+    {
+        $dbal = $this->getEntityManager()->getConnection();
+        $stmt = $dbal->prepare("
+        SELECT s.* FROM skins s
+          LEFT JOIN weapon w ON s.weapon_id = w.id
+          LEFT JOIN rarity r ON s.rarity_id = r.id
+          LEFT JOIN decor d ON s.decor_id = d.id
+          LEFT JOIN item_set item ON s.item_set_id = item.id
+          LEFT JOIN quality q ON s.quality_id = q.id
+          LEFT JOIN type_skins ts ON s.type_skins_id = ts.id
+        WHERE
+          s.name = :skins_name 
+          AND w.localized_tag_name = :weapon_name 
+          AND r.localized_tag_name = :rarity_name
+          AND d.localized_tag_name = :decor_name
+          AND item.localized_tag_name = :item_set_name
+          AND q.localized_tag_name = :quality_name
+          AND ts.localized_tag_name = :type_skins_name
+        ");
+        $stmt->bindParam('skins_name', $filter['name'], \PDO::PARAM_STR);
+        $stmt->bindParam('weapon_name', $filter['weapon'], \PDO::PARAM_STR);
+        $stmt->bindParam('rarity_name', $filter['rarity'], \PDO::PARAM_STR);
+        $stmt->bindParam('decor_name', $filter['decor'], \PDO::PARAM_STR);
+        $stmt->bindParam('item_set_name', $filter['item_set'], \PDO::PARAM_STR);
+        $stmt->bindParam('quality_name', $filter['quality'], \PDO::PARAM_STR);
+        $stmt->bindParam('type_skins_name', $filter['type_skins'], \PDO::PARAM_STR);
         $stmt->execute();
 
         return $stmt->fetch();

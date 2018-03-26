@@ -51,7 +51,7 @@ class SkinsConsumer implements ConsumerInterface
     {
         $parameters = json_decode($msg->getBody(), 1);
         try {
-            $this->skinsHandler->handler($parameters);
+            $this->skinsHandler->handler($parameters, $parameters['price']);
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
             $this->dbal->insert('a_failed_link_skins', ['msg' => $msg->getBody()]);
