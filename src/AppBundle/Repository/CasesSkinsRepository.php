@@ -91,6 +91,49 @@ class CasesSkinsRepository extends EntityRepository
     }
 
     /**
+     * @param $domainId
+     * @param $casesId
+     * @return array
+     */
+    public function findAllSkinsByCasesId($domainId, $casesId)
+    {
+        $dbal = $this->getEntityManager()->getConnection();
+        $stmt = $dbal->prepare('
+        SELECT
+          s.id, 
+          s.name, 
+          s.icon_url, 
+          s.steam_price, 
+          cs.id as cases_skins_id, 
+          cs.procent_rarity, 
+          cs.procent_skins, 
+          cs.count, 
+          cd.id as cases_domain_id,
+          w.localized_tag_name as weapon,
+          r.id as rarity_id,
+          r.localized_tag_name as rarity,
+          c.price as cases_price,
+          c.image as cases_image,
+          c.cases_category_id
+        FROM cases_skins cs
+          LEFT JOIN cases c ON cs.cases_id = c.id
+          LEFT JOIN cases_domain cd ON c.cases_domain_id = cd.id
+          LEFT JOIN skins s ON s.id = cs.skins_id
+          LEFT JOIN weapon w ON w.id = s.weapon_id
+          LEFT JOIN rarity r ON r.id = s.rarity_id
+        WHERE
+           cd.uuid = :uuid AND cs.cases_id = :cases_id
+        GROUP BY s.id, cd.id, cs.id, w.localized_tag_name, r.localized_tag_name, c.price, r.id, c.cases_category_id, c.image
+        ORDER BY r.sort;
+        ');
+        $stmt->bindParam('cases_id', $casesId, \PDO::PARAM_INT);
+        $stmt->bindParam('uuid', $domainId, \PDO::PARAM_STR);
+        $stmt->execute();
+
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+    /**
      * @param $casesDomainId
      * @param $offset
      * @return array

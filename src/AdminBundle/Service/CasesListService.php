@@ -103,7 +103,7 @@ class CasesListService
             $this->logger->error($e->getMessage());
             $listRarityCasesNormalize = [];
         }
-        
+
         $listRarity = $this->em->getRepository(Rarity::class)
             ->findAllRarity();
 

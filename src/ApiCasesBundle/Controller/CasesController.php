@@ -76,7 +76,7 @@ class CasesController extends FOSRestController
         }
 
         $case['skins'] = $em->getRepository(CasesSkins::class)
-            ->findSkinsByCasesId($domainId, $casesId);
+            ->findAllSkinsByCasesId($domainId, $casesId);
 
         $case['skins'] = array_map(function ($item) {
             return [
