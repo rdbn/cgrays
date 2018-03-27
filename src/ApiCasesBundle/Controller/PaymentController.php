@@ -13,11 +13,11 @@ class PaymentController extends FOSRestController
     /**
      * @param Request $request
      *
-     * @Rest\Post("/payment")
+     * @Rest\Post("/payment/yandex")
      * @Rest\View()
      * @return Response
      */
-    public function postPaymentAction(Request $request)
+    public function postYandexAction(Request $request)
     {
         $paymentInformation = $request->request->all();
         $domainId = $request->headers->get('x-domain-id');
@@ -31,7 +31,67 @@ class PaymentController extends FOSRestController
             $this->get('logger')->error(json_encode($paymentInformation));
             $this->get('logger')->error($e->getMessage());
 
-            $view = $this->view("Bad request", 200);
+            $view = $this->view("Bad request", 400);
+        }
+
+        return $this->handleView($view);
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @Rest\Post("/payment/qiwi/success")
+     * @Rest\View()
+     * @return Response
+     */
+    public function postQiwiSuccessAction(Request $request)
+    {
+        $paymentInformation = $request->request->all();
+        var_dump($paymentInformation);
+        $this->get('logger')->error(json_encode($paymentInformation));
+
+
+        $domainId = $request->headers->get('x-domain-id');
+
+        try {
+
+
+            $view = $this->view("success", 200);
+        } catch (\Exception $e) {
+            $this->get('logger')->error(json_encode($paymentInformation));
+            $this->get('logger')->error($e->getMessage());
+
+            $view = $this->view("Bad request", 400);
+        }
+
+        return $this->handleView($view);
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @Rest\Post("/payment/qiwi/fail")
+     * @Rest\View()
+     * @return Response
+     */
+    public function postQiwiFailAction(Request $request)
+    {
+        $paymentInformation = $request->request->all();
+        var_dump($paymentInformation);
+        $this->get('logger')->error(json_encode($paymentInformation));
+
+
+        $domainId = $request->headers->get('x-domain-id');
+
+        try {
+
+
+            $view = $this->view("success", 200);
+        } catch (\Exception $e) {
+            $this->get('logger')->error(json_encode($paymentInformation));
+            $this->get('logger')->error($e->getMessage());
+
+            $view = $this->view("Bad request", 400);
         }
 
         return $this->handleView($view);
