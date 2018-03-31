@@ -41,7 +41,8 @@
         "php-amqplib/rabbitmq-bundle": "^1.13",
         "egeloen/ckeditor-bundle": "^6.0",
         "lexik/jwt-authentication-bundle": "^2.4",
-        "jonnyw/php-phantomjs": "^4.6"
+        "jonnyw/php-phantomjs": "^4.6",
+        "eightpoints/guzzle-bundle": "dev-master"
     },
     "require-dev": {
         "sensio/generator-bundle": "^3.0",
