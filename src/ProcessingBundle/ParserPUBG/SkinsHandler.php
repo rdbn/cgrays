@@ -200,7 +200,7 @@ class SkinsHandler
     {
         try {
             $image = $this->imageService->upload("https:{$imageUrl}", false);
-            if (is_array(getimagesize("http://cgrays.loc/image/{$image}"))) {
+            if (is_array(getimagesize("http://cgrays.com/image/{$image}"))) {
                 return "image/{$image}";
             }
         } catch (\Exception $e) {
@@ -209,7 +209,7 @@ class SkinsHandler
 
         try {
             $image = $this->imageService->upload("https://pubgitems.pro{$imageUrl}", false);
-            if (is_array(getimagesize("http://cgrays.loc/image/{$image}"))) {
+            if (is_array(getimagesize("http://cgrays.com/image/{$image}"))) {
                 return "image/{$image}";
             }
         } catch (\Exception $e) {
