@@ -85,7 +85,7 @@ class SkinsHandler
     public function handle(array $skins)
     {
         $skinsEntity = $this->em->getRepository(SkinsPUBG::class)
-            ->findOneBy(['name' => $skins['name']]);
+            ->findOneBy(['name' => trim($skins['name'])]);
 
         if ($skinsEntity) {
             return;
