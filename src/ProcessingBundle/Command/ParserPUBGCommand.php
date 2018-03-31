@@ -27,27 +27,21 @@ class ParserPUBGCommand extends ContainerAwareCommand
     {
         $container = $this->getContainer();
         $producer = $container->get('old_sound_rabbit_mq.parser_pubg_producer');
+        $guzzle = $container->get('guzzle.client.steam');
         $logger = $container->get('logger');
 
-        $client = Client::getInstance();
-        $client->getEngine()->setPath('/usr/local/bin/phantomjs');
+        $request = $guzzle->request('GET', 'https://pubgitems.pro/en/containers');
+        $status = $request->getStatusCode();
+        $content = $request->getBody()->getContents();
 
-        $request  = $client->getMessageFactory()->createRequest();
-        $response = $client->getMessageFactory()->createResponse();
-
-        $request->setMethod('GET');
-        $request->setUrl('https://pubgitems.pro/en/containers');
-
-        $client->send($request, $response);
-
-        $logger->info("Status: {$response->getStatus()}");
-        if ($response->getStatus() != 200) {
-            $logger->info("Content: {$response->getContent()}");
+        $logger->info("Status: {$status}");
+        if ($status != 200) {
+            $logger->info("Content: {$content}");
             throw new \Exception('Not valid status');
         }
 
-        if($response->getStatus() === 200) {
-            $crawler = new Crawler($response->getContent());
+        if($status === 200) {
+            $crawler = new Crawler($content);
             $crawler->filter('#browse-collections a.mdc-list-item')->each(function (Crawler $node, $i) use ($producer) {
                 $text = trim($node->text());
                 preg_match('/(.*)/i', $text, $matchesName);

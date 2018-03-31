@@ -9,7 +9,6 @@
 namespace ProcessingBundle\ParserPUBG;
 
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\DBALException;
 use OldSound\RabbitMqBundle\RabbitMq\ConsumerInterface;
 use PhpAmqpLib\Message\AMQPMessage;
 use Psr\Log\LoggerInterface;
