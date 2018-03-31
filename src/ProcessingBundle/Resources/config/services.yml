@@ -4,22 +4,31 @@ services:
         arguments: ["@doctrine.dbal.default_connection", "@logger"]
 
     processing.parser.skins_handler:
-        class: ProcessingBundle\Parser\SkinsHandler
+        class: ProcessingBundle\ParserCSGO\SkinsHandler
         arguments:
             - '@doctrine.orm.entity_manager'
             - '@doctrine.dbal.default_connection'
 
     processing.parser.price_handler:
-        class: ProcessingBundle\Parser\PriceHandler
+        class: ProcessingBundle\ParserCSGO\PriceHandler
         arguments:
             - "@doctrine.orm.entity_manager"
             - "@doctrine.dbal.default_connection"
             - "@logger"
 
     processing.parser.skins_image_handler:
-        class: ProcessingBundle\Parser\SkinsImageHandler
+        class: ProcessingBundle\ParserCSGO\SkinsImageHandler
         arguments:
             - "@doctrine.orm.entity_manager"
             - "@doctrine.dbal.default_connection"
             - "@app.service.upload_image"
             - "%steam_community_image_url%"
+
+    processing.parser_pubg.skins_handler:
+        class: ProcessingBundle\ParserPUBG\SkinsHandler
+        arguments:
+            - "@doctrine.dbal.default_connection"
+            - "@doctrine.orm.entity_manager"
+            - "@guzzle.client.steam"
+            - "@app.service.upload_image"
+            - "@logger"

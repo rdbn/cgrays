@@ -6,13 +6,13 @@
  * Time: 17:18
  */
 
-namespace ProcessingBundle\Parser;
+namespace ProcessingBundle\ParserCSGO;
 
 use AppBundle\Entity\Skins;
 use AppBundle\Services\UploadImageService;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManager;
-use ProcessingBundle\Parser\Helper\FilterSkinHelper;
+use ProcessingBundle\ParserCSGO\Helper\FilterSkinHelper;
 
 class SkinsImageHandler
 {

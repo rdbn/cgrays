@@ -6,7 +6,7 @@
  * Time: 10:49
  */
 
-namespace ProcessingBundle\Parser\Helper;
+namespace ProcessingBundle\ParserCSGO\Helper;
 
 
 class FilterSkinHelper

@@ -6,7 +6,7 @@
  * Time: 17:18
  */
 
-namespace ProcessingBundle\Parser;
+namespace ProcessingBundle\ParserCSGO;
 
 use AppBundle\Entity\Decor;
 use AppBundle\Entity\ItemSet;
@@ -19,7 +19,7 @@ use AppBundle\Modal\DictionaryInterface;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManager;
-use ProcessingBundle\Parser\Helper\FilterSkinHelper;
+use ProcessingBundle\ParserCSGO\Helper\FilterSkinHelper;
 
 class SkinsHandler
 {

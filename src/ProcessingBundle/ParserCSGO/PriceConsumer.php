@@ -3,22 +3,22 @@
  * Created by PhpStorm.
  * User: rdbn
  * Date: 08.10.17
- * Time: 20:52
+ * Time: 20:51
  */
 
-namespace ProcessingBundle\Parser;
+namespace ProcessingBundle\ParserCSGO;
 
-use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\DBALException;
 use OldSound\RabbitMqBundle\RabbitMq\ConsumerInterface;
 use PhpAmqpLib\Message\AMQPMessage;
 use Psr\Log\LoggerInterface;
 
-class SkinsImageConsumer implements ConsumerInterface
+class PriceConsumer implements ConsumerInterface
 {
     /**
-     * @var SkinsImageHandler
+     * @var PriceHandler
      */
-    private $imageHandler;
+    private $handler;
 
     /**
      * @var LoggerInterface
@@ -26,13 +26,13 @@ class SkinsImageConsumer implements ConsumerInterface
     private $logger;
 
     /**
-     * SkinsConsumer constructor.
-     * @param SkinsImageHandler $imageHandler
+     * PriceConsumer constructor.
+     * @param PriceHandler $handler
      * @param LoggerInterface $logger
      */
-    public function __construct(SkinsImageHandler $imageHandler, LoggerInterface $logger)
+    public function __construct(PriceHandler $handler, LoggerInterface $logger)
     {
-        $this->imageHandler = $imageHandler;
+        $this->handler = $handler;
         $this->logger = $logger;
     }
 
@@ -43,16 +43,16 @@ class SkinsImageConsumer implements ConsumerInterface
     public function execute(AMQPMessage $msg)
     {
         $parameters = json_decode($msg->getBody(), 1);
-        try {
-            $this->imageHandler->handler($parameters);
-        } catch (\Exception $e) {
-            $this->logger->error($e->getMessage());
-            sleep(30);
 
+        try {
+            $this->handler->handle($parameters);
+        } catch (DBALException $e) {
+            $this->logger->error($e->getMessage());
             return self::MSG_REJECT_REQUEUE;
         }
 
-        return self::MSG_ACK;
-    }
+        $this->logger->info("Message: {$msg->getBody()}");
 
+        return self::MSG_REJECT_REQUEUE;
+    }
 }

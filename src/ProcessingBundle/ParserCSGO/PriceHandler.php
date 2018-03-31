@@ -6,7 +6,7 @@
  * Time: 11:06
  */
 
-namespace ProcessingBundle\Parser;
+namespace ProcessingBundle\ParserCSGO;
 
 use AppBundle\Entity\Skins;
 use Doctrine\DBAL\Connection;

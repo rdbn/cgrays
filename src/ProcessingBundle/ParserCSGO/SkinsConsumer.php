@@ -6,7 +6,7 @@
  * Time: 20:52
  */
 
-namespace ProcessingBundle\Parser;
+namespace ProcessingBundle\ParserCSGO;
 
 use Doctrine\DBAL\Connection;
 use OldSound\RabbitMqBundle\RabbitMq\ConsumerInterface;
