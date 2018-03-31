@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * @ORM\Entity(repositoryClass="AppBundle\Repository\RarityRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\RarityPUBGRepository")
  * @ORM\Table(name="rarity_pubg")
  */
 class RarityPUBG implements DictionaryInterface

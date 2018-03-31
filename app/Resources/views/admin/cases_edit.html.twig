@@ -142,50 +142,64 @@
                         </div>
                     </div>
                     <div class="row">
+                        {% if formFilter.decor is defined %}
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    {{ form_label(formFilter.decor) }}
+                                    <div class="sonata-ba-field sonata-ba-field-standard-natural">
+                                        {{ form_widget(formFilter.decor, {'attr': {'class': 'form-control'}}) }}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                        {% if formFilter.decor is defined %}
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    {{ form_label(formFilter.quality) }}
+                                    <div class="sonata-ba-field sonata-ba-field-standard-natural">
+                                        {{ form_widget(formFilter.quality, {'attr': {'class': 'form-control'}}) }}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                        {% if formFilter.decor is defined %}
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    {{ form_label(formFilter.itemSet) }}
+                                    <div class="sonata-ba-field sonata-ba-field-standard-natural">
+                                        {{ form_widget(formFilter.itemSet, {'attr': {'class': 'form-control'}}) }}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
                         <div class="col-lg-4">
-                            <div class="form-group">
-                                {{ form_label(formFilter.decor) }}
-                                <div class="sonata-ba-field sonata-ba-field-standard-natural">
-                                    {{ form_widget(formFilter.decor, {'attr': {'class': 'form-control'}}) }}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-4">
-                            <div class="form-group">
-                                {{ form_label(formFilter.quality) }}
-                                <div class="sonata-ba-field sonata-ba-field-standard-natural">
-                                    {{ form_widget(formFilter.quality, {'attr': {'class': 'form-control'}}) }}
-                                </div>
-                            </div>
-                        </div><div class="col-lg-4">
-                            <div class="form-group">
-                                {{ form_label(formFilter.itemSet) }}
-                                <div class="sonata-ba-field sonata-ba-field-standard-natural">
-                                    {{ form_widget(formFilter.itemSet, {'attr': {'class': 'form-control'}}) }}
-                                </div>
-                            </div>
-                        </div><div class="col-lg-4">
                             <div class="form-group">
                                 {{ form_label(formFilter.rarity) }}
                                 <div class="sonata-ba-field sonata-ba-field-standard-natural">
                                     {{ form_widget(formFilter.rarity, {'attr': {'class': 'form-control'}}) }}
                                 </div>
                             </div>
-                        </div><div class="col-lg-4">
-                            <div class="form-group">
-                                {{ form_label(formFilter.weapon) }}
-                                <div class="sonata-ba-field sonata-ba-field-standard-natural">
-                                    {{ form_widget(formFilter.weapon, {'attr': {'class': 'form-control'}}) }}
-                                </div>
-                            </div>
-                        </div><div class="col-lg-4">
-                            <div class="form-group">
-                                {{ form_label(formFilter.typeSkins) }}
-                                <div class="sonata-ba-field sonata-ba-field-standard-natural">
-                                    {{ form_widget(formFilter.typeSkins, {'attr': {'class': 'form-control'}}) }}
-                                </div>
-                            </div>
                         </div>
+                        {% if formFilter.decor is defined %}
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    {{ form_label(formFilter.weapon) }}
+                                    <div class="sonata-ba-field sonata-ba-field-standard-natural">
+                                        {{ form_widget(formFilter.weapon, {'attr': {'class': 'form-control'}}) }}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                        {% if formFilter.decor is defined %}
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    {{ form_label(formFilter.typeSkins) }}
+                                    <div class="sonata-ba-field sonata-ba-field-standard-natural">
+                                        {{ form_widget(formFilter.typeSkins, {'attr': {'class': 'form-control'}}) }}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
                     </div>
                     <h3>Список скинов в кейсе:</h3>
                     <div class="row">
@@ -247,5 +261,9 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script src="{{ asset('bundles/admin/js/cases-skins.js') }}" type="application/javascript"></script>
+    {% if isPUBG is defined %}
+        <script src="{{ asset('bundles/admin/js/cases-skins-pubg.js') }}" type="application/javascript"></script>
+    {% else %}
+        <script src="{{ asset('bundles/admin/js/cases-skins.js') }}" type="application/javascript"></script>
+    {% endif %}
 {% endblock %}

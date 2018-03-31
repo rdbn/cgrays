@@ -28,6 +28,8 @@ set :app_config_path, "app/config"
 set :log_path, "var/logs"
 set :cache_path, "var/cache"
 
+set :composer_install_flags, '--prefer-dist --no-interaction --optimize-autoloader --quiet'
+
 set :symfony_console_path, "bin/console"
 set :symfony_console_flags, "--no-debug"
 
@@ -41,8 +43,6 @@ set :assets_install_flags,  '--symlink'
 # Share files/directories between releases
 set :linked_files, ["app/config/parameters.yml"]
 set :linked_dirs, ["var/logs", "var/jwt", "var/sessions", "vendor", "web/image"]
-
-set :composer_install_flags, '--prefer-dist --no-interaction --optimize-autoloader --quiet'
 
 # Set correct permissions between releases, this is turned off by default
 set :file_permissions_paths, ["var"]

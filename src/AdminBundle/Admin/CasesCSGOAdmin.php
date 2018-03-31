@@ -13,7 +13,7 @@ use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 
-class CasesAdmin extends AbstractAdmin
+class CasesCSGOAdmin extends AbstractAdmin
 {
     protected $baseRouteName = 'sonata_cases';
     protected $baseRoutePattern = 'cases';

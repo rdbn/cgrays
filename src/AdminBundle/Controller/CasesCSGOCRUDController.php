@@ -16,7 +16,7 @@ use AppBundle\Entity\Rarity;
 use AppBundle\Entity\Skins;
 use Sonata\AdminBundle\Controller\CRUDController as Controller;
 
-class CasesCRUDController extends Controller
+class CasesCSGOCRUDController extends Controller
 {
     public function createAction()
     {

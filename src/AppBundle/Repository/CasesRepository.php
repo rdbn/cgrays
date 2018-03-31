@@ -57,4 +57,24 @@ class CasesRepository extends EntityRepository
 
         return $stmt->fetch();
     }
+
+    public function queryCSGOSonata()
+    {
+        $qb = $this->createQueryBuilder('c');
+        $qb
+            ->leftJoin('c.casesSkins', 'cs')
+            ->where($qb->expr()->isNotNull('cs.id'));
+
+        return $qb;
+    }
+
+    public function queryPUBGSonata()
+    {
+        $qb = $this->createQueryBuilder('c');
+        $qb
+            ->leftJoin('c.casesSkinsPubg', 'cs')
+            ->where($qb->expr()->isNotNull('cs.id'));
+
+        return $qb;
+    }
 }

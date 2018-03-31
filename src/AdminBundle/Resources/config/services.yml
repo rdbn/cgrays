@@ -41,11 +41,20 @@ services:
         tags:
             - { name: sonata.admin, manager_type: orm, group: Кейсы, label: Bot live drop, show_mosaic_button: false }
 
-    admin.admin.cases:
-        class: AdminBundle\Admin\CasesAdmin
-        arguments: [~, AppBundle\Entity\Cases, AdminBundle:CasesCRUD]
+    admin.admin.cases_csgo:
+        class: AdminBundle\Admin\CasesCSGOAdmin
+        arguments: [~, AppBundle\Entity\Cases, AdminBundle:CasesCSGOCRUD]
         tags:
-            - { name: sonata.admin, manager_type: orm, group: Кейсы, label: Кейсы, show_mosaic_button: false }
+            - { name: sonata.admin, manager_type: orm, group: Кейсы, label: Кейсы CSGO, show_mosaic_button: false }
+        calls:
+            - [ setTemplate, [edit, admin/cases_edit.html.twig]]
+        public: true
+
+    admin.admin.cases_pubg:
+        class: AdminBundle\Admin\CasesPUBGAdmin
+        arguments: [~, AppBundle\Entity\Cases, AdminBundle:CasesPUBGCRUD]
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: Кейсы, label: Кейсы PUBG, show_mosaic_button: false }
         calls:
             - [ setTemplate, [edit, admin/cases_edit.html.twig]]
         public: true
@@ -74,54 +83,70 @@ services:
         tags:
             - { name: sonata.admin, manager_type: orm, group: Кейсы, label: Cтатистика, show_mosaic_button: false }
 
-    admin.admin.rarity:
+    admin.admin.rarity_pubg:
+        class: AdminBundle\Admin\RarityPUBGAdmin
+        arguments: [~, AppBundle\Entity\RarityPUBG, ~]
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: Скины PUBG, label: Раритетность, show_mosaic_button: false }
+
+    admin.admin.skins_pubg:
+        class: AdminBundle\Admin\SkinsPUBGAdmin
+        arguments: [~, AppBundle\Entity\SkinsPUBG, ~]
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: Скины PUBG, label: Скины, show_mosaic_button: false }
+
+    admin.admin.rarity_csgo:
         class: AdminBundle\Admin\RarityAdmin
         arguments: [~, AppBundle\Entity\Rarity, ~]
         tags:
-            - { name: sonata.admin, manager_type: orm, group: Скины, label: Древность, show_mosaic_button: false }
+            - { name: sonata.admin, manager_type: orm, group: Скины CSGO, label: Древность, show_mosaic_button: false }
 
-    admin.admin.quality:
+    admin.admin.quality_csgo:
         class: AdminBundle\Admin\QualityAdmin
         arguments: [~, AppBundle\Entity\Quality, ~]
         tags:
-            - { name: sonata.admin, manager_type: orm, group: Скины, label: Качество, show_mosaic_button: false }
+            - { name: sonata.admin, manager_type: orm, group: Скины CSGO, label: Качество, show_mosaic_button: false }
 
-    admin.admin.weapon:
+    admin.admin.weapon_csgo:
         class: AdminBundle\Admin\WeaponAdmin
         arguments: [~, AppBundle\Entity\Weapon, ~]
         tags:
-            - { name: sonata.admin, manager_type: orm, group: Скины, label: Оружие, show_mosaic_button: false }
+            - { name: sonata.admin, manager_type: orm, group: Скины CSGO, label: Оружие, show_mosaic_button: false }
 
-    admin.admin.item_set:
+    admin.admin.item_set_csgo:
         class: AdminBundle\Admin\ItemSetAdmin
         arguments: [~, AppBundle\Entity\ItemSet, ~]
         tags:
-            - { name: sonata.admin, manager_type: orm, group: Скины, label: Набор, show_mosaic_button: false }
+            - { name: sonata.admin, manager_type: orm, group: Скины CSGO, label: Набор, show_mosaic_button: false }
 
-    admin.admin.type_skins:
+    admin.admin.type_skins_csgo:
         class: AdminBundle\Admin\TypeSkinsAdmin
         arguments: [~, AppBundle\Entity\TypeSkins, ~]
         tags:
-            - { name: sonata.admin, manager_type: orm, group: Скины, label: Тип, show_mosaic_button: false }
+            - { name: sonata.admin, manager_type: orm, group: Скины CSGO, label: Тип, show_mosaic_button: false }
 
-    admin.admin.decor:
+    admin.admin.decor_csgo:
         class: AdminBundle\Admin\DecorAdmin
         arguments: [~, AppBundle\Entity\Decor, ~]
         tags:
-            - { name: sonata.admin, manager_type: orm, group: Скины, label: Оформление, show_mosaic_button: false }
+            - { name: sonata.admin, manager_type: orm, group: Скины CSGO, label: Оформление, show_mosaic_button: false }
 
-    admin.admin.skins:
+    admin.admin.skins_csgo:
         class: AdminBundle\Admin\SkinsAdmin
         arguments: [~, AppBundle\Entity\Skins, ~]
         tags:
-            - { name: sonata.admin, manager_type: orm, group: Скины, label: Основа для скинов, show_mosaic_button: false }
+            - { name: sonata.admin, manager_type: orm, group: Скины CSGO, label: Основа для скинов, show_mosaic_button: false }
 
-    admin.admin.skins_price:
+    admin.admin.skins_price_csgo:
         class: AdminBundle\Admin\SkinsPriceAdmin
         arguments: [~, AppBundle\Entity\SkinsPrice, ~]
         tags:
-            - { name: sonata.admin, manager_type: orm, group: Скины, label: Скины на продаже, show_mosaic_button: false }
+            - { name: sonata.admin, manager_type: orm, group: Скины CSGO, label: Скины на продаже, show_mosaic_button: false }
 
     admin.service.cases_list:
         class: AdminBundle\Service\CasesListService
+        arguments: ['@doctrine.orm.default_entity_manager', "@logger"]
+
+    admin.service.cases_list_pubg:
+        class: AdminBundle\Service\CasesListPUBGService
         arguments: ['@doctrine.orm.default_entity_manager', "@logger"]

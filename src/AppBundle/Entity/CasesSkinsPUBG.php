@@ -12,10 +12,10 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity(repositoryClass="AppBundle\Repository\CasesSkinsRepository")
- * @ORM\Table(name="cases_skins")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\CasesSkinsPUBGRepository")
+ * @ORM\Table(name="cases_skins_pubg")
  */
-class CasesSkins
+class CasesSkinsPUBG
 {
     /**
      * @ORM\Column(type="integer")
@@ -31,7 +31,7 @@ class CasesSkins
     protected $skins;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Cases", inversedBy="casesSkins")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Cases", inversedBy="casesSkinsPubg")
      * @ORM\JoinColumn(name="cases_id", referencedColumnName="id")
      */
     protected $cases;
@@ -44,9 +44,9 @@ class CasesSkins
 
     /**
      * @Assert\Range(min="0", max="100")
-     * @ORM\Column(name="procent_skins", type="smallint", options={"default": 0})
+     * @ORM\Column(name="is_drop", type="boolean", options={"default": TRUE})
      */
-    protected $procentSkins;
+    protected $isDrop;
 
     /**
      * @ORM\Column(name="created_at", type="datetime", type="datetime")
@@ -56,7 +56,7 @@ class CasesSkins
     public function __construct()
     {
         $this->procentRarity = 0;
-        $this->procentSkins = 0;
+        $this->isDrop = true;
         $this->createdAt = new \DateTime();
     }
 
@@ -67,7 +67,6 @@ class CasesSkins
     {
         return (string) $this->procentRarity;
     }
-
 
     /**
      * Get id
@@ -82,9 +81,9 @@ class CasesSkins
     /**
      * Set procentRarity
      *
-     * @param string $procentRarity
+     * @param integer $procentRarity
      *
-     * @return CasesSkins
+     * @return CasesSkinsPUBG
      */
     public function setProcentRarity($procentRarity)
     {
@@ -96,7 +95,7 @@ class CasesSkins
     /**
      * Get procentRarity
      *
-     * @return string
+     * @return integer
      */
     public function getProcentRarity()
     {
@@ -104,27 +103,27 @@ class CasesSkins
     }
 
     /**
-     * Set procentSkins
+     * Set isDrop
      *
-     * @param string $procentSkins
+     * @param integer $isDrop
      *
-     * @return CasesSkins
+     * @return CasesSkinsPUBG
      */
-    public function setProcentSkins($procentSkins)
+    public function setIsDrop($isDrop)
     {
-        $this->procentSkins = $procentSkins;
+        $this->isDrop = $isDrop;
 
         return $this;
     }
 
     /**
-     * Get procentSkins
+     * Get isDrop
      *
-     * @return string
+     * @return integer
      */
-    public function getProcentSkins()
+    public function getIsDrop()
     {
-        return $this->procentSkins;
+        return $this->isDrop;
     }
 
     /**
@@ -132,7 +131,7 @@ class CasesSkins
      *
      * @param \DateTime $createdAt
      *
-     * @return CasesSkins
+     * @return CasesSkinsPUBG
      */
     public function setCreatedAt($createdAt)
     {
@@ -154,11 +153,11 @@ class CasesSkins
     /**
      * Set skins
      *
-     * @param \AppBundle\Entity\Skins $skins
+     * @param \AppBundle\Entity\SkinsPUBG $skins
      *
-     * @return CasesSkins
+     * @return CasesSkinsPUBG
      */
-    public function setSkins(\AppBundle\Entity\Skins $skins = null)
+    public function setSkins(\AppBundle\Entity\SkinsPUBG $skins = null)
     {
         $this->skins = $skins;
 
@@ -168,7 +167,7 @@ class CasesSkins
     /**
      * Get skins
      *
-     * @return \AppBundle\Entity\Skins
+     * @return \AppBundle\Entity\SkinsPUBG
      */
     public function getSkins()
     {
@@ -180,7 +179,7 @@ class CasesSkins
      *
      * @param \AppBundle\Entity\Cases $cases
      *
-     * @return CasesSkins
+     * @return CasesSkinsPUBG
      */
     public function setCases(\AppBundle\Entity\Cases $cases = null)
     {

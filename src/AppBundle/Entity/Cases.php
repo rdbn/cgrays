@@ -69,6 +69,11 @@ class Cases
     protected $casesSkins;
 
     /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\CasesSkinsPUBG", mappedBy="cases")
+     */
+    protected $casesSkinsPubg;
+
+    /**
      * Unmapped property to handle file uploads
      */
     private $file;
@@ -333,5 +338,39 @@ class Cases
     public function getCasesSkins()
     {
         return $this->casesSkins;
+    }
+
+    /**
+     * Add casesSkinsPubg
+     *
+     * @param \AppBundle\Entity\CasesSkinsPubg $casesSkinsPubg
+     *
+     * @return Cases
+     */
+    public function addCasesSkinsPubg(\AppBundle\Entity\CasesSkinsPubg $casesSkinsPubg)
+    {
+        $this->casesSkinsPubg[] = $casesSkinsPubg;
+
+        return $this;
+    }
+
+    /**
+     * Remove casesSkinsPubg
+     *
+     * @param \AppBundle\Entity\CasesSkinsPubg $casesSkinsPubg
+     */
+    public function removeCasesSkinsPubg(\AppBundle\Entity\CasesSkinsPubg $casesSkinsPubg)
+    {
+        $this->casesSkinsPubg->removeElement($casesSkinsPubg);
+    }
+
+    /**
+     * Get casesSkinsPubg
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getCasesSkinsPubg()
+    {
+        return $this->casesSkinsPubg;
     }
 }

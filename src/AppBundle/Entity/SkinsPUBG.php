@@ -49,6 +49,11 @@ class SkinsPUBG
     protected $steamPrice;
 
     /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\CasesSkinsPUBG", mappedBy="skins")
+     */
+    protected $casesSkins;
+
+    /**
      * Unmapped property to handle file uploads
      */
     private $file;
