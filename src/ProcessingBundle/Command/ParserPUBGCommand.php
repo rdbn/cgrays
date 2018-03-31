@@ -25,7 +25,9 @@ class ParserPUBGCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $producer = $this->getContainer()->get('old_sound_rabbit_mq.parser_pubg_producer');
+        $container = $this->getContainer();
+        $producer = $container->get('old_sound_rabbit_mq.parser_pubg_producer');
+        $logger = $container->get('logger');
 
         $client = Client::getInstance();
         $client->getEngine()->setPath('/usr/local/bin/phantomjs');
@@ -37,6 +39,12 @@ class ParserPUBGCommand extends ContainerAwareCommand
         $request->setUrl('https://pubgitems.pro/en/containers');
 
         $client->send($request, $response);
+
+        $logger->info("Status: {$response->getStatus()}");
+        if ($response->getStatus() != 200) {
+            $logger->info("Content: {$response->getContent()}");
+            throw new \Exception('Not valid status');
+        }
 
         if($response->getStatus() === 200) {
             $crawler = new Crawler($response->getContent());
