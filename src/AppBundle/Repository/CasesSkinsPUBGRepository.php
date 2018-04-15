@@ -40,4 +40,86 @@ class CasesSkinsPUBGRepository extends EntityRepository
 
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
+
+    /**
+     * @param $domainId
+     * @param $casesId
+     * @return array
+     * @throws \Doctrine\DBAL\DBALException
+     */
+    public function findAllSkinsByCasesId($domainId, $casesId)
+    {
+        $dbal = $this->getEntityManager()->getConnection();
+        $stmt = $dbal->prepare('
+        SELECT
+          s.id, 
+          s.name, 
+          s.image as icon_url, 
+          s.steam_price, 
+          cs.id as cases_skins_id, 
+          cs.procent_rarity, 
+          cs.is_drop, 
+          cd.id as cases_domain_id,
+          r.id as rarity_id,
+          r.localized_tag_name as rarity,
+          c.price as cases_price,
+          c.image as cases_image,
+          c.cases_category_id
+        FROM cases_skins_pubg cs
+          LEFT JOIN cases c ON cs.cases_id = c.id
+          LEFT JOIN cases_domain cd ON c.cases_domain_id = cd.id
+          LEFT JOIN skins_pubg s ON s.id = cs.skins_id
+          LEFT JOIN rarity r ON r.id = s.rarity_id
+        WHERE
+           cd.uuid = :uuid AND cs.cases_id = :cases_id
+        GROUP BY s.id, cd.id, cs.id, r.localized_tag_name, c.price, r.id, c.cases_category_id, c.image
+        ORDER BY r.sort;
+        ');
+        $stmt->bindParam('cases_id', $casesId, \PDO::PARAM_INT);
+        $stmt->bindParam('uuid', $domainId, \PDO::PARAM_STR);
+        $stmt->execute();
+
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * @param $domainId
+     * @param $casesId
+     * @return array
+     * @throws \Doctrine\DBAL\DBALException
+     */
+    public function findSkinsByCasesId($domainId, $casesId)
+    {
+        $dbal = $this->getEntityManager()->getConnection();
+        $stmt = $dbal->prepare('
+        SELECT
+          s.id, 
+          s.name, 
+          s.image as icon_url, 
+          s.steam_price, 
+          cs.id as cases_skins_id, 
+          cs.procent_rarity, 
+          cs.is_drop, 
+          cd.id as cases_domain_id,
+          r.id as rarity_id,
+          r.localized_tag_name as rarity,
+          c.price as cases_price,
+          c.image as cases_image,
+          c.cases_category_id
+        FROM cases_skins_pubg cs
+          LEFT JOIN cases c ON cs.cases_id = c.id
+          LEFT JOIN cases_domain cd ON c.cases_domain_id = cd.id
+          LEFT JOIN skins_pubg s ON s.id = cs.skins_id
+          LEFT JOIN rarity r ON r.id = s.rarity_id
+        WHERE
+           cd.uuid = :uuid AND cs.cases_id = :cases_id AND cs.is_drop = TRUE
+        GROUP BY s.id, cd.id, cs.id, r.localized_tag_name, c.price, r.id, c.cases_category_id, c.image
+        ORDER BY r.sort;
+        ');
+        $stmt->bindParam('cases_id', $casesId, \PDO::PARAM_INT);
+        $stmt->bindParam('uuid', $domainId, \PDO::PARAM_STR);
+        $stmt->execute();
+
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
 }

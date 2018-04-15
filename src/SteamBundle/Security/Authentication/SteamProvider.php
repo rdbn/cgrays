@@ -13,10 +13,15 @@ class SteamProvider implements AuthenticationProviderInterface
 {
     private $userProvider;
     private $guzzle;
-    public function __construct(UserProviderInterface $userProvider, Client $guzzle)
+
+    /**
+     * SteamProvider constructor.
+     * @param UserProviderInterface $userProvider
+     */
+    public function __construct(UserProviderInterface $userProvider)
     {
         $this->userProvider = $userProvider;
-        $this->guzzle = $guzzle;
+        $this->guzzle = new Client();
     }
 
     public function authenticate(TokenInterface $token)

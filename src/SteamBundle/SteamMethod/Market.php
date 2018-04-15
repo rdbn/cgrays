@@ -29,13 +29,12 @@ class Market
 
     /**
      * InventoryBuilderDotaMethod constructor.
-     * @param Client $guzzle
      * @param $steamCommunityUrl
      * @param $steamCountItem
      */
-    public function __construct(Client $guzzle, $steamCommunityUrl, $steamCountItem)
+    public function __construct($steamCommunityUrl, $steamCountItem)
     {
-        $this->guzzle = $guzzle;
+        $this->guzzle = new Client();
         $this->steamCommunityUrl = $steamCommunityUrl;
         $this->steamCountItem = $steamCountItem;
     }

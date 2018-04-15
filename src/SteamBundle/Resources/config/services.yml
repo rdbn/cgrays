@@ -2,7 +2,7 @@ services:
     # security
     steam.security.authentication.provider:
         class: SteamBundle\Security\Authentication\SteamProvider
-        arguments: [ '@steam.user_provider', '@guzzle.client.steam' ]
+        arguments: ['@steam.user_provider']
         public: false
 
     steam.security.authentication.listener:
@@ -27,7 +27,6 @@ services:
 
     steam.modal.api_method:
         class: SteamBundle\Modal\ApiMethod
-        arguments: ['@guzzle.client.steam']
 
     steam.abstract_method:
         abstract: true
@@ -66,13 +65,11 @@ services:
     steam.api_inventory:
         class: SteamBundle\SteamMethod\Inventory
         arguments:
-            - '@guzzle.client.steam'
             - '%steam.steam_community_url%'
             - '%steam.steam_inventory_count%'
 
     steam.api_market:
         class: SteamBundle\SteamMethod\Market
         arguments:
-            - '@guzzle.client.steam'
             - '%steam.steam_community_url%'
             - '%steam.steam_inventory_count%'

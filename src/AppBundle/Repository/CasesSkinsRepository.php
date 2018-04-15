@@ -15,6 +15,7 @@ class CasesSkinsRepository extends EntityRepository
     /**
      * @param $casesId
      * @return array
+     * @throws \Doctrine\DBAL\DBALException
      */
     public function findCasesSkinsByCasesId($casesId)
     {
@@ -36,6 +37,7 @@ class CasesSkinsRepository extends EntityRepository
     /**
      * @param $casesSkinsId
      * @return array
+     * @throws \Doctrine\DBAL\DBALException
      */
     public function findCasesSkinsByCasesIdForUpdate($casesSkinsId)
     {
@@ -51,6 +53,7 @@ class CasesSkinsRepository extends EntityRepository
      * @param $domainId
      * @param $casesId
      * @return array
+     * @throws \Doctrine\DBAL\DBALException
      */
     public function findSkinsByCasesId($domainId, $casesId)
     {
@@ -94,6 +97,7 @@ class CasesSkinsRepository extends EntityRepository
      * @param $domainId
      * @param $casesId
      * @return array
+     * @throws \Doctrine\DBAL\DBALException
      */
     public function findAllSkinsByCasesId($domainId, $casesId)
     {

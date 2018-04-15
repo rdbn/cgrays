@@ -54,6 +54,21 @@ class SkinsPUBG
     protected $casesSkins;
 
     /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\CasesSkinsDropUserPUBG", mappedBy="skins")
+     */
+    protected $casesSkinsDropUser;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\CasesSkinsPickUpUserPUBG", mappedBy="skins")
+     */
+    protected $casesSkinsPickUpUser;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\UserPickUpSkinsSteamPUBG", mappedBy="skins")
+     */
+    protected $userPickUpSkinsUser;
+
+    /**
      * Unmapped property to handle file uploads
      */
     private $file;
@@ -171,30 +186,6 @@ class SkinsPUBG
     }
 
     /**
-     * Set description
-     *
-     * @param string $description
-     *
-     * @return SkinsPUBG
-     */
-    public function setDescription($description)
-    {
-        $this->description = $description;
-
-        return $this;
-    }
-
-    /**
-     * Get description
-     *
-     * @return string
-     */
-    public function getDescription()
-    {
-        return $this->description;
-    }
-
-    /**
      * Set steamPrice
      *
      * @param string $steamPrice
@@ -240,5 +231,141 @@ class SkinsPUBG
     public function getRarity()
     {
         return $this->rarity;
+    }
+
+    /**
+     * Add casesSkin
+     *
+     * @param \AppBundle\Entity\CasesSkinsPUBG $casesSkin
+     *
+     * @return SkinsPUBG
+     */
+    public function addCasesSkin(\AppBundle\Entity\CasesSkinsPUBG $casesSkin)
+    {
+        $this->casesSkins[] = $casesSkin;
+
+        return $this;
+    }
+
+    /**
+     * Remove casesSkin
+     *
+     * @param \AppBundle\Entity\CasesSkinsPUBG $casesSkin
+     */
+    public function removeCasesSkin(\AppBundle\Entity\CasesSkinsPUBG $casesSkin)
+    {
+        $this->casesSkins->removeElement($casesSkin);
+    }
+
+    /**
+     * Get casesSkins
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getCasesSkins()
+    {
+        return $this->casesSkins;
+    }
+
+    /**
+     * Add casesSkinsDropUser
+     *
+     * @param \AppBundle\Entity\CasesSkinsDropUserPUBG $casesSkinsDropUser
+     *
+     * @return SkinsPUBG
+     */
+    public function addCasesSkinsDropUser(\AppBundle\Entity\CasesSkinsDropUserPUBG $casesSkinsDropUser)
+    {
+        $this->casesSkinsDropUser[] = $casesSkinsDropUser;
+
+        return $this;
+    }
+
+    /**
+     * Remove casesSkinsDropUser
+     *
+     * @param \AppBundle\Entity\CasesSkinsDropUserPUBG $casesSkinsDropUser
+     */
+    public function removeCasesSkinsDropUser(\AppBundle\Entity\CasesSkinsDropUserPUBG $casesSkinsDropUser)
+    {
+        $this->casesSkinsDropUser->removeElement($casesSkinsDropUser);
+    }
+
+    /**
+     * Get casesSkinsDropUser
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getCasesSkinsDropUser()
+    {
+        return $this->casesSkinsDropUser;
+    }
+
+    /**
+     * Add casesSkinsPickUpUser
+     *
+     * @param \AppBundle\Entity\CasesSkinsPickUpUserPUBG $casesSkinsPickUpUser
+     *
+     * @return SkinsPUBG
+     */
+    public function addCasesSkinsPickUpUser(\AppBundle\Entity\CasesSkinsPickUpUserPUBG $casesSkinsPickUpUser)
+    {
+        $this->casesSkinsPickUpUser[] = $casesSkinsPickUpUser;
+
+        return $this;
+    }
+
+    /**
+     * Remove casesSkinsPickUpUser
+     *
+     * @param \AppBundle\Entity\CasesSkinsPickUpUserPUBG $casesSkinsPickUpUser
+     */
+    public function removeCasesSkinsPickUpUser(\AppBundle\Entity\CasesSkinsPickUpUserPUBG $casesSkinsPickUpUser)
+    {
+        $this->casesSkinsPickUpUser->removeElement($casesSkinsPickUpUser);
+    }
+
+    /**
+     * Get casesSkinsPickUpUser
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getCasesSkinsPickUpUser()
+    {
+        return $this->casesSkinsPickUpUser;
+    }
+
+    /**
+     * Add userPickUpSkinsUser
+     *
+     * @param \AppBundle\Entity\UserPickUpSkinsSteamPUBG $userPickUpSkinsUser
+     *
+     * @return SkinsPUBG
+     */
+    public function addUserPickUpSkinsUser(\AppBundle\Entity\UserPickUpSkinsSteamPUBG $userPickUpSkinsUser)
+    {
+        $this->userPickUpSkinsUser[] = $userPickUpSkinsUser;
+
+        return $this;
+    }
+
+    /**
+     * Remove userPickUpSkinsUser
+     *
+     * @param \AppBundle\Entity\UserPickUpSkinsSteamPUBG $userPickUpSkinsUser
+     */
+    public function removeUserPickUpSkinsUser(\AppBundle\Entity\UserPickUpSkinsSteamPUBG $userPickUpSkinsUser)
+    {
+        $this->userPickUpSkinsUser->removeElement($userPickUpSkinsUser);
+    }
+
+    /**
+     * Get userPickUpSkinsUser
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getUserPickUpSkinsUser()
+    {
+        return $this->userPickUpSkinsUser;
     }
 }

@@ -2,7 +2,7 @@
 
 namespace ProcessingBundle\Command;
 
-use JonnyW\PhantomJs\Client;
+use GuzzleHttp\Client;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -27,7 +27,7 @@ class ParserPUBGCommand extends ContainerAwareCommand
     {
         $container = $this->getContainer();
         $producer = $container->get('old_sound_rabbit_mq.parser_pubg_producer');
-        $guzzle = $container->get('guzzle.client.steam');
+        $guzzle = new Client();
         $logger = $container->get('logger');
 
         $request = $guzzle->request('GET', 'https://pubgitems.pro/en/containers');

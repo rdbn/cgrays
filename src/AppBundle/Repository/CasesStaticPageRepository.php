@@ -23,7 +23,6 @@ class CasesStaticPageRepository extends EntityRepository
         $qb = $this->createQueryBuilder('csp');
         $qb
             ->select('csp.typePage')
-            ->addSelect('csp.id')
             ->addSelect('csp.text')
             ->leftJoin('csp.casesDomain', 'cd')
             ->where('cd.uuid = :domain_id')

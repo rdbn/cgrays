@@ -15,6 +15,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManager;
 use GuzzleHttp\Client as Guzzle;
+use GuzzleHttp\Client;
 use JonnyW\PhantomJs\Client as Phantom;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DomCrawler\Crawler;
@@ -55,24 +56,17 @@ class SkinsHandler
      * SkinsHandler constructor.
      * @param Connection $dbal
      * @param EntityManager $em
-     * @param Guzzle $guzzle
      * @param UploadImageService $imageService
      * @param LoggerInterface $logger
      */
-    public function __construct(
-        Connection $dbal,
-        EntityManager $em,
-        Guzzle $guzzle,
-        UploadImageService $imageService,
-        LoggerInterface $logger
-    )
+    public function __construct(Connection $dbal, EntityManager $em, UploadImageService $imageService, LoggerInterface $logger)
     {
         $this->dbal = $dbal;
         $this->em = $em;
-        $this->guzzle = $guzzle;
         $this->imageService = $imageService;
         $this->logger = $logger;
 
+        $this->guzzle = new Client();
         $this->phantom = Phantom::getInstance();
         $this->phantom->getEngine()->setPath('/usr/local/bin/phantomjs');
     }

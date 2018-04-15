@@ -10,8 +10,8 @@ namespace AppBundle\Repository;
 
 use AppBundle\Entity\User;
 use Doctrine\DBAL\DBALException;
-use Doctrine\DBAL\Driver\PDOException;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 
 class UserRepository extends EntityRepository
@@ -29,7 +29,11 @@ class UserRepository extends EntityRepository
             ->setParameter('user_1', (int)$value, \PDO::PARAM_INT)
             ->setParameter('user_2', $value, \PDO::PARAM_STR);
 
-        return $qb->getQuery()->getOneOrNullResult();
+        try {
+            return $qb->getQuery()->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            return null;
+        }
     }
 
     /**

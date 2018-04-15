@@ -75,8 +75,14 @@ class CasesController extends FOSRestController
             return $this->handleView($view);
         }
 
-        $case['skins'] = $em->getRepository(CasesSkins::class)
-            ->findAllSkinsByCasesId($domainId, $casesId);
+        try {
+            $case['skins'] = $em->getRepository(CasesSkins::class)
+                ->findAllSkinsByCasesId($domainId, $casesId);
+        } catch (DBALException $e) {
+            $this->get('logger')->error($e->getMessage());
+            $view = $this->view("Bad request", 400);
+            return $this->handleView($view);
+        }
 
         $case['skins'] = array_map(function ($item) {
             return [

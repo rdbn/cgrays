@@ -6,12 +6,11 @@
  * Time: 19:30
  */
 
-namespace ApiCasesBundle\Service;
+namespace ApiCasesPUBGBundle\Service;
 
 use AppBundle\Entity\CasesBalanceUser;
 use AppBundle\Entity\CasesDomain;
 use AppBundle\Entity\Skins;
-use AppBundle\Entity\SkinsPUBG;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManager;
@@ -40,7 +39,7 @@ class UserSellSkinsHandler
     }
 
     /**
-     * @param SkinsPUBG $skins
+     * @param Skins $skins
      * @param int $userId
      * @param $domainId
      * @param $currencyId
@@ -48,7 +47,7 @@ class UserSellSkinsHandler
      * @throws \Doctrine\DBAL\ConnectionException
      * @throws \Exception
      */
-    public function handler(SkinsPUBG $skins, int $userId, $domainId, $currencyId)
+    public function handler(Skins $skins, int $userId, $domainId, $currencyId)
     {
         $casesDomain = $this->em->getRepository(CasesDomain::class)
             ->findOneBy(['uuid' => $domainId]);

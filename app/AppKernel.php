@@ -20,10 +20,10 @@ class AppKernel extends Kernel
             new JMS\SerializerBundle\JMSSerializerBundle(),
             new Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle(),
             new Symfony\Bundle\AsseticBundle\AsseticBundle(),
-            new EightPoints\Bundle\GuzzleBundle\GuzzleBundle(),
             new Knp\Bundle\PaginatorBundle\KnpPaginatorBundle(),
             new OldSound\RabbitMqBundle\OldSoundRabbitMqBundle(),
             new Lexik\Bundle\JWTAuthenticationBundle\LexikJWTAuthenticationBundle(),
+            new Nelmio\ApiDocBundle\NelmioApiDocBundle(),
 
             // sonata
             new Sonata\CoreBundle\SonataCoreBundle(),
@@ -42,6 +42,7 @@ class AppKernel extends Kernel
             new ProcessingBundle\ProcessingBundle(),
             // new DotaBundle\DotaBundle(),
             new ApiCasesBundle\ApiCasesBundle(),
+            new ApiCasesPUBGBundle\ApiCasesPUBGBundle(),
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {

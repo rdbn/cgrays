@@ -17,6 +17,7 @@ class CasesBalanceUserRepository extends EntityRepository
      * @param $currencyId
      * @param $casesDomainId
      * @return mixed
+     * @throws \Doctrine\DBAL\DBALException
      */
     public function findUserBalanceForUpdateByUserIdCurrencyIdDomain($userId, $currencyId, $casesDomainId)
     {

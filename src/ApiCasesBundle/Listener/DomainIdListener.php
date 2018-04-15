@@ -48,7 +48,7 @@ class DomainIdListener
         $domainIdConstraint = new DomainIdConstraint();
         $validator = $this->validator->validate($domainId, $domainIdConstraint);
         if (count($validator) > 0) {
-            $event->setResponse(new Response("Not found", 404));
+            $event->setResponse(new Response(json_encode([404 => "Not found"]), 404));
         }
 
         return;

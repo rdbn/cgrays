@@ -1,0 +1,30 @@
+services:
+    api_cases_pubg.service.case_open:
+        class: ApiCasesPUBGBundle\Service\CaseOpenHandler
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@doctrine.dbal.default_connection'
+            - '@security.token_storage'
+            - '@api_cases.service.games'
+            - '@api_cases.service.metrics_event_sender'
+            - '@logger'
+
+    api_cases_pubg.service.cases_user_sell_skins:
+        class: ApiCasesPUBGBundle\Service\CasesUserSellSkinsHandler
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@doctrine.dbal.default_connection'
+            - '@api_cases.service.metrics_event_sender'
+
+    api_cases_pubg.service.cases_user_pick_up_skins:
+        class: ApiCasesPUBGBundle\Service\CasesUserPickUpSkinsHandler
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@doctrine.dbal.default_connection'
+            - '@api_cases.service.metrics_event_sender'
+
+    api_cases_pubg.service.user_pick_up_skins_steam:
+        class: ApiCasesBundle\Service\UserSellSkinsHandler
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@doctrine.dbal.default_connection'

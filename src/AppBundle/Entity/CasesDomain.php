@@ -77,7 +77,12 @@ class CasesDomain
     {
         $this->uuid = GenerateUUID::getUUID();
         $this->createdAt = new \DateTime();
+
         $this->cases = new ArrayCollection();
+        $this->casesStaticPage = new ArrayCollection();
+        $this->casesSkinsPickUpUser = new ArrayCollection();
+        $this->casesSkinsDropUser = new ArrayCollection();
+        $this->userPickUpSkinsUser = new ArrayCollection();
     }
 
     public function __toString()
