@@ -58,23 +58,25 @@ security:
     access_control:
         - { path: ^/login$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/connect/steam, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/api/login_check, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/api/cases/list, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/api/cases/skins, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/api/cases/static, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/api/cases/connect/steam, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/api/cases/payment, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/api/cases/live-drop, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/api/cases/user, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+#        - { path: ^/api/login_check, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+#        - { path: ^/api/cases/list, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+#        - { path: ^/api/cases/skins, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+#        - { path: ^/api/cases/static, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+#        - { path: ^/api/cases/connect/steam, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+#        - { path: ^/api/cases/payment, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+#        - { path: ^/api/cases/live-drop, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+#        - { path: ^/api/cases/user, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api/cases/pubg/live-drop, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api/cases/pubg/list, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api/cases/pubg/skins, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api/cases/pubg/static, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api/cases/pubg/login_check, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api/cases/pubg/user, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/doc$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/user, roles: ROLE_USER }
         - { path: ^/payment, roles: ROLE_USER }
         - { path: ^/basket, roles: ROLE_USER }
         - { path: ^/api, roles: ROLE_USER }
         - { path: ^/backend, roles: ROLE_ADMIN }
         - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/, roles: ROLE_ADMIN }

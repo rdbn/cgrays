@@ -45,7 +45,7 @@ class RarityPUBG implements DictionaryInterface
      */
     public function __toString()
     {
-        return $this->localizedTagName;
+        return (string) $this->localizedTagName;
     }
 
     /**

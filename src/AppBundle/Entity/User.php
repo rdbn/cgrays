@@ -162,7 +162,7 @@ class User implements UserInterface, EquatableInterface, \Serializable, SteamUse
 
     public function __toString()
     {
-        return $this->username;
+        return (string) $this->username;
     }
 
     public function getRoles()

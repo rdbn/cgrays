@@ -87,7 +87,7 @@ class CasesDomain
 
     public function __toString()
     {
-        return $this->domain;
+        return (string) $this->domain;
     }
 
     /**
