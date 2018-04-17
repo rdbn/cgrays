@@ -50,6 +50,7 @@ class CasesPUBGAdmin extends AbstractAdmin
             ->add('price')
             ->add('promotionPrice')
             ->add('coefficient')
+            ->add('casesDomain')
             ->add('image', 'string', [
                 'template' => 'CRUD/list__image.html.twig'
             ])
