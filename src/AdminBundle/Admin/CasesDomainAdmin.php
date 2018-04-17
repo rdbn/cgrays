@@ -33,7 +33,9 @@ class CasesDomainAdmin extends AbstractAdmin
      */
     protected function configureFormFields(FormMapper $form)
     {
-        $form->add('domain', 'url');
+        $form
+            ->add('domain', 'url')
+            ->add('steamApiKey', 'text');
     }
 
     /**
@@ -52,6 +54,7 @@ class CasesDomainAdmin extends AbstractAdmin
         $list
             ->addIdentifier('domain')
             ->add('uuid')
+            ->add('steamApiKey')
             ->add('_action', null, [
                 'actions' => [
                     'edit' => [],
